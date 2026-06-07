@@ -1,7 +1,6 @@
 import HeroSection from "@/components/HeroSection";
 import OurStory from "@/components/OurStory";
 import EventDetails from "@/components/EventDetails";
-import RSVPForm from "@/components/RSVPForm";
 import FAQSection from "@/components/FAQSection";
 
 export default function Home() {
@@ -11,7 +10,6 @@ export default function Home() {
       <OurStory />
       <EventDetails />
       <FAQSection />
-      <RSVPForm />
     </main>
   );
 }

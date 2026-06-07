@@ -18,7 +18,7 @@ export default function HeroSection() {
           M <span className="text-accent-secondary italic font-light">&amp;</span> M
         </h1>
         <p className="text-xl md:text-2xl font-light text-stone-600 tracking-wider">
-          September 12, 2026
+          December 5, 2026
         </p>
       </motion.div>
     </section>
