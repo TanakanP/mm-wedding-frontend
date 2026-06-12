@@ -71,8 +71,10 @@ export default function OurStory() {
                   ></div>
                 </div>
 
-                {/* Blooming card: uses framer-motion whileInView (scale + opacity + rotate) matching .bloom keyframe for "bloom on view".
-                    Click to activate (gold accents, stronger shadow) for interactive "open" feel per spec. */}
+                {/* Blooming card: framer-motion whileInView (scale + opacity + rotate) matching .bloom for "bloom on view".
+                    Click toggles active (gold accents + shadow) and expands a small visual detail area below description
+                    (smooth height/opacity via framer) for "click to expand more details if space". Ellipsis cue only when closed.
+                    Year uses parent motion bloom only (removed redundant child .bloom to avoid conflict). */}
                 <motion.div
                   initial={{ opacity: 0, scale: 0.8, rotate: -2 }}
                   whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
@@ -89,7 +91,7 @@ export default function OurStory() {
                       : "border-sage/20 shadow-sm hover:border-sage/40 hover:shadow"
                   }`}
                 >
-                  <span className="font-serif text-accent-primary text-lg bloom">
+                  <span className="font-serif text-accent-primary text-lg">
                     {milestone.year}
                   </span>
                   <h3 className="font-bold text-xl text-foreground mt-1">
@@ -97,7 +99,18 @@ export default function OurStory() {
                   </h3>
                   <p className="text-foreground/70 mt-2 font-light leading-relaxed">
                     {milestone.description}
+                    {!isActive && <span className="text-accent-primary/30"> …</span>}
                   </p>
+                  {/* Visual "more details" expansion: claims additional vertical space inside card when active.
+                      Uses framer animate for smooth garden-like transition (height + fade). Purely visual (no new prose).
+                      Keeps exact main descriptions always fully visible. */}
+                  <motion.div
+                    animate={{ height: isActive ? 10 : 0, opacity: isActive ? 1 : 0 }}
+                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                    className="overflow-hidden"
+                  >
+                    <div className="h-px bg-gradient-to-r from-transparent via-accent-primary/25 to-transparent mt-2" />
+                  </motion.div>
                 </motion.div>
               </motion.div>
             );
