@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface Wish {
   id: number;
@@ -75,17 +75,38 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
   );
   const [selectedWish, setSelectedWish] = useState<Wish | null>(null);
 
+  // Guard: track whether this userWish has already been planted (prevents duplicates
+  // from effect re-runs caused by new object refs on parent re-renders).
+  const plantedRef = useRef<string | null>(null);
+
   useEffect(() => {
     // Animate "planting" the user's wish (local demo). Samples are seeded at init.
     if (userWish && userWish.message?.trim()) {
+      const name = userWish.name;
+      const message = userWish.message.trim();
+      const sig = `${name}|${message}`;
+
+      if (plantedRef.current === sig) {
+        return; // already planted this exact user wish for this instance
+      }
+
+      // Claim immediately so rapid re-renders (showerPetals etc.) do not schedule duplicates
+      plantedRef.current = sig;
+
       const userPlanted: Wish = {
         id: Date.now(),
-        name: userWish.name,
-        message: userWish.message.trim(),
+        name,
+        message,
       };
 
       const plantTimer = setTimeout(() => {
-        setWishes((prev) => [...prev, userPlanted]);
+        setWishes((prev) => {
+          // Safety: do not append if an identical wish is already present
+          if (prev.some((w) => w.name === name && w.message === message)) {
+            return prev;
+          }
+          return [...prev, userPlanted];
+        });
         // Auto-highlight the newly planted wish for a moment
         setSelectedWish(userPlanted);
         // Clear highlight after a bit
@@ -144,7 +165,8 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
       </AnimatePresence>
 
       <p className="mt-2 text-[10px] text-sage/60 text-center tracking-wide">
-        Tap a flower to hear its wish • Yours is planted and growing
+        Tap a flower to hear its wish
+        {userWish && userWish.message?.trim() && " • Yours is planted and growing"}
       </p>
     </div>
   );

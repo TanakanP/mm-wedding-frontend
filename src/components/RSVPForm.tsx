@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { X } from "lucide-react";
 
 import PlantWishWall from "./PlantWishWall";
@@ -80,6 +80,15 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
       return () => clearTimeout(t);
     }
   }, [isSubmitted, submittedData?.attending]);
+
+  // Stabilize userWish object reference so PlantWishWall effect (dep on [userWish])
+  // does not re-run on every parent re-render (e.g. showerPetals updates).
+  const userWishForWall = useMemo(() => {
+    if (submittedData && submittedData.attending === "yes" && submittedData.message && submittedData.message.trim()) {
+      return { name: submittedData.name, message: submittedData.message.trim() };
+    }
+    return undefined;
+  }, [submittedData]);
 
   const onSubmit = async (data: RSVPFormValues) => {
     // In a real app, send to API here
@@ -242,13 +251,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
 
                     {/* Plant Your Wish Wall - growing garden of sample + user messages (below, wider) */}
                     <div className="w-full max-w-xl px-2 mt-6">
-                      <PlantWishWall
-                        userWish={
-                          submittedData.message && submittedData.message.trim()
-                            ? { name: submittedData.name, message: submittedData.message.trim() }
-                            : undefined
-                        }
-                      />
+                      <PlantWishWall userWish={userWishForWall} />
                     </div>
                   </>
                 ) : (
