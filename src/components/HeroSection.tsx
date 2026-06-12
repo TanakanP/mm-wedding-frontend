@@ -8,7 +8,7 @@ interface TimeLeft {
   hours: number;
 }
 
-const Petals = () => {
+const Petals = ({ wind = 0 }: { wind?: number }) => {
   const [petals, setPetals] = useState<
     Array<{ id: number; left: number; delay: number; duration: number; drift: number }>
   >([]);
@@ -33,7 +33,7 @@ const Petals = () => {
           style={{ left: `${p.left}%` }}
           animate={{
             y: ["-10%", "110%"],
-            x: [0, p.drift],
+            x: [0, p.drift + wind],
             rotate: [0, 360],
           }}
           transition={{
@@ -64,6 +64,8 @@ export default function HeroSection() {
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(getTimeLeft);
 
+  const [wind, setWind] = useState(0);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft(getTimeLeft());
@@ -72,9 +74,20 @@ export default function HeroSection() {
     return () => clearInterval(interval);
   }, [targetDate]);
 
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      // Map mouse position across viewport to gentle wind offset (-15px to +15px)
+      const normalized = e.clientX / window.innerWidth - 0.5;
+      const windOffset = normalized * 30;
+      setWind(windOffset);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
     <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden bg-cream garden-texture">
-      <Petals />
+      <Petals wind={wind} />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
