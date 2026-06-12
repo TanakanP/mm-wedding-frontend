@@ -13,8 +13,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "M & M Wedding",
-  description: "Join us to celebrate our wedding",
+  title: "M & M Wedding | The Garden Hiroen",
+  description: "Join us in the gardens on 5 December 2026 for our Garden Hiroen celebration.",
 };
 
 export default function RootLayout({
