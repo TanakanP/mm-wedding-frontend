@@ -17,7 +17,6 @@ export default function GardenNav() {
     const idMap: Record<string, string> = {
       "our story": "our-story",
       "garden path": "garden-path",
-      "plant your wishes": "garden-path",
       "garden whispers": "garden-whispers",
     };
 
@@ -60,7 +59,6 @@ export default function GardenNav() {
           {[
             { label: "Our Story", id: "our-story", icon: Leaf },
             { label: "The Garden Path", id: "garden-path", icon: Flower },
-            { label: "Plant Your Wishes", id: "garden-path", icon: Leaf },
             { label: "Garden Whispers", id: "garden-whispers", icon: Flower },
           ].map(({ label, id, icon: Icon }, idx) => {
             const isActive = currentSectionId === id;

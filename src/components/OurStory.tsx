@@ -1,122 +1,194 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
+import PhotoCarousel from "./our-story/PhotoCarousel";
+import PinnedPhoto from "./our-story/PinnedPhoto";
+import StoryLetter from "./our-story/StoryLetter";
+import {
+  MOBILE_CAROUSEL_BOTTOM,
+  MOBILE_CAROUSEL_TOP,
+  PHOTO_PLACEMENTS,
+  STORY_LETTER,
+  STORY_TITLE,
+  TIMING,
+  type LetterPhase,
+  type Phase,
+} from "./our-story/constants";
 
-const milestones = [
-  {
-    year: "2018",
-    title: "First Met",
-    description:
-      "In a hidden rose garden café, surrounded by climbing vines and the scent of jasmine, we talked for hours as golden light filtered through the leaves.",
-  },
-  {
-    year: "2020",
-    title: "First Trip",
-    description:
-      "We wandered through misty mountain gardens and planted a young sapling together — the first tree in our shared garden of memories.",
-  },
-  {
-    year: "2024",
-    title: "The Proposal",
-    description:
-      "Beneath a canopy of wisteria and stars in our secret garden, with a ring hidden inside a perfect blooming lotus.",
-  },
-];
+function letterPhaseFrom(phase: Phase): LetterPhase {
+  switch (phase) {
+    case "letter":
+      return "empty";
+    case "typing":
+      return "typing";
+    case "photos":
+    case "done":
+      return "complete";
+    default:
+      return "hidden";
+  }
+}
+
+const IS_DEV = process.env.NODE_ENV === "development";
+
+function estimateTypingMs() {
+  return (
+    STORY_TITLE.length * TIMING.typeTitleSpeed +
+    200 +
+    STORY_LETTER.length * TIMING.typeBodySpeed +
+    300
+  );
+}
 
 export default function OurStory() {
-  const [activeIndex, setActiveIndex] = useState<number | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.45 });
+  const [phase, setPhase] = useState<Phase>("waiting");
+  const [animationKey, setAnimationKey] = useState(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const startedRef = useRef(false);
+  const typingDoneRef = useRef(false);
+  const runIdRef = useRef(0);
 
-  const toggleActive = (index: number) => {
-    setActiveIndex(activeIndex === index ? null : index);
-  };
+  const schedule = useCallback((fn: () => void, ms: number) => {
+    const runId = runIdRef.current;
+    return window.setTimeout(() => {
+      if (runIdRef.current === runId) fn();
+    }, ms);
+  }, []);
+
+  const startAnimation = useCallback(() => {
+    runIdRef.current += 1;
+    typingDoneRef.current = false;
+
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (prefersReduced) {
+      setReduceMotion(true);
+      setPhase("done");
+      return;
+    }
+
+    setReduceMotion(false);
+    setPhase("letter");
+    schedule(
+      () => setPhase("typing"),
+      TIMING.letterAppear + TIMING.letterAppearHold
+    );
+  }, [schedule]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReduceMotion(mq.matches);
+  }, []);
+
+  useEffect(() => {
+    if (!isInView || startedRef.current) return;
+    startedRef.current = true;
+    startAnimation();
+  }, [isInView, startAnimation]);
+
+  const handleRestart = useCallback(() => {
+    setAnimationKey((k) => k + 1);
+    startAnimation();
+  }, [startAnimation]);
+
+  const handleTypingComplete = useCallback(() => {
+    if (typingDoneRef.current) return;
+    typingDoneRef.current = true;
+    setPhase("photos");
+    schedule(
+      () => setPhase("done"),
+      PHOTO_PLACEMENTS.length * TIMING.photoStagger + 500
+    );
+  }, [schedule]);
+
+  useEffect(() => {
+    if (phase !== "typing") return;
+    const fallback = schedule(handleTypingComplete, estimateTypingMs());
+    return () => window.clearTimeout(fallback);
+  }, [phase, handleTypingComplete, schedule]);
+
+  const currentLetterPhase = letterPhaseFrom(phase);
+  const showLetter = phase !== "waiting";
+  const showPhotos = phase === "photos" || phase === "done";
 
   return (
-    <section id="our-story" className="garden-snap-section w-full flex items-center bg-cream garden-texture text-center px-4">
-      <div className="max-w-4xl mx-auto w-full pt-[var(--nav-offset)]">
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="font-serif text-4xl md:text-5xl text-accent-primary mb-16"
+    <section
+      ref={sectionRef}
+      id="our-story"
+      className="garden-snap-section relative w-full flex flex-col items-center justify-center bg-cream garden-texture px-0 md:px-6 overflow-visible pt-[var(--nav-offset)] md:pt-0"
+    >
+      {IS_DEV && (
+        <button
+          type="button"
+          onClick={handleRestart}
+          className="absolute top-[calc(var(--nav-offset)+0.5rem)] left-1/2 -translate-x-1/2 z-50 rounded-md border border-sage/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground/70 shadow-sm backdrop-blur-sm hover:bg-background hover:text-foreground transition-colors"
         >
-          Our Story
-        </motion.h2>
+          ↺ Restart animation
+        </button>
+      )}
 
-        {/* Simple vertical sage path with asymmetry for winding garden feel */}
-        <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-sage before:to-transparent">
-          {milestones.map((milestone, index) => {
-            const isActive = activeIndex === index;
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ delay: index * 0.2 }}
-                className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group"
-              >
-                {/* Sage-toned path marker; gold accent when active */}
-                <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 transition-colors ${
-                    isActive
-                      ? "border-accent-primary bg-cream text-accent-primary shadow"
-                      : "border-sage/30 bg-cream text-sage shadow"
-                  }`}
-                >
-                  <div
-                    className={`w-3 h-3 rounded-full transition-colors ${
-                      isActive ? "bg-accent-primary" : "bg-accent-secondary"
-                    }`}
-                  ></div>
-                </div>
+      {/* Mobile: top carousel */}
+      <div className="w-full shrink-0 md:hidden">
+        <PhotoCarousel
+          key={`top-${animationKey}`}
+          photos={MOBILE_CAROUSEL_TOP}
+          direction="ltr"
+          visible={showPhotos}
+        />
+      </div>
 
-                {/* Blooming card: framer-motion whileInView (scale + opacity + rotate) matching .bloom for "bloom on view".
-                    Click toggles active (gold accents + shadow) and expands a small visual detail area below description
-                    (smooth height/opacity via framer) for "click to expand more details if space". Ellipsis cue only when closed.
-                    Year uses parent motion bloom only (removed redundant child .bloom to avoid conflict). */}
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.8, rotate: -2 }}
-                  whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                  viewport={{ once: true, margin: "-80px" }}
-                  transition={{
-                    duration: 0.6,
-                    ease: [0.23, 1, 0.32, 1],
-                    delay: 0.05 + index * 0.1,
-                  }}
-                  onClick={() => toggleActive(index)}
-                  className={`w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] bg-background p-6 rounded-lg text-left border transition-all duration-300 cursor-pointer ${
-                    isActive
-                      ? "border-accent-primary shadow-md ring-1 ring-accent-primary/20"
-                      : "border-sage/20 shadow-sm hover:border-sage/40 hover:shadow"
-                  }`}
-                >
-                  <span className="font-serif text-accent-primary text-lg">
-                    {milestone.year}
-                  </span>
-                  <h3 className="font-bold text-xl text-foreground mt-1">
-                    {milestone.title}
-                  </h3>
-                  <p className="text-foreground/70 mt-2 font-light leading-relaxed">
-                    {milestone.description}
-                    {!isActive && <span className="text-accent-primary/30"> …</span>}
-                  </p>
-                  {/* Visual "more details" expansion: claims additional vertical space inside card when active.
-                      Uses framer animate for smooth garden-like transition (height + fade). Purely visual (no new prose).
-                      Keeps exact main descriptions always fully visible. */}
-                  <motion.div
-                    animate={{ height: isActive ? 10 : 0, opacity: isActive ? 1 : 0 }}
-                    transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-                    className="overflow-hidden"
-                  >
-                    <div className="h-px bg-gradient-to-r from-transparent via-accent-primary/25 to-transparent mt-2" />
-                  </motion.div>
-                </motion.div>
-              </motion.div>
-            );
-          })}
+      <div className="relative mx-auto w-full flex-1 flex items-center justify-center min-h-0 md:h-[min(580px,84dvh)] max-w-[min(100%,520px)] md:max-w-[920px] overflow-visible">
+        <div
+          className="absolute inset-0 rounded-lg opacity-[0.35] pointer-events-none hidden md:block"
+          style={{
+            backgroundImage: `radial-gradient(circle, rgba(74,102,79,0.08) 1px, transparent 1px)`,
+            backgroundSize: "12px 12px",
+          }}
+          aria-hidden
+        />
+
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative overflow-visible px-4 md:px-28">
+            {PHOTO_PLACEMENTS.map((placement, index) => (
+              <PinnedPhoto
+                key={`${animationKey}-${placement.id}`}
+                placement={placement}
+                index={index}
+                visible={showPhotos}
+              />
+            ))}
+            {showLetter && (
+              <StoryLetter
+                key={animationKey}
+                letterPhase={currentLetterPhase}
+                onTypingComplete={handleTypingComplete}
+              />
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Mobile: bottom carousel — bottom padding matches section top nav offset */}
+      <div
+        className={`w-full shrink-0 md:hidden`}
+      >
+        <PhotoCarousel
+          key={`bottom-${animationKey}`}
+          photos={MOBILE_CAROUSEL_BOTTOM}
+          direction="rtl"
+          visible={showPhotos}
+        />
+      </div>
+
+      {reduceMotion && phase === "done" && (
+        <motion.span className="sr-only" aria-live="polite">
+          Our story letter and photos
+        </motion.span>
+      )}
     </section>
   );
 }

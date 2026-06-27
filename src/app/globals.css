@@ -10,7 +10,7 @@
   --color-cream: #f7f3eb;
 
   /* Single source of truth for fixed nav height + scroll offsets */
-  --nav-offset: 68px;
+  --nav-offset: 48px;
 }
 
 @theme inline {
@@ -99,7 +99,6 @@ body {
   overflow-x: hidden;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
-  scroll-padding-top: var(--nav-offset);
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
