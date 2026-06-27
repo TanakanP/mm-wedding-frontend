@@ -8,6 +8,9 @@
   --color-sage: #4a664f;
   --color-dusty: #a36e6a;
   --color-cream: #f7f3eb;
+
+  /* Single source of truth for fixed nav height + scroll offsets */
+  --nav-offset: 68px;
 }
 
 @theme inline {
@@ -33,6 +36,15 @@
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
+}
+
+/* Lock the document — all scrolling happens inside .garden-slider */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 body {
@@ -67,4 +79,69 @@ body {
   border-radius: 50% 0 50% 0;
   pointer-events: none;
   z-index: 1;
+}
+
+/* === Native CSS scroll-snap garden slider ===
+ * Matches the reference pattern: a fixed-height overflow container with
+ * mandatory y-axis snap. Do NOT use flex on this element — flex lets the
+ * container grow with its children and breaks both snap and overflow scroll.
+ */
+.garden-app {
+  position: relative;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+.garden-slider {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-padding-top: var(--nav-offset);
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.garden-slider::-webkit-scrollbar {
+  display: none;
+}
+
+/* Snap targets — one viewport per chapter */
+.garden-snap-section {
+  flex-shrink: 0;
+  width: 100%;
+  scroll-snap-align: start;
+}
+
+#hero,
+#our-story,
+#garden-path {
+  height: 100dvh;
+  scroll-snap-stop: always;
+}
+
+#garden-whispers {
+  min-height: 100dvh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .garden-slider {
+    scroll-snap-type: none;
+  }
+}
+
+/* Screen reader only utility (for live regions etc.) */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

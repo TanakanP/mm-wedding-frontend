@@ -8,6 +8,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { X } from "lucide-react";
 
 import PlantWishWall from "./PlantWishWall";
+import { getGardenSlider } from "@/lib/scroll";
 
 const rsvpSchema = z.object({
   name: z.string().min(2, "Name is required"),
@@ -40,17 +41,17 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     Array<{ id: number; x: number; delay: number; duration: number; rotate: number }>
   >([]);
 
-  // Lock body scroll when modal is open
+  // Lock garden slider scroll when modal is open
   useEffect(() => {
+    const slider = getGardenSlider();
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
+      if (slider) slider.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'unset';
+      if (slider) slider.style.overflow = "";
     }
 
-    // Cleanup on unmount to ensure scroll is restored
     return () => {
-      document.body.style.overflow = 'unset';
+      if (slider) slider.style.overflow = "";
     };
   }, [isOpen]);
 

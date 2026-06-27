@@ -21,8 +21,8 @@ export default function EventDetails() {
   ];
 
   return (
-    <section className="w-full py-24 bg-cream garden-texture text-center px-4 relative">
-      <div className="max-w-4xl mx-auto">
+    <section id="garden-path" className="garden-snap-section w-full flex items-center bg-cream garden-texture text-center px-4 relative">
+      <div className="max-w-4xl mx-auto w-full pt-[var(--nav-offset)]">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
