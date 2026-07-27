@@ -15,6 +15,7 @@ import {
   type LetterPhase,
   type Phase,
 } from "./our-story/constants";
+import { usePreloadStoryPhotos } from "./our-story/usePreloadStoryPhotos";
 
 function letterPhaseFrom(phase: Phase): LetterPhase {
   switch (phase) {
@@ -114,6 +115,8 @@ export default function OurStory() {
   const currentLetterPhase = letterPhaseFrom(phase);
   const showLetter = phase !== "waiting";
   const showPhotos = phase === "photos" || phase === "done";
+
+  usePreloadStoryPhotos(phase === "letter" || phase === "typing");
 
   return (
     <section

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { EASE, TIMING, type PhotoPlacement } from "./constants";
+import StoryPhotoImage from "./StoryPhotoImage";
 
 type PhotoCarouselProps = {
   photos: PhotoPlacement[];
@@ -11,20 +12,12 @@ type PhotoCarouselProps = {
 
 function CarouselPhoto({ placement }: { placement: PhotoPlacement }) {
   return (
-    <figure className="shrink-0 w-[140px] h-[175px] border-[5px] border-white shadow-lg overflow-hidden relative my-4">
-      <div
-        className="w-full h-full relative"
-        style={{
-          background: `linear-gradient(145deg, ${placement.gradient[0]}, ${placement.gradient[1]})`,
-        }}
-      >
-        <span
-          className="absolute inset-0 flex items-center justify-center font-serif text-3xl font-semibold text-white/90 drop-shadow-md pointer-events-none select-none"
-          aria-hidden
-        >
-          {placement.id}
-        </span>
-      </div>
+    <figure className="shrink-0 my-4">
+      <StoryPhotoImage
+        placement={placement}
+        className="w-[140px] h-[175px] border-[5px] border-white shadow-lg"
+        sizes="140px"
+      />
       <figcaption className="sr-only">{placement.alt}</figcaption>
     </figure>
   );

@@ -1,7 +1,11 @@
 "use client";
 
+import { useCallback, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { PHOTO_SIZE_CLASS, type PhotoPlacement } from "./constants";
+import StoryPhotoImage from "./StoryPhotoImage";
+
+const MAX_SWING = 9.23;
 
 type PinnedPhotoProps = {
   placement: PhotoPlacement;
@@ -9,27 +13,11 @@ type PinnedPhotoProps = {
   visible: boolean;
 };
 
-function LeafWatermark() {
-  return (
-    <svg
-      viewBox="0 0 48 48"
-      className="absolute bottom-2 right-2 w-8 h-8 opacity-20"
-      aria-hidden
-    >
-      <path
-        d="M24 42 C8 32 4 18 24 6 C44 18 40 32 24 42 Z"
-        fill="white"
-      />
-      <path d="M24 10 L24 38" stroke="white" strokeWidth="1" opacity="0.5" />
-    </svg>
-  );
-}
-
 function PushPin() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="absolute -top-2 left-1/2 -translate-x-1/2 w-5 h-5 md:w-6 md:h-6 z-20 drop-shadow-sm"
+      className="absolute -top-2 left-1/2 -translate-x-1/2 w-5 h-5 md:w-6 md:h-6 z-20 drop-shadow-sm pointer-events-none"
       aria-hidden
     >
       <circle cx="12" cy="7" r="6" fill="#b89e68" />
@@ -44,35 +32,56 @@ export default function PinnedPhoto({
   index,
   visible,
 }: PinnedPhotoProps) {
+  const figureRef = useRef<HTMLElement>(null);
+  const [swing, setSwing] = useState(0);
+  const baseRotation = placement.rotation;
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const el = figureRef.current;
+    if (!el) return;
+
+    const rect = el.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const next = Math.max(
+      -MAX_SWING,
+      Math.min(MAX_SWING, (x / (rect.width / 2)) * MAX_SWING)
+    );
+    setSwing(next);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setSwing(0);
+  }, []);
+
   if (!visible) return null;
 
   return (
     <motion.figure
-      className={`absolute z-20 hidden md:block ${placement.position}`}
-      style={{ rotate: `${placement.rotation}deg` }}
-      initial={{ opacity: 0, y: -20, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{
-        duration: 0.45,
-        delay: index * 0.35,
-        ease: [0.34, 1.4, 0.64, 1],
+      ref={figureRef}
+      className={`absolute z-20 hidden md:block cursor-default ${placement.position}`}
+      style={{ transformOrigin: "top center" }}
+      initial={{ opacity: 0, y: -20, scale: 0.9, rotate: baseRotation }}
+      animate={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotate: baseRotation + swing,
       }}
+      transition={{
+        opacity: { duration: 0.45, delay: index * 0.35, ease: [0.34, 1.4, 0.64, 1] },
+        y: { duration: 0.45, delay: index * 0.35, ease: [0.34, 1.4, 0.64, 1] },
+        scale: { duration: 0.45, delay: index * 0.35, ease: [0.34, 1.4, 0.64, 1] },
+        rotate: { type: "spring", stiffness: 280, damping: 26 },
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       <PushPin />
-      <div
-        className={`relative border-[5px] border-white shadow-lg overflow-hidden ${PHOTO_SIZE_CLASS[placement.size ?? "md"]}`}
-        style={{
-          background: `linear-gradient(145deg, ${placement.gradient[0]}, ${placement.gradient[1]})`,
-        }}
-      >
-        <span
-          className="absolute inset-0 flex items-center justify-center font-serif text-3xl md:text-4xl font-semibold text-white/90 drop-shadow-md pointer-events-none select-none"
-          aria-hidden
-        >
-          {placement.id}
-        </span>
-        <LeafWatermark />
-      </div>
+      <StoryPhotoImage
+        placement={placement}
+        className={`border-[5px] border-white shadow-lg ${PHOTO_SIZE_CLASS[placement.size ?? "md"]}`}
+        sizes="215px"
+      />
       <figcaption className="sr-only">{placement.alt}</figcaption>
     </motion.figure>
   );

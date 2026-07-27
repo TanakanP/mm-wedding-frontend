@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "photos:optimize": "node scripts/optimize-story-photos.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

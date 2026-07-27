@@ -1,3 +1,5 @@
+import { PHOTO_VERSIONS } from "./photo-versions";
+
 export const STORY_TITLE = "Our Story";
 
 export const STORY_LETTER =
@@ -29,6 +31,14 @@ export type PhotoPlacement = {
   size?: PhotoSize;
 };
 
+/** Display-sized copies in /public/photos/display/ (run npm run photos:optimize after replacing originals). */
+export function getStoryPhotoSrc(id: number): string {
+  const version = PHOTO_VERSIONS[id];
+  return version
+    ? `/photos/display/${id}.jpeg?v=${version}`
+    : `/photos/display/${id}.jpeg`;
+}
+
 export const PHOTO_SIZE_CLASS: Record<PhotoSize, string> = {
   sm: "w-[92px] h-[115px] md:w-[124px] md:h-[155px]",
   md: "w-[108px] h-[135px] md:w-[152px] md:h-[190px]",
@@ -39,7 +49,7 @@ export const PHOTO_PLACEMENTS: PhotoPlacement[] = [
   {
     id: 1,
     rotation: -5,
-    position: "-top-14 -left-[6.5rem] md:-top-[6.5rem] md:-left-[1.25rem]",
+    position: "-top-14 -left-[6.5rem] md:-top-[6.5rem] md:-left-[4.5rem]",
     gradient: ["#c48a7f", "#4a664f"],
     alt: "Our moment 1",
     size: "md",
@@ -47,7 +57,7 @@ export const PHOTO_PLACEMENTS: PhotoPlacement[] = [
   {
     id: 2,
     rotation: 6,
-    position: "top-8 -right-[7rem] md:top-6 md:-right-[5rem]",
+    position: "top-8 -right-[7rem] md:top-[-7rem] md:-right-[5rem]",
     gradient: ["#b89e68", "#a36e6a"],
     alt: "Our moment 2",
     size: "md",
@@ -55,7 +65,7 @@ export const PHOTO_PLACEMENTS: PhotoPlacement[] = [
   {
     id: 3,
     rotation: 3,
-    position: "-bottom-16 -left-12 md:-bottom-[5.5rem] md:-left-[5.5rem]",
+    position: "-bottom-16 -left-12 md:-bottom-[9.5rem] md:-left-[5.5rem]",
     gradient: ["#4a664f", "#c48a7f"],
     alt: "Our moment 3",
     size: "md",
@@ -63,7 +73,7 @@ export const PHOTO_PLACEMENTS: PhotoPlacement[] = [
   {
     id: 4,
     rotation: 11,
-    position: "-top-10 -left-[11.5rem] md:-top-10 md:-left-[19rem]",
+    position: "-top-10 -left-[11.5rem] md:-top-20 md:-left-[20rem]",
     gradient: ["#a36e6a", "#4a664f"],
     alt: "Our moment 4",
     size: "lg",
@@ -87,7 +97,7 @@ export const PHOTO_PLACEMENTS: PhotoPlacement[] = [
   {
     id: 7,
     rotation: 5,
-    position: "top-[37%] -right-[10rem] md:-right-[17rem]",
+    position: "top-[27%] -right-[10rem] md:-right-[15rem]",
     gradient: ["#b89e68", "#4a664f"],
     alt: "Our moment 7",
     size: "md",
@@ -102,13 +112,21 @@ export const PHOTO_PLACEMENTS: PhotoPlacement[] = [
   },
   {
     id: 9,
-    rotation: -6,
+    rotation: 6,
     position: "top-[92%] -right-[12.5rem] md:-right-[22.5rem]",
     gradient: ["#4a664f", "#b89e68"],
     alt: "Our moment 9",
     size: "sm",
   },
+  {
+    id: 10,
+    rotation: -1.5,
+    position: "-bottom-16 -left-12 md:-bottom-[-4.5rem] md:-left-[9.5rem]",
+    gradient: ["#4a664f", "#c48a7f"],
+    alt: "Our moment 3",
+    size: "sm",
+  },
 ];
 
-export const MOBILE_CAROUSEL_TOP = PHOTO_PLACEMENTS.filter((p) => p.id % 2 === 1);
-export const MOBILE_CAROUSEL_BOTTOM = PHOTO_PLACEMENTS.filter((p) => p.id % 2 === 0);
+export const MOBILE_CAROUSEL_TOP = [...PHOTO_PLACEMENTS, ...PHOTO_PLACEMENTS].filter((p) => p.id % 2 === 1);
+export const MOBILE_CAROUSEL_BOTTOM = [...PHOTO_PLACEMENTS, ...PHOTO_PLACEMENTS].filter((p) => p.id % 2 === 0);
