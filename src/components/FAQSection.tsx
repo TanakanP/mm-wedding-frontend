@@ -35,7 +35,7 @@ export default function FAQSection() {
   return (
     <section
       id="garden-whispers"
-      className="garden-snap-section w-full flex flex-col bg-cream garden-texture px-4"
+      className="garden-section w-full flex flex-col bg-cream garden-texture px-4"
     >
       <div className="flex-1 flex items-center py-12">
         <div className="max-w-3xl mx-auto w-full pt-[var(--nav-offset)]">

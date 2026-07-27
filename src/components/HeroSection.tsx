@@ -206,7 +206,7 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="hero" className="garden-snap-section relative w-full flex flex-col items-center justify-center overflow-hidden bg-cream garden-texture">
+    <section id="hero" className="garden-section relative w-full flex flex-col items-center justify-center overflow-hidden bg-cream garden-texture">
       <PetalsCanvas wind={wind} />
       <motion.div
         initial={{ opacity: 0, y: 20 }}

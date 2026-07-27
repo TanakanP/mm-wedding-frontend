@@ -122,7 +122,7 @@ export default function OurStory() {
     <section
       ref={sectionRef}
       id="our-story"
-      className="garden-snap-section relative w-full flex flex-col items-center justify-center bg-cream garden-texture px-0 md:px-6 overflow-visible pt-[var(--nav-offset)] md:pt-0"
+      className="garden-section relative w-full flex flex-col items-center justify-center bg-cream garden-texture px-0 md:px-6 overflow-visible pt-[var(--nav-offset)] md:pt-0"
     >
       {IS_DEV && (
         <button

@@ -27,9 +27,7 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground`}
     >
-      <body className="h-dvh overflow-hidden font-sans">
-        {children}
-      </body>
+      <body className="font-sans">{children}</body>
     </html>
   );
 }
