@@ -1,45 +1,32 @@
-/**
- * Single source of truth for nav height / scroll offset.
- * Keep in sync with --nav-offset in globals.css.
- */
-export const NAV_SCROLL_OFFSET = 68;
-
-export const GARDEN_SLIDER_ID = "garden-slider";
-
-export function getGardenSlider(): HTMLElement | null {
-  if (typeof document === "undefined") return null;
-  return document.getElementById(GARDEN_SLIDER_ID);
-}
-
 function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-export function scrollToSection(sectionId: string, offset = NAV_SCROLL_OFFSET) {
-  const slider = getGardenSlider();
-  const el = document.getElementById(sectionId);
-  if (!slider || !el) {
-    console.warn(`[scrollToSection] Slider or element "${sectionId}" not found`);
+function scrollBehavior(): ScrollBehavior {
+  return prefersReducedMotion() ? "auto" : "smooth";
+}
+
+export function scrollToSection(sectionId: string) {
+  if (typeof document === "undefined") return;
+
+  const element = document.getElementById(sectionId);
+  if (!element) {
+    console.warn(`[scrollToSection] Element "${sectionId}" not found`);
     return;
   }
 
-  const sliderTop = slider.getBoundingClientRect().top;
-  const elTop = el.getBoundingClientRect().top;
-  const y = slider.scrollTop + (elTop - sliderTop) - offset;
-
-  slider.scrollTo({
-    top: Math.max(0, y),
-    behavior: prefersReducedMotion() ? "auto" : "smooth",
+  element.scrollIntoView({
+    behavior: scrollBehavior(),
+    block: "start",
   });
 }
 
-export function scrollSliderToTop() {
-  const slider = getGardenSlider();
-  if (!slider) return;
+export function scrollToTop() {
+  if (typeof window === "undefined") return;
 
-  slider.scrollTo({
+  window.scrollTo({
     top: 0,
-    behavior: prefersReducedMotion() ? "auto" : "smooth",
+    behavior: scrollBehavior(),
   });
 }

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "photos:optimize": "node scripts/optimize-story-photos.mjs",
+    "test": "node --test tests/*.test.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

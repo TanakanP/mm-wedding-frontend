@@ -1,10 +1,5 @@
-import { scrollToSection, NAV_SCROLL_OFFSET } from "@/lib/scroll";
+import { scrollToSection } from "@/lib/scroll";
 
 export function useScrollToSection() {
-  return (sectionId: string, offset = NAV_SCROLL_OFFSET) => {
-    scrollToSection(sectionId, offset);
-  };
+  return scrollToSection;
 }
-
-// Re-export for convenience when consuming sections
-export { NAV_SCROLL_OFFSET } from "@/lib/scroll";
