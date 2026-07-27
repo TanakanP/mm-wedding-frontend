@@ -8,7 +8,11 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { scrollToSection, scrollToTop } from "@/lib/scroll";
+import {
+  scrollToSection,
+  scrollToTop,
+  updateSectionVisibility,
+} from "@/lib/scroll";
 
 /**
  * Ordered list of chapter/section IDs for the garden walk experience.
@@ -58,21 +62,14 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const sections = getSectionElements();
     if (sections.length === 0) return;
+    const visibilityById = new Map(sections.map((section) => [section.id, 0]));
 
     const observer = new IntersectionObserver(
       (entries) => {
-        let best: IntersectionObserverEntry | null = null;
-
-        for (const entry of entries) {
-          if (
-            entry.isIntersecting &&
-            (!best || entry.intersectionRatio > best.intersectionRatio)
-          ) {
-            best = entry;
-          }
-        }
-
-        const id = best?.target.id as SectionId | undefined;
+        const id = updateSectionVisibility(
+          visibilityById,
+          entries
+        ) as SectionId | undefined;
         if (id && SECTION_IDS.includes(id)) {
           setCurrentSectionId(id);
         }

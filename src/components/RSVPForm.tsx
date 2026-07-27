@@ -7,6 +7,7 @@ import * as z from "zod";
 import { useState, useEffect, useRef, useMemo } from "react";
 import { X } from "lucide-react";
 
+import { lockDocumentScroll } from "@/lib/scroll";
 import PlantWishWall from "./PlantWishWall";
 
 const rsvpSchema = z.object({
@@ -43,12 +44,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   useEffect(() => {
     if (!isOpen) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
+    return lockDocumentScroll();
   }, [isOpen]);
 
   const {

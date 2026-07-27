@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <SectionsProvider>
       <GardenNav />
-      <main>
+      <main className="overflow-x-clip">
         <HeroSection />
         <OurStory />
         <EventDetails />
