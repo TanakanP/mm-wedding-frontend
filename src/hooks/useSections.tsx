@@ -13,26 +13,16 @@ import {
   scrollToTop,
   updateSectionVisibility,
 } from "@/lib/scroll";
+import { SECTION_IDS, type SectionId } from "@/content/wedding";
 
-/**
- * Ordered list of chapter/section IDs for the garden walk experience.
- * Add/remove here (and ensure corresponding <section id="..."> exists) to extend.
- */
-export const SECTION_IDS = [
-  "hero",
-  "our-story",
-  "garden-path",
-  "garden-whispers",
-] as const;
-
-export type SectionId = (typeof SECTION_IDS)[number];
-
-/** Friendly labels for announcements and UI. */
 const SECTION_LABELS: Record<SectionId, string> = {
-  hero: "Hero",
+  hero: "Invitation",
+  countdown: "Date and countdown",
   "our-story": "Our Story",
-  "garden-path": "The Garden Path",
-  "garden-whispers": "Garden Whispers",
+  schedule: "Schedule",
+  venue: "Venue",
+  rsvp: "RSVP",
+  "garden-whispers": "FAQ",
 };
 
 interface SectionsContextValue {
@@ -70,8 +60,8 @@ export function SectionsProvider({ children }: { children: ReactNode }) {
           visibilityById,
           entries
         ) as SectionId | undefined;
-        if (id && SECTION_IDS.includes(id)) {
-          setCurrentSectionId(id);
+        if (id && SECTION_IDS.includes(id as SectionId)) {
+          setCurrentSectionId(id as SectionId);
         }
       },
       {

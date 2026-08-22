@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import { WEDDING } from "@/content/wedding";
 import { useSections } from "@/hooks/useSections";
 
 const faqs = [
@@ -35,10 +36,9 @@ export default function FAQSection() {
   return (
     <section
       id="garden-whispers"
-      className="garden-section w-full flex flex-col bg-cream garden-texture px-4"
+      className="garden-section w-full bg-cream garden-texture px-4 py-20 md:py-28"
     >
-      <div className="flex-1 flex items-center py-12">
-        <div className="max-w-3xl mx-auto w-full pt-[var(--nav-offset)]">
+      <div className="mx-auto w-full max-w-3xl">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -61,7 +61,7 @@ export default function FAQSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className={`border rounded-lg overflow-hidden bg-background/60 backdrop-blur-sm transition-colors ${isOpen ? "border-accent-secondary/40 shadow-sm" : "border-sage/20"}`}
+                  className={`overflow-hidden rounded-sm border bg-cream/95 transition-colors ${isOpen ? "border-accent-secondary/50 shadow-sm" : "border-sage/30"}`}
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : index)}
@@ -70,12 +70,12 @@ export default function FAQSection() {
                     className="w-full px-6 py-4 flex items-center justify-between text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary/40 rounded-lg"
                   >
                     <span
-                      className={`font-medium transition-colors ${isOpen ? "text-accent-primary" : "text-foreground"}`}
+                      className={`font-medium transition-colors ${isOpen ? "text-accent-secondary" : "text-foreground"}`}
                     >
                       {faq.question}
                     </span>
                     <ChevronDown
-                      className={`w-5 h-5 transition-all duration-300 ${isOpen ? "rotate-180 text-accent-secondary" : "text-sage/60"}`}
+                      className={`h-5 w-5 transition-all duration-300 ${isOpen ? "rotate-180 text-accent-secondary" : "text-sage/60"}`}
                     />
                   </button>
 
@@ -100,12 +100,11 @@ export default function FAQSection() {
             })}
           </div>
         </div>
-      </div>
 
-      <footer className="w-full py-12 border-t border-sage/15 text-center">
+      <footer className="mt-20 w-full border-t border-sage/30 py-12 text-center">
         <div className="max-w-3xl mx-auto">
           <p className="text-sage/80 font-light tracking-wide text-sm">
-            Planted with love • M &amp; M • 5 December 2026 • The Garden Hiroen
+            Planted with love • M &amp; M • {WEDDING.dateLabel} • {WEDDING.venue.name}
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-sage/60">
             <button
@@ -120,7 +119,7 @@ export default function FAQSection() {
             </span>
           </div>
           <p className="mt-4 text-[10px] text-sage/40">
-            © The Garden Hiroen — all are welcome in spirit
+            © {WEDDING.venue.name} — all are welcome in spirit
           </p>
         </div>
       </footer>

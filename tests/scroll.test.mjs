@@ -41,7 +41,7 @@ function installBrowser({
     documentElement: { style: { overflow: rootOverflow } },
     body: { style: { overflow: bodyOverflow } },
     getElementById(id) {
-      return id === "our-story" ? section : null;
+      return id === "our-story" || id === "rsvp" ? section : null;
     },
   };
 
@@ -88,6 +88,15 @@ test("section navigation is immediate when reduced motion is requested", () => {
   assert.deepEqual(browser.getMediaQueries(), [
     "(prefers-reduced-motion: reduce)",
   ]);
+});
+
+test("RSVP navigation scrolls the editorial RSVP chapter into view", () => {
+  const browser = installBrowser();
+  scrolling.scrollToSection("rsvp");
+  assert.deepEqual(browser.getSectionOptions(), {
+    behavior: "smooth",
+    block: "start",
+  });
 });
 
 test("top navigation scrolls the document instead of a nested container", () => {

@@ -22,18 +22,6 @@
   --color-dusty: var(--color-dusty);
   --color-cream: var(--color-cream);
 
-  /* Temporary compatibility aliases for the migration (Task 1).
-   * Old pastel-* utilities are still referenced in HeroSection, OurStory,
-   * EventDetails, and FAQSection. These aliases point to the new cream base
-   * (or closest harmonious equivalent from Verdant Harmony) so section
-   * backgrounds do not silently break while components are updated in later tasks.
-   * These will be removed post-migration.
-   */
-  --color-pastel-rose: var(--color-cream);
-  --color-pastel-mint: var(--color-cream);
-  --color-pastel-cream: var(--color-cream);
-  --color-pastel-blue: var(--color-cream);
-
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
 }
@@ -85,16 +73,6 @@ body {
 .garden-section {
   width: 100%;
   scroll-margin-top: var(--nav-offset);
-}
-
-#hero,
-#our-story,
-#garden-path {
-  height: 100dvh;
-}
-
-#garden-whispers {
-  min-height: 100dvh;
 }
 
 @media (min-width: 768px) {
