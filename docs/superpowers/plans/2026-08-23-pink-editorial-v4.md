@@ -1,6 +1,6 @@
 # M&M Pink Editorial V4 Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILLS: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task, and use frontend-design:frontend-design for every implementation task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Rebuild the current wedding page as the approved nine-section V4 pink editorial invitation while preserving the existing countdown, first-visit intro, navigation, RSVP form, wish wall, and footer behavior.
 
@@ -22,6 +22,14 @@
 - When `WEDDING.venue.mapUrl` is `null`, derive a Google Maps search URL from the address and encode that exact URL in the QR code.
 - Respect `prefers-reduced-motion`; every component must render in its final stable state without essential continuous motion.
 - Do not stage, modify, or delete unrelated existing workspace changes.
+
+## Agentic Worker Design Requirements
+
+- Every worker must read and invoke `frontend-design:frontend-design` before editing files, including workers handling content contracts, visual components, responsive behavior, or acceptance fixes.
+- Every worker must treat the approved V4 reference and its nine-section specification as the visual source of truth; do not substitute a generic wedding-template aesthetic.
+- Every UI task must include screenshot critique at desktop and mobile sizes before its review checkpoint. Compare hierarchy, typography, spacing, photography, palette, and motion against V4.
+- Spend visual complexity on the approved envelope, vinyl, violet frame, schedule path, gallery, location card, final photograph, and RSVP response card. Do not reintroduce V5 floral marks.
+- The coordinating agent must include the `frontend-design:frontend-design` requirement explicitly in every subagent task prompt.
 
 ---
 
@@ -1138,4 +1146,4 @@ Expected: only pre-existing unrelated workspace changes remain. If Step 6 expose
 
 ## Execution Handoff
 
-After every task, run its focused checks and review the diff before beginning the next task. Preserve unrelated dirty files throughout execution.
+After every task, run its focused checks, review the diff, and complete the required V4 screenshot critique before beginning the next task. Preserve unrelated dirty files throughout execution. Every dispatched worker prompt must require `frontend-design:frontend-design` in addition to the execution skill selected for this plan.
