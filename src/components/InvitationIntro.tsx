@@ -102,7 +102,7 @@ export default function InvitationIntro() {
       aria-modal="true"
       aria-labelledby="invitation-intro-title"
       aria-describedby="invitation-intro-description"
-      className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-wine/70 px-5 backdrop-blur-xl"
+      className="fixed inset-0 z-[100] overflow-hidden bg-wine/70 backdrop-blur-xl"
       animate={{ opacity: opening ? 0 : 1 }}
       transition={
         reduceMotion
@@ -116,27 +116,20 @@ export default function InvitationIntro() {
       />
 
       <motion.div
-        className="relative z-10 flex w-full max-w-xl flex-col items-center"
+        className="absolute inset-x-0 top-[43%] z-10 flex flex-col items-center md:top-[54%]"
         initial={false}
         animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 12 }}
       >
-        <p className="mb-4 text-[10px] uppercase tracking-[0.32em] text-cream/80">
+        <motion.p
+          className="absolute inset-x-0 bottom-full mb-4 text-center text-[10px] uppercase tracking-[0.32em] text-cream/80 md:mb-24"
+          animate={{ opacity: opening ? 0 : 1 }}
+          transition={{ duration: reduceMotion ? 0 : 0.2 }}
+        >
           A little invitation
-        </p>
+        </motion.p>
 
-        <div className="relative w-[min(88vw,610px)] [perspective:1200px]">
-          <motion.div
-            className="relative aspect-[610/335] w-full [transform-style:preserve-3d]"
-            animate={
-              !opening
-                ? { y: 0, scale: 1 }
-                : { y: 70, scale: 0.94 }
-            }
-            transition={{
-              duration: reduceMotion ? 0 : 0.8,
-              delay: reduceMotion ? 0 : opening ? 1.85 : 0,
-            }}
-          >
+        <div className="relative h-[46vw] min-h-56 max-h-[335px] w-[min(88vw,610px)] [perspective:1200px]">
+          <div className="absolute inset-0 [transform-style:preserve-3d]">
             <div className="absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
 
             <motion.div
@@ -206,22 +199,30 @@ export default function InvitationIntro() {
                 M&amp;M
               </span>
             </motion.button>
-          </motion.div>
+          </div>
         </div>
 
-        <h2
-          id="invitation-intro-title"
-          className="mt-6 font-serif text-3xl text-cream md:text-4xl"
+        <motion.div
+          className="mt-6 text-center md:absolute md:inset-x-0 md:bottom-full md:mb-5 md:mt-0"
+          animate={{ opacity: opening ? 0 : 1 }}
+          transition={{ duration: reduceMotion ? 0 : 0.2 }}
         >
-          You&apos;re invited
-        </h2>
-        <p
-          id="invitation-intro-description"
-          className="mt-2 text-xs uppercase tracking-[0.2em] text-cream/75"
-          aria-live="polite"
-        >
-          {opening ? "Opening your invitation" : "Tap the M & M seal to open"}
-        </p>
+          <h2
+            id="invitation-intro-title"
+            className="font-serif text-3xl text-cream md:text-4xl"
+          >
+            You&apos;re invited
+          </h2>
+          <p
+            id="invitation-intro-description"
+            className="mt-2 text-xs uppercase tracking-[0.2em] text-cream/75"
+            aria-live="polite"
+          >
+            {opening
+              ? "Opening your invitation"
+              : "Tap the M & M seal to open"}
+          </p>
+        </motion.div>
       </motion.div>
     </motion.div>
   );
