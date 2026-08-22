@@ -1,7 +1,9 @@
 # Photography-First Editorial Wedding Revamp
 
-**Date:** 2026-08-22  
-**Status:** Approved design  
+**Date:** 2026-08-22
+
+**Status:** Approved design, revised to retain the existing theme
+
 **Working title:** Cinematic Memory Journal
 
 ## Purpose
@@ -20,17 +22,23 @@ preparation information without making them wait through animation.
 The visual direction combines two concepts:
 
 - **Cinematic Garden Journal:** large photographs, clean editorial grids,
-  alternating olive and cream chapters, and clear information hierarchy.
+  cream-led garden surfaces, and clear information hierarchy.
 - **Modern Memory Scrapbook:** a taped M & M invitation tag and two lightly
   rotated memory prints used as personal accents.
 
 The cinematic structure is dominant. Scrapbook treatments are limited to the
 hero tag and the story memories so the page stays refined rather than busy.
+The current website theme remains dominant: warm cream, deep green typography,
+warm gold, muted rose, sage, and the subtle garden texture. Photography creates
+the visual contrast that darker forest-colored chapters supplied in the early
+concepts.
 
 ## Goals
 
 - Make photography occupy approximately 65–75% of the perceived page journey.
 - Use all ten existing optimized photographs, each with a distinct role.
+- Retain the current garden palette and overall warmth while improving the
+  editorial composition.
 - Replace fixed-height chapters and the pinned story runway with natural page
   flow.
 - Preserve the working countdown, RSVP, FAQ, wish wall, navigation, and reduced
@@ -56,18 +64,24 @@ hero tag and the story memories so the page stays refined rather than busy.
 
 ### Palette
 
-The existing garden identity remains, with stronger dark and mid-tone chapters:
+Keep the current theme tokens as the source of truth:
 
-- Forest — `#17352B`: primary dark surface and text.
-- Moss — `#59654A`: schedule, countdown, and RSVP chapters.
-- Cream — `#F3ECDF`: main page background.
-- Paper — `#FFFAF1`: invitation tag, story copy, and light information panels.
-- Muted rose — `#B9827F`: small romantic accents and focus details.
-- Warm gold — `#C1AA73`: dates, timeline times, and restrained utility accents.
+- Deep forest — `#0C2A1F`: typography, navigation state, focus, and occasional
+  high-emphasis buttons; not a large chapter background.
+- Sage — `#4A664F`: secondary text, thin rules, timeline paths, and quiet
+  botanical details.
+- Cream — `#F7F3EB`: dominant page and section background.
+- Warm gold — `#B89E68`: dates, timeline times, buttons, and restrained utility
+  accents.
+- Muted rose — `#C48A7F`: romantic details, petals, selected states, and small
+  paper accents.
+- Dusty rose — `#A36E6A`: optional deeper rose for contrast where the muted rose
+  is too light.
 
-Texture stays subtle. The current grid may remain on quiet cream areas but must
-not cover every section. Photographs and solid color fields provide most of the
-visual structure.
+The current subtle garden grid remains on selected cream areas. Plain cream and
+slightly brighter paper-like panels create section separation without adding a
+new dark theme. Large photographs provide the strongest contrast. Full-width
+forest or moss background chapters are excluded.
 
 ### Typography
 
@@ -95,7 +109,7 @@ aspect ratios and `object-position` values so faces remain visible.
 
 | Photo | Role | Treatment |
 | --- | --- | --- |
-| 6 | Hero | Full-bleed, darker tonal treatment for the invitation tag |
+| 6 | Hero | Full-bleed, gently darkened only enough for the invitation tag |
 | 7 | Main story image | Tall cinematic crop on mobile; wide editorial crop on desktop |
 | 1 | Story memory | Small taped/rotated print |
 | 2 | Story memory | Small taped/rotated print |
@@ -124,7 +138,8 @@ eight narrative chapters plus the opening hero.
 
 ### 1. Date and Countdown
 
-- A compact moss chapter follows immediately after the hero.
+- A compact cream chapter follows immediately after the hero, separated with
+  warm-gold rules and date details.
 - It contains the calendar-style date, live countdown, and an “Add to calendar”
   action when a valid target is available.
 - This chapter is content-height, not `100dvh`.
@@ -141,6 +156,8 @@ eight narrative chapters plus the opening hero.
 
 - The event schedule becomes a visible vertical timeline.
 - Photo 3 supports the timeline.
+- The timeline uses the existing cream surface, sage path, warm-gold times, and
+  muted-rose details rather than a dark background panel.
 - Times and descriptions are visible by default; guests do not need to tap
   decorative markers to discover essential information.
 
@@ -167,7 +184,8 @@ eight narrative chapters plus the opening hero.
 ### 7. RSVP With Love
 
 - The existing RSVP form and validation behavior are preserved.
-- The trigger is a strong, visible action in a moss chapter.
+- The trigger is a strong, visible warm-gold action within a cream garden
+  chapter; deep forest may be used for hover or high-contrast text.
 - The form may remain a focused modal/sheet so its existing scroll-lock and
   completion flow can be retained.
 - The wish wall remains connected to successful RSVP data as it is today.
@@ -206,6 +224,8 @@ eight narrative chapters plus the opening hero.
   1280px.
 - Allow photographs to occupy asymmetrical two-column spreads.
 - Use full-bleed treatment only for the hero and Photo 4 interlude.
+- Keep surrounding editorial panels cream or paper-toned so the desktop layout
+  still feels like the existing website.
 - Show direct navigation links for Story, Schedule, Venue, and FAQ plus a
   distinct RSVP action.
 
@@ -279,7 +299,7 @@ not be overwritten.
 
 - Images reserve their aspect ratio so a delayed image does not collapse the
   page. Alt text communicates the image’s narrative purpose.
-- If an image fails, its reserved cream or moss surface remains readable and
+- If an image fails, its reserved cream or paper surface remains readable and
   adjacent information stays usable.
 - The countdown never displays negative values.
 - RSVP validation errors remain specific, visible, and associated with their
@@ -339,8 +359,8 @@ not be overwritten.
 
 ## Implementation Sequence
 
-1. Centralize approved content/photo metadata and establish the revised visual
-   tokens.
+1. Centralize approved content/photo metadata and preserve the existing visual
+   tokens, adding only layout-level aliases when required.
 2. Restore all chapters to natural document flow and remove obsolete pinned
    scroll behavior.
 3. Build the hero, invitation tag, countdown transition, and responsive
@@ -357,6 +377,8 @@ not be overwritten.
 
 - The page reads as one continuous photography-led invitation rather than
   separate full-screen slides.
+- The existing cream, gold, rose, sage, and subtle garden-texture identity is
+  immediately recognizable; large dark green chapter backgrounds are absent.
 - All ten existing photographs appear once in the approved roles.
 - The taped M & M invitation tag is the dominant signature element.
 - Essential date, schedule, venue, and RSVP information is readable without
