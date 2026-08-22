@@ -12,6 +12,10 @@ export type TimeLeft = {
   isPast: boolean;
 };
 
+export function shouldContinueCountdown(timeLeft: TimeLeft): boolean {
+  return !timeLeft.isPast;
+}
+
 export function getTimeLeft(targetMs: number, nowMs = Date.now()): TimeLeft {
   const isPast = nowMs >= targetMs;
   const diff = Math.max(0, targetMs - nowMs);

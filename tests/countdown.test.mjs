@@ -36,7 +36,9 @@ test("countdown returns month and precise remainder units", () => {
 });
 
 test("countdown clamps every value after the event", () => {
-  assert.deepEqual(countdown.getTimeLeft(1000, 2000), {
+  const timeLeft = countdown.getTimeLeft(1000, 2000);
+
+  assert.deepEqual(timeLeft, {
     months: 0,
     days: 0,
     hours: 0,
@@ -44,4 +46,11 @@ test("countdown clamps every value after the event", () => {
     seconds: 0,
     isPast: true,
   });
+  assert.equal(countdown.shouldContinueCountdown(timeLeft), false);
+});
+
+test("countdown continues ticking before the event", () => {
+  const timeLeft = countdown.getTimeLeft(2000, 1000);
+
+  assert.equal(countdown.shouldContinueCountdown(timeLeft), true);
 });

@@ -114,7 +114,7 @@ export default function EventDetails() {
           <button
             type="button"
             onClick={() => setIsRSVPOpen(true)}
-            className="mt-8 rounded-lg bg-accent-primary px-10 py-3 text-lg font-medium text-white shadow-sm transition-colors hover:bg-foreground"
+            className="mt-8 rounded-lg bg-accent-primary px-10 py-3 text-lg font-medium text-foreground shadow-sm transition-colors hover:bg-foreground hover:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             RSVP Now
           </button>

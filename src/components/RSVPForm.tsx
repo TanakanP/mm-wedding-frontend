@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { X } from "lucide-react";
 
 import { lockDocumentScroll } from "@/lib/scroll";
@@ -31,6 +31,14 @@ interface RSVPFormProps {
 
 const groomRelations = ["Family", "High School Friend", "University Friend", "Colleague", "Other"];
 const brideRelations = ["Family", "Childhood Friend", "University Friend", "Colleague", "Other"];
+const focusableSelector = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
 
 function motionProps<T extends object>(reduceMotion: boolean, props: T) {
   return reduceMotion ? {} : props;
@@ -40,6 +48,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState<RSVPFormValues | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+  const submissionStatusRef = useRef<HTMLParagraphElement>(null);
   const reduceMotion = Boolean(useReducedMotion());
 
   // Transient petal shower (outside the cardRef so it does not affect downloads)
@@ -63,12 +74,16 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     resolver: zodResolver(rsvpSchema),
     defaultValues: {
       drinksAlcohol: false,
+      relation: "",
     }
   });
 
   const side = watch("side");
   const attending = watch("attending");
   const relation = watch("relation");
+  const validationMessages = Object.values(errors)
+    .map((error) => error?.message)
+    .filter((message): message is string => typeof message === "string");
 
   // Trigger living petals on success mount for attending=yes (outside card)
   useEffect(() => {
@@ -97,7 +112,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     setIsSubmitted(true);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     onClose();
     // Optional: reset form after closing so it's fresh next time
     setTimeout(() => {
@@ -106,7 +121,72 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
       setShowerPetals([]);
       reset();
     }, 300);
-  };
+  }, [onClose, reset]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    openerRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+
+    const focusFrame = window.requestAnimationFrame(() => {
+      const firstFocusable = dialogRef.current?.querySelector<HTMLElement>(focusableSelector);
+      (firstFocusable ?? dialogRef.current)?.focus({ preventScroll: true });
+    });
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        handleClose();
+        return;
+      }
+
+      if (event.key !== "Tab" || !dialogRef.current) return;
+
+      const focusableElements = Array.from(
+        dialogRef.current.querySelectorAll<HTMLElement>(focusableSelector)
+      ).filter((element) => element.getClientRects().length > 0);
+
+      if (focusableElements.length === 0) {
+        event.preventDefault();
+        dialogRef.current.focus();
+        return;
+      }
+
+      const first = focusableElements[0];
+      const last = focusableElements[focusableElements.length - 1];
+      const focusIsInside = document.activeElement instanceof Node
+        && dialogRef.current.contains(document.activeElement);
+
+      if (event.shiftKey && (document.activeElement === first || !focusIsInside)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !focusIsInside)) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", handleKeyDown);
+      openerRef.current?.focus({ preventScroll: true });
+      openerRef.current = null;
+    };
+  }, [handleClose, isOpen]);
+
+  useEffect(() => {
+    if (!isSubmitted) return;
+
+    const focusFrame = window.requestAnimationFrame(() => {
+      submissionStatusRef.current?.focus({ preventScroll: true });
+    });
+
+    return () => window.cancelAnimationFrame(focusFrame);
+  }, [isSubmitted]);
 
   const triggerPetalShower = (count = 6) => {
     const newPetals = Array.from({ length: count }, (_, i) => ({
@@ -150,7 +230,13 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
             className="absolute inset-0"
             onClick={handleClose}
           />
-          <motion.div 
+          <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="rsvp-dialog-title"
+            aria-describedby="rsvp-dialog-description"
+            tabIndex={-1}
             {...motionProps(reduceMotion, {
               initial: { opacity: 0, scale: 0.95, y: 20 },
               animate: { opacity: 1, scale: 1, y: 0 },
@@ -163,13 +249,29 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
               <button 
                 onClick={handleClose}
                 className="absolute top-4 right-4 p-2 text-sage/70 hover:text-foreground transition-colors bg-cream/70 md:bg-transparent rounded-full backdrop-blur-sm md:backdrop-blur-none"
-                aria-label="Close"
+                aria-label="Close RSVP dialog"
               >
                 <X className="w-6 h-6" />
               </button>
-              <h2 className="font-serif text-4xl text-center text-accent-primary mb-2">The Invitation</h2>
+              <h2 id="rsvp-dialog-title" className="font-serif text-4xl text-center text-accent-primary mb-2">The Invitation</h2>
               <p className="text-center text-sage font-light">{WEDDING.venue.name}</p>
               <p className="text-center text-sage font-light">{WEDDING.timeLabel} | {WEDDING.dateLabel}</p>
+              <p id="rsvp-dialog-description" className="sr-only">
+                Complete this form to respond to M and M&apos;s wedding invitation.
+              </p>
+              <p
+                ref={submissionStatusRef}
+                role="status"
+                aria-live="polite"
+                tabIndex={-1}
+                className="sr-only"
+              >
+                {isSubmitting
+                  ? "Submitting your RSVP."
+                  : isSubmitted && submittedData
+                    ? `Thank you, ${submittedData.name}. Your RSVP has been received.`
+                    : ""}
+              </p>
             </div>
 
             {/* Body & Footer */}
@@ -228,7 +330,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
 
                       <button
                         onClick={downloadCard}
-                        className="bg-accent-primary hover:bg-foreground text-white px-6 py-3 rounded-lg transition-colors font-medium w-full sm:w-auto"
+                        className="bg-accent-primary hover:bg-foreground text-foreground hover:text-cream px-6 py-3 rounded-lg transition-colors font-medium w-full sm:w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                       >
                         Save Picture
                       </button>
@@ -282,35 +384,65 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                 )}
               </div>
             ) : (
-              <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden text-left">
+              <form
+                onSubmit={handleSubmit(onSubmit)}
+                aria-busy={isSubmitting}
+                className="flex flex-col flex-1 overflow-hidden text-left"
+              >
+                <p className="sr-only" role="alert">
+                  {validationMessages.length > 0
+                    ? `Please correct the RSVP form. ${validationMessages.join(". ")}.`
+                    : ""}
+                </p>
                 {/* Scrollable Form Body */}
                 <div className="flex-1 overflow-y-auto bg-cream p-6 sm:p-8 md:px-12 md:py-8 flex flex-col gap-4 md:gap-6">
                   {/* 1. Name */}
                   <div className="shrink-0">
-                    <label className="block text-sm font-medium text-foreground mb-1">Tell us your name</label>
+                    <label htmlFor="rsvp-name" className="block text-sm font-medium text-foreground mb-1">Tell us your name</label>
                     <input
+                      id="rsvp-name"
                       {...register("name")}
+                      aria-invalid={Boolean(errors.name)}
+                      aria-describedby={errors.name ? "rsvp-name-error" : undefined}
                       className="w-full sm:w-2/3 md:w-1/2 px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
                       placeholder="John & Jane Doe"
                     />
-                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>}
+                    {errors.name && <p id="rsvp-name-error" className="text-red-700 text-sm mt-1">{errors.name.message}</p>}
                   </div>
 
                   {/* 2. Side (Groom/Bride) */}
-                  <div className="shrink-0">
-                    <label className="block text-sm font-medium text-foreground mb-2">Which side are you from?</label>
+                  <fieldset
+                    className="shrink-0"
+                    aria-invalid={Boolean(errors.side)}
+                    aria-describedby={errors.side ? "rsvp-side-error" : undefined}
+                  >
+                    <legend className="block text-sm font-medium text-foreground mb-2">Which side are you from?</legend>
                     <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" value="groom" {...register("side")} className="accent-accent-secondary" />
+                      <label htmlFor="rsvp-side-groom" className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          id="rsvp-side-groom"
+                          type="radio"
+                          value="groom"
+                          {...register("side")}
+                          aria-describedby={errors.side ? "rsvp-side-error" : undefined}
+                          className="accent-accent-secondary"
+                        />
                         <span className="text-foreground/80">Groom</span>
                       </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" value="bride" {...register("side")} className="accent-accent-secondary" />
+                      <label htmlFor="rsvp-side-bride" className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          id="rsvp-side-bride"
+                          type="radio"
+                          value="bride"
+                          {...register("side")}
+                          aria-describedby={errors.side ? "rsvp-side-error" : undefined}
+                          className="accent-accent-secondary"
+                        />
                         <span className="text-foreground/80">Bride</span>
                       </label>
                     </div>
-                    {errors.side && <p className="text-red-500 text-sm mt-1">{errors.side.message}</p>}
-                  </div>
+                    {errors.side && <p id="rsvp-side-error" className="text-red-700 text-sm mt-1">{errors.side.message}</p>}
+                  </fieldset>
 
                   {/* 3. Relation Dropdown */}
                   <AnimatePresence>
@@ -325,9 +457,12 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                       >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
                           <div>
-                            <label className="block text-sm font-medium text-foreground mb-1">Relationship</label>
+                            <label htmlFor="rsvp-relation" className="block text-sm font-medium text-foreground mb-1">Relationship</label>
                             <select
+                              id="rsvp-relation"
                               {...register("relation")}
+                              aria-invalid={Boolean(errors.relation)}
+                              aria-describedby={errors.relation ? "rsvp-relation-error" : undefined}
                               className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
                             >
                               <option value="">Select a relationship...</option>
@@ -335,7 +470,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                                 <option key={rel} value={rel}>{rel}</option>
                               ))}
                             </select>
-                            {errors.relation && <p className="text-red-500 text-sm mt-1">{errors.relation.message}</p>}
+                            {errors.relation && <p id="rsvp-relation-error" className="text-red-700 text-sm mt-1">{errors.relation.message}</p>}
                           </div>
 
                           <AnimatePresence>
@@ -347,8 +482,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                                   exit: { opacity: 0 },
                                 })}
                               >
-                                <label className="block text-sm font-medium text-foreground mb-1">Please specify</label>
+                                <label htmlFor="rsvp-other-relation" className="block text-sm font-medium text-foreground mb-1">Please specify</label>
                                 <input
+                                  id="rsvp-other-relation"
                                   {...register("otherRelation")}
                                   className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
                                   placeholder="e.g., Friend of parent"
@@ -362,20 +498,38 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   </AnimatePresence>
 
                   {/* 4. Attending */}
-                  <div className="shrink-0">
-                    <label className="block text-sm font-medium text-foreground mb-2">Will you be attending?</label>
+                  <fieldset
+                    className="shrink-0"
+                    aria-invalid={Boolean(errors.attending)}
+                    aria-describedby={errors.attending ? "rsvp-attending-error" : undefined}
+                  >
+                    <legend className="block text-sm font-medium text-foreground mb-2">Will you be attending?</legend>
                     <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" value="yes" {...register("attending")} className="accent-accent-secondary" />
+                      <label htmlFor="rsvp-attending-yes" className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          id="rsvp-attending-yes"
+                          type="radio"
+                          value="yes"
+                          {...register("attending")}
+                          aria-describedby={errors.attending ? "rsvp-attending-error" : undefined}
+                          className="accent-accent-secondary"
+                        />
                         <span className="text-foreground/80">Joyfully Accepts</span>
                       </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input type="radio" value="no" {...register("attending")} className="accent-accent-secondary" />
+                      <label htmlFor="rsvp-attending-no" className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          id="rsvp-attending-no"
+                          type="radio"
+                          value="no"
+                          {...register("attending")}
+                          aria-describedby={errors.attending ? "rsvp-attending-error" : undefined}
+                          className="accent-accent-secondary"
+                        />
                         <span className="text-foreground/80">Regretfully Declines</span>
                       </label>
                     </div>
-                    {errors.attending && <p className="text-red-500 text-sm mt-1">{errors.attending.message}</p>}
-                  </div>
+                    {errors.attending && <p id="rsvp-attending-error" className="text-red-700 text-sm mt-1">{errors.attending.message}</p>}
+                  </fieldset>
 
                   <AnimatePresence mode="wait">
                     {/* Logic if Attending */}
@@ -391,8 +545,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                       >
                         {/* Guest Count */}
                         <div>
-                          <label className="block text-sm font-medium text-foreground mb-1">How many follower(s)?</label>
+                          <label htmlFor="rsvp-guest-count" className="block text-sm font-medium text-foreground mb-1">How many follower(s)?</label>
                           <input
+                            id="rsvp-guest-count"
                             type="number"
                             min="1"
                             {...register("guestCount")}
@@ -403,11 +558,17 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
 
                         {/* Alcohol Checkbox */}
                         <div>
-                          <label className="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" {...register("drinksAlcohol")} className="accent-accent-secondary" />
+                          <label htmlFor="rsvp-drinks-alcohol" className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              id="rsvp-drinks-alcohol"
+                              type="checkbox"
+                              {...register("drinksAlcohol")}
+                              aria-describedby="rsvp-drinks-alcohol-help"
+                              className="accent-accent-secondary"
+                            />
                             <span className="text-foreground font-medium">I will be drinking alcohol</span>
                           </label>
-                          <p className="text-xs text-sage mt-1.5 italic">
+                          <p id="rsvp-drinks-alcohol-help" className="text-xs text-sage mt-1.5 italic">
                             * Our alcohol will be only beers and liquors
                           </p>
                         </div>
@@ -427,8 +588,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                         className="overflow-hidden shrink-0"
                       >
                         <div>
-                          <label className="block text-sm font-medium text-foreground mb-1">A Note for the Couple</label>
+                          <label htmlFor="rsvp-message" className="block text-sm font-medium text-foreground mb-1">A Note for the Couple</label>
                           <textarea
+                            id="rsvp-message"
                             {...register("message")}
                             rows={4}
                             className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors resize-none bg-cream"
@@ -445,7 +607,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-accent-primary hover:bg-foreground text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-70"
+                    className="w-full bg-accent-primary hover:bg-foreground text-foreground hover:text-cream font-medium py-3 rounded-lg transition-colors disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
                     {isSubmitting ? "Sending..." : "Submit"}
                   </button>

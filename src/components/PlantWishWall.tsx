@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 
 interface Wish {
@@ -23,16 +23,30 @@ const sampleWishes: Omit<Wish, "id">[] = [
   { name: "The Garden Club", message: "To the most beautiful bloom of all — your union." },
 ];
 
-function WishFlower({ wish, isNew, onSelect }: { wish: Wish; isNew?: boolean; onSelect: (w: Wish) => void }) {
+function WishFlower({
+  wish,
+  isNew,
+  onSelect,
+  reduceMotion,
+}: {
+  wish: Wish;
+  isNew?: boolean;
+  onSelect: (w: Wish) => void;
+  reduceMotion: boolean;
+}) {
   return (
     <motion.button
       type="button"
       onClick={() => onSelect(wish)}
-      initial={{ scale: isNew ? 0.2 : 0.6, opacity: 0, y: 10 }}
-      animate={{ scale: 1, opacity: 1, y: 0 }}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.96 }}
-      transition={{ type: "spring", stiffness: 180, damping: 14, delay: isNew ? 0.05 : 0 }}
+      {...(reduceMotion
+        ? {}
+        : {
+            initial: { scale: isNew ? 0.2 : 0.6, opacity: 0, y: 10 },
+            animate: { scale: 1, opacity: 1, y: 0 },
+            whileHover: { scale: 1.08 },
+            whileTap: { scale: 0.96 },
+            transition: { type: "spring", stiffness: 180, damping: 14, delay: isNew ? 0.05 : 0 },
+          })}
       className="group relative flex flex-col items-center focus:outline-none"
       aria-label={`Wish from ${wish.name}`}
     >
@@ -70,6 +84,7 @@ function WishFlower({ wish, isNew, onSelect }: { wish: Wish; isNew?: boolean; on
 }
 
 export default function PlantWishWall({ userWish }: PlantWishWallProps) {
+  const reduceMotion = Boolean(useReducedMotion());
   const [wishes, setWishes] = useState<Wish[]>(() =>
     sampleWishes.map((w, index) => ({ ...w, id: 1000 + index }))
   );
@@ -138,6 +153,7 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
             wish={wish}
             isNew={index === wishes.length - 1 && !!userWish}
             onSelect={handleSelect}
+            reduceMotion={reduceMotion}
           />
         ))}
 
@@ -150,10 +166,14 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
         {selectedWish && (
           <motion.div
             key={selectedWish.id}
-            initial={{ opacity: 0, y: 6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.985 }}
-            transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+            {...(reduceMotion
+              ? {}
+              : {
+                  initial: { opacity: 0, y: 6, scale: 0.98 },
+                  animate: { opacity: 1, y: 0, scale: 1 },
+                  exit: { opacity: 0, y: -4, scale: 0.985 },
+                  transition: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+                })}
             className="mt-3 mx-auto max-w-[28ch] text-center"
           >
             <div className="inline-block px-4 py-2 rounded-xl bg-background/80 border border-sage/15 text-sm text-foreground font-light tracking-tight shadow-sm">

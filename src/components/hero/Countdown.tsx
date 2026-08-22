@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getTimeLeft } from "@/lib/countdown";
+import { getTimeLeft, shouldContinueCountdown } from "@/lib/countdown";
 
 const unitLabels = ["MONTHS", "DAYS", "HOURS", "MINUTES", "SECONDS"] as const;
 
@@ -10,11 +10,26 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
   const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(targetMs));
 
   useEffect(() => {
-    const update = () => setTimeLeft(getTimeLeft(targetMs));
+    let interval: number | undefined;
+    const update = () => {
+      const nextTimeLeft = getTimeLeft(targetMs);
+      setTimeLeft(nextTimeLeft);
 
-    update();
-    const interval = window.setInterval(update, 1000);
-    return () => window.clearInterval(interval);
+      if (!shouldContinueCountdown(nextTimeLeft) && interval !== undefined) {
+        window.clearInterval(interval);
+        interval = undefined;
+      }
+
+      return nextTimeLeft;
+    };
+
+    if (shouldContinueCountdown(update())) {
+      interval = window.setInterval(update, 1000);
+    }
+
+    return () => {
+      if (interval !== undefined) window.clearInterval(interval);
+    };
   }, [targetMs]);
 
   if (timeLeft.isPast) {

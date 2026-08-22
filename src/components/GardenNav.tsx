@@ -54,7 +54,7 @@ export default function GardenNav() {
                       ? "bg-accent-secondary/15 font-medium text-accent-secondary"
                       : "text-foreground/70 hover:bg-sage/10 hover:text-foreground"
                   }`}
-                  aria-current={isActive ? "page" : undefined}
+                  aria-current={isActive ? "location" : undefined}
                 >
                   {item.label}
                 </button>
@@ -88,7 +88,7 @@ export default function GardenNav() {
                         ? "bg-accent-secondary/15 font-medium text-accent-secondary"
                         : "text-foreground hover:bg-sage/10"
                     }`}
-                    aria-current={isActive ? "page" : undefined}
+                    aria-current={isActive ? "location" : undefined}
                   >
                     {item.label}
                   </button>
@@ -103,7 +103,7 @@ export default function GardenNav() {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.975 }}
           transition={{ type: "spring", stiffness: 260, damping: 18 }}
-          className="bg-accent-primary text-white text-xs md:text-sm font-medium px-3.5 md:px-5 py-1 md:py-1.5 rounded-full shadow-sm hover:bg-foreground transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-cream focus-visible:ring-accent-primary/70 flex items-center gap-1 shrink-0"
+          className="bg-accent-primary text-foreground text-xs md:text-sm font-medium px-3.5 md:px-5 py-1 md:py-1.5 rounded-full shadow-sm hover:bg-foreground hover:text-cream transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-cream focus-visible:ring-accent-primary/70 flex items-center gap-1 shrink-0"
           aria-label="Scroll to RSVP"
         >
           RSVP
