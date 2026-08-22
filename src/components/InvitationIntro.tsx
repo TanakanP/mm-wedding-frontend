@@ -1,8 +1,9 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { WEDDING } from "@/content/wedding";
+import { PHOTOS } from "@/content/wedding";
 import {
   INVITATION_REPLAY_EVENT,
   INVITATION_STORAGE_KEY,
@@ -101,7 +102,7 @@ export default function InvitationIntro() {
       aria-modal="true"
       aria-labelledby="invitation-intro-title"
       aria-describedby="invitation-intro-description"
-      className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-foreground/35 px-5 backdrop-blur-xl"
+      className="fixed inset-0 z-[100] grid place-items-center overflow-hidden bg-wine/70 px-5 backdrop-blur-xl"
       animate={{ opacity: opening ? 0 : 1 }}
       transition={
         reduceMotion
@@ -110,7 +111,7 @@ export default function InvitationIntro() {
       }
     >
       <div
-        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(247,243,235,0.32),transparent_46%),linear-gradient(145deg,rgba(12,42,31,0.28),rgba(196,138,127,0.16))]"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,250,243,0.22),transparent_46%),linear-gradient(145deg,rgba(81,49,58,0.46),rgba(169,112,124,0.24))]"
         aria-hidden="true"
       />
 
@@ -123,60 +124,67 @@ export default function InvitationIntro() {
           A little invitation
         </p>
 
-        <div className="relative w-[min(86vw,520px)] [perspective:1200px]">
+        <div className="relative w-[min(88vw,610px)] [perspective:1200px]">
           <motion.div
-            className="relative aspect-[16/10] w-full [transform-style:preserve-3d]"
+            className="relative aspect-[610/335] w-full [transform-style:preserve-3d]"
             animate={
-              reduceMotion || !opening
+              !opening
                 ? { y: 0, scale: 1 }
                 : { y: 70, scale: 0.94 }
             }
-            transition={{ duration: 0.8, delay: opening ? 1.85 : 0 }}
+            transition={{
+              duration: reduceMotion ? 0 : 0.8,
+              delay: reduceMotion ? 0 : opening ? 1.85 : 0,
+            }}
           >
-            <div className="absolute inset-0 rounded-sm bg-[#eadfcd] shadow-[0_28px_65px_rgba(12,42,31,0.28)]" />
+            <div className="absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
 
             <motion.div
               aria-hidden={!opening}
-              className="absolute inset-x-[8%] top-[9%] z-[2] flex h-[82%] flex-col items-center justify-center border border-accent-primary/40 bg-[#fffaf1] px-8 text-center text-foreground shadow-lg"
+              className="absolute inset-x-[8%] top-[9%] z-[2] h-[82%] bg-cream p-2 pb-8 text-foreground shadow-[0_14px_30px_rgba(60,30,38,0.24)] md:p-3 md:pb-10"
               animate={
-                reduceMotion || !opening
+                !opening
                   ? { y: "8%", rotate: -1, opacity: 0 }
-                  : { y: "-72%", rotate: 1.5, opacity: 1 }
+                  : { y: "-62%", rotate: 1.5, opacity: 1 }
               }
               transition={{
-                duration: 1.05,
-                delay: opening ? 0.72 : 0,
+                duration: reduceMotion ? 0 : 1.05,
+                delay: reduceMotion ? 0 : opening ? 0.72 : 0,
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
-              <p className="text-[9px] uppercase tracking-[0.24em] text-accent-primary">
-                Together with our families
-              </p>
-              <p className="mt-3 font-serif text-5xl leading-none md:text-6xl">
-                M &amp; M
-              </p>
-              <div className="my-4 h-px w-16 bg-accent-primary/60" aria-hidden="true" />
-              <p className="text-xs uppercase tracking-[0.16em]">
-                {WEDDING.dateLabel}
-              </p>
-              <p className="mt-1 text-xs text-foreground/65">
-                {WEDDING.venue.name}
-              </p>
+              <div className="relative h-full overflow-hidden">
+                <Image
+                  src={PHOTOS[1].src}
+                  alt={PHOTOS[1].alt}
+                  fill
+                  loading="eager"
+                  sizes="(max-width: 768px) 74vw, 500px"
+                  className="object-cover"
+                  style={{ objectPosition: PHOTOS[1].objectPosition }}
+                />
+              </div>
+              <span className="absolute inset-x-0 bottom-2 text-center font-serif text-sm italic md:bottom-3 md:text-base">
+                You&apos;re invited
+              </span>
             </motion.div>
 
             <motion.div
-              className="absolute inset-x-0 top-0 z-[4] h-[56%] origin-top bg-[#f3eadc] [clip-path:polygon(0_0,100%_0,50%_100%)]"
-              animate={{ rotateX: opening && !reduceMotion ? 178 : 0 }}
-              transition={{ duration: 0.72, ease: [0.65, 0, 0.35, 1] }}
+              className="absolute inset-x-0 top-0 z-[4] h-[58%] origin-top bg-paper [clip-path:polygon(0_0,100%_0,50%_100%)]"
+              animate={{ rotateX: opening ? 178 : 0 }}
+              transition={{
+                duration: reduceMotion ? 0 : 0.72,
+                ease: [0.65, 0, 0.35, 1],
+              }}
               style={{ backfaceVisibility: "hidden" }}
             />
 
             <div
-              className="absolute inset-0 z-[3] rounded-sm bg-[#efe4d3] [clip-path:polygon(0_18%,50%_60%,100%_18%,100%_100%,0_100%)]"
+              className="absolute inset-0 z-[3] bg-petal [clip-path:polygon(0_12%,50%_60%,100%_12%,100%_100%,0_100%)]"
               aria-hidden="true"
             />
             <div
-              className="absolute inset-0 z-[3] rounded-sm border border-white/50 [clip-path:polygon(0_18%,50%_60%,100%_18%,100%_100%,0_100%)]"
+              className="absolute inset-0 z-[3] border border-cream/35 [clip-path:polygon(0_12%,50%_60%,100%_12%,100%_100%,0_100%)]"
               aria-hidden="true"
             />
 
@@ -186,15 +194,15 @@ export default function InvitationIntro() {
               onClick={openInvitation}
               disabled={opening || stage === "checking"}
               aria-label="Open M and M wedding invitation"
-              className={`absolute left-1/2 top-[56%] z-[5] grid h-20 w-20 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-foreground/15 bg-accent-primary text-foreground shadow-[0_10px_24px_rgba(12,42,31,0.24)] outline-none focus-visible:ring-4 focus-visible:ring-cream/80 disabled:pointer-events-none md:h-24 md:w-24 ${reduceMotion ? "" : "transition-transform hover:scale-105"}`}
+              className={`absolute left-1/2 top-[54%] z-[5] grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-foreground/15 bg-accent-primary text-foreground shadow-[0_11px_25px_rgba(75,44,34,0.22)] outline-none focus-visible:ring-4 focus-visible:ring-cream/80 disabled:pointer-events-none md:h-[68px] md:w-[68px] ${reduceMotion ? "" : "transition-transform hover:scale-105"}`}
               animate={
-                reduceMotion || !opening
+                !opening
                   ? { opacity: 1, scale: 1 }
                   : { opacity: 0, scale: 0.55, rotate: -12 }
               }
-              transition={{ duration: 0.35 }}
+              transition={{ duration: reduceMotion ? 0 : 0.35 }}
             >
-              <span className="font-serif text-lg tracking-[0.08em] md:text-xl">
+              <span className="font-serif text-sm tracking-[0.08em]">
                 M&amp;M
               </span>
             </motion.button>

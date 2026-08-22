@@ -34,7 +34,7 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
 
   if (timeLeft.isPast) {
     return (
-      <div className="mt-10 text-[10px] tracking-[0.2em] uppercase text-accent-primary">
+      <div className="mt-10 text-[10px] uppercase tracking-[0.2em] text-accent-primary">
         THE NEW CHAPTER BEGINS TODAY, SEE YOU SOON.
       </div>
     );
@@ -50,16 +50,22 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
 
   return (
     <div className="mt-10" suppressHydrationWarning>
-      <div className="text-[10px] tracking-[0.2em] uppercase text-accent-primary mb-3">
+      <div className="mb-4 text-[10px] uppercase tracking-[0.2em] text-petal">
         The new chapter awaits in
       </div>
-      <div className="flex items-baseline justify-center gap-4 sm:gap-6 md:gap-8 font-light text-foreground">
+      <div className="grid grid-cols-2 items-start gap-x-3 gap-y-5 font-light text-cream sm:grid-cols-5 sm:gap-x-5 md:gap-x-7">
         {unitLabels.map((label, index) => (
-          <div key={label} className="text-center">
-            <div className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl tabular-nums" suppressHydrationWarning>
+          <div
+            key={label}
+            className={`text-center ${index === unitLabels.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
+          >
+            <div
+              className="font-serif text-3xl tabular-nums sm:text-4xl md:text-5xl lg:text-6xl"
+              suppressHydrationWarning
+            >
               {values[index]}
             </div>
-            <div className="text-[8px] sm:text-[9px] md:text-[10px] tracking-[0.2em] mt-1 text-sage">
+            <div className="mt-1 text-[8px] tracking-[0.2em] text-petal sm:text-[9px] md:text-[10px]">
               {label}
             </div>
           </div>
