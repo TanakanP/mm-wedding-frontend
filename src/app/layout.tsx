@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
+import { WEDDING } from "@/content/wedding";
 import "./globals.css";
 
 const inter = Inter({
@@ -13,8 +14,8 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "M & M Wedding | The Garden Hiroen",
-  description: "Join us in the gardens on 5 December 2026 for our Garden Hiroen celebration.",
+  title: `${WEDDING.couple} Wedding | ${WEDDING.venue.name}`,
+  description: `Join us on ${WEDDING.dateLabel} for our celebration at ${WEDDING.venue.name}.`,
 };
 
 export default function RootLayout({
