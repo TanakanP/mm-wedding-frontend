@@ -16,13 +16,16 @@ import {
 import { SECTION_IDS, type SectionId } from "@/content/wedding";
 
 const SECTION_LABELS: Record<SectionId, string> = {
-  hero: "Invitation",
-  countdown: "Date and countdown",
-  "our-story": "Our Story",
+  hero: "Opening invitation",
+  families: "Together with our families",
+  "framed-photo": "Framed memory",
+  "dress-code": "Dress code",
   schedule: "Schedule",
-  venue: "Venue",
+  gallery: "Photo gallery",
+  venue: "Location",
+  "final-image": "Final memory",
   rsvp: "RSVP",
-  "garden-whispers": "FAQ",
+  "garden-whispers": "Frequently asked questions",
 };
 
 interface SectionsContextValue {

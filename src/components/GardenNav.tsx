@@ -23,7 +23,7 @@ export default function GardenNav() {
       initial={false}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -10 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-cream/95 backdrop-blur-md border-b border-sage/15"
+      className="fixed top-0 left-0 right-0 z-50 border-b border-wine/15 bg-cream/95 backdrop-blur-md"
       aria-label="Primary garden navigation"
       aria-hidden={!isVisible}
       inert={!isVisible}
@@ -35,7 +35,7 @@ export default function GardenNav() {
             scrollToTop();
             setIsMenuOpen(false);
           }}
-          className="font-serif text-lg md:text-xl tracking-[0.5px] text-foreground/80 hover:text-accent-primary transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary/50 rounded px-1 shrink-0"
+          className="shrink-0 rounded px-1 font-serif text-lg tracking-[0.5px] text-wine transition-colors hover:text-accent-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-wine/50 md:text-xl"
           aria-label="Scroll to top"
         >
           M &amp; M
@@ -49,10 +49,10 @@ export default function GardenNav() {
                 <button
                   key={item.id}
                   onClick={() => navigateTo(item.id)}
-                  className={`rounded-full px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary/50 ${
+                  className={`rounded-full px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-wine/50 ${
                     isActive
-                      ? "bg-accent-secondary/15 font-medium text-accent-secondary"
-                      : "text-foreground/70 hover:bg-sage/10 hover:text-foreground"
+                      ? "bg-petal font-medium text-wine"
+                      : "text-wine/70 hover:bg-petal/60 hover:text-wine"
                   }`}
                   aria-current={isActive ? "location" : undefined}
                 >
@@ -65,7 +65,7 @@ export default function GardenNav() {
           <button
             type="button"
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="rounded-full border border-sage/30 px-3 py-1.5 text-xs font-medium tracking-wide text-foreground md:hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary/60"
+            className="rounded-full border border-wine/30 px-3 py-1.5 text-xs font-medium tracking-wide text-wine focus:outline-none focus-visible:ring-2 focus-visible:ring-dusty/70 md:hidden"
             aria-expanded={isMenuOpen}
             aria-controls="garden-mobile-menu"
           >
@@ -75,7 +75,7 @@ export default function GardenNav() {
           {isMenuOpen && (
             <div
               id="garden-mobile-menu"
-              className="absolute right-0 top-full z-10 mt-2 w-48 rounded-sm border border-sage/20 bg-cream p-2 shadow-lg md:hidden"
+              className="absolute right-0 top-full z-10 mt-2 w-48 rounded-sm border border-wine/20 bg-cream p-2 shadow-lg md:hidden"
             >
               {NAV_ITEMS.map((item) => {
                 const isActive = currentSectionId === item.id;
@@ -83,10 +83,10 @@ export default function GardenNav() {
                   <button
                     key={item.id}
                     onClick={() => navigateTo(item.id)}
-                    className={`block w-full rounded-sm px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary/60 ${
+                    className={`block w-full rounded-sm px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-wine/60 ${
                       isActive
-                        ? "bg-accent-secondary/15 font-medium text-accent-secondary"
-                        : "text-foreground hover:bg-sage/10"
+                        ? "bg-petal font-medium text-wine"
+                        : "text-wine hover:bg-petal/60"
                     }`}
                     aria-current={isActive ? "location" : undefined}
                   >
@@ -103,13 +103,10 @@ export default function GardenNav() {
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.975 }}
           transition={{ type: "spring", stiffness: 260, damping: 18 }}
-          className="bg-accent-primary text-foreground text-xs md:text-sm font-medium px-3.5 md:px-5 py-1 md:py-1.5 rounded-full shadow-sm hover:bg-foreground hover:text-cream transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-offset-cream focus-visible:ring-accent-primary/70 flex items-center gap-1 shrink-0"
+          className="shrink-0 rounded-full bg-wine px-3.5 py-1 text-xs font-medium text-cream shadow-sm transition-colors hover:bg-dusty hover:text-wine focus:outline-none focus-visible:ring-2 focus-visible:ring-wine/70 focus-visible:ring-offset-1 focus-visible:ring-offset-cream md:px-5 md:py-1.5 md:text-sm"
           aria-label="Scroll to RSVP"
         >
           RSVP
-          <span aria-hidden="true" className="text-[9px] opacity-80">
-            ✿
-          </span>
         </motion.button>
       </div>
     </motion.nav>

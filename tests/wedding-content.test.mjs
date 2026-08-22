@@ -32,6 +32,13 @@ test("V4 exposes exactly nine editable sections in the approved order", () => {
   assert.equal(new Set(content.V4_SECTION_IDS).size, 9);
 });
 
+test("navigation links to the approved V4 chapters", () => {
+  assert.deepEqual(
+    content.NAV_ITEMS.map((item) => item.id),
+    ["families", "schedule", "gallery", "venue", "garden-whispers"]
+  );
+});
+
 test("V4 assigns every primary photograph once", () => {
   assert.deepEqual(content.EDITORIAL_PHOTO_IDS, [6, 1, 7, 2, 8, 3, 5, 4, 10, 9]);
   assert.equal(new Set(content.EDITORIAL_PHOTO_IDS).size, 10);
