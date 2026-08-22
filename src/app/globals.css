@@ -1,15 +1,17 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f7f3eb; /* Cream Base */
-  --foreground: #0c2a1f; /* Deep Forest */
-  --color-accent-primary: #b89e68; /* Warm Gold */
-  --color-accent-secondary: #c48a7f; /* Muted Rose */
-  --color-sage: #4a664f;
-  --color-dusty: #a36e6a;
-  --color-cream: #f7f3eb;
-
-  /* Single source of truth for fixed nav height + scroll offsets */
+  --background: #fffaf3;
+  --foreground: #51313a;
+  --color-accent-primary: #bda56e;
+  --color-accent-secondary: #a9707c;
+  --color-sage: #756078;
+  --color-dusty: #c7929b;
+  --color-cream: #fffaf3;
+  --color-paper: #f8eee9;
+  --color-petal: #eed4d8;
+  --color-wine: #68414b;
+  --color-violet: #756078;
   --nav-offset: 48px;
 }
 
@@ -21,6 +23,10 @@
   --color-sage: var(--color-sage);
   --color-dusty: var(--color-dusty);
   --color-cream: var(--color-cream);
+  --color-paper: var(--color-paper);
+  --color-petal: var(--color-petal);
+  --color-wine: var(--color-wine);
+  --color-violet: var(--color-violet);
 
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-serif: var(--font-playfair), ui-serif, Georgia, serif;
@@ -42,11 +48,11 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Subtle garden textures */
+/* Subtle paper grain */
 .garden-texture {
-  background-image: 
-    linear-gradient(rgba(74, 102, 79, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(74, 102, 79, 0.03) 1px, transparent 1px);
+  background-image:
+    linear-gradient(rgba(81, 49, 58, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(81, 49, 58, 0.018) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 

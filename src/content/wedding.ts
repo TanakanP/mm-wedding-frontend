@@ -1,18 +1,23 @@
-export const SECTION_IDS = [
+export const V4_SECTION_IDS = [
   "hero",
-  "countdown",
-  "our-story",
+  "families",
+  "framed-photo",
+  "dress-code",
   "schedule",
+  "gallery",
   "venue",
+  "final-image",
   "rsvp",
-  "garden-whispers",
 ] as const;
+
+export const SECTION_IDS = [...V4_SECTION_IDS, "garden-whispers"] as const;
 
 export type SectionId = (typeof SECTION_IDS)[number];
 
 export const NAV_ITEMS = [
-  { id: "our-story", label: "Our Story" },
+  { id: "families", label: "Invitation" },
   { id: "schedule", label: "Schedule" },
+  { id: "gallery", label: "Gallery" },
   { id: "venue", label: "Venue" },
   { id: "garden-whispers", label: "FAQ" },
 ] as const satisfies readonly { id: SectionId; label: string }[];
@@ -29,6 +34,22 @@ export const WEDDING = {
     address: "456 Celebration Lane, New York, NY",
     mapUrl: null as string | null,
     calendarUrl: null as string | null,
+  },
+  song: {
+    title: "Our song",
+    audioUrl: null as string | null,
+  },
+  dressCode: {
+    title: "Pink garden formal",
+    description:
+      "Soft rose, violet, champagne, blush, and warm neutral tones are warmly welcomed.",
+    colors: [
+      { label: "Deep wine", value: "#68414B" },
+      { label: "Violet", value: "#756078" },
+      { label: "Muted rose", value: "#A9707C" },
+      { label: "Dusty pink", value: "#C7929B" },
+      { label: "Champagne gold", value: "#BDA56E" },
+    ],
   },
   story:
     "Some paths in life are wandered alone, and some are found together. Ours began in a quiet garden café, grew through seasons of laughter and patience, and led us here — to this day, surrounded by the people we love most. We are grateful you are part of our story.",
@@ -51,4 +72,6 @@ export const PHOTOS = {
   10: { id: 10, src: "/photos/display/10.jpeg", alt: "M and M together during a garden journey", objectPosition: "50% 45%" },
 } as const;
 
-export const EDITORIAL_PHOTO_IDS = [6, 7, 1, 2, 3, 4, 10, 5, 8, 9] as const;
+export const EDITORIAL_PHOTO_IDS = [6, 1, 7, 2, 8, 3, 5, 4, 10, 9] as const;
+
+export const V4_GALLERY_PHOTO_IDS = [8, 3, 5, 4] as const;

@@ -17,9 +17,25 @@ const content = await import(
   `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`
 );
 
-test("editorial photo plan uses every photo exactly once", () => {
-  assert.deepEqual(content.EDITORIAL_PHOTO_IDS, [6, 7, 1, 2, 3, 4, 10, 5, 8, 9]);
+test("V4 exposes exactly nine editable sections in the approved order", () => {
+  assert.deepEqual(content.V4_SECTION_IDS, [
+    "hero",
+    "families",
+    "framed-photo",
+    "dress-code",
+    "schedule",
+    "gallery",
+    "venue",
+    "final-image",
+    "rsvp",
+  ]);
+  assert.equal(new Set(content.V4_SECTION_IDS).size, 9);
+});
+
+test("V4 assigns every primary photograph once", () => {
+  assert.deepEqual(content.EDITORIAL_PHOTO_IDS, [6, 1, 7, 2, 8, 3, 5, 4, 10, 9]);
   assert.equal(new Set(content.EDITORIAL_PHOTO_IDS).size, 10);
+  assert.deepEqual(content.V4_GALLERY_PHOTO_IDS, [8, 3, 5, 4]);
   assert.equal(Object.keys(content.PHOTOS).length, 10);
   for (const photo of Object.values(content.PHOTOS)) {
     assert.match(photo.src, /^\/photos\/display\/\d+\.jpeg$/);
@@ -27,18 +43,13 @@ test("editorial photo plan uses every photo exactly once", () => {
   }
 });
 
-test("navigation observes every meaningful editorial chapter", () => {
-  assert.deepEqual(content.SECTION_IDS, [
-    "hero",
-    "countdown",
-    "our-story",
-    "schedule",
-    "venue",
-    "rsvp",
-    "garden-whispers",
-  ]);
+test("song and dress-code content have stable fallbacks", () => {
+  assert.deepEqual(content.WEDDING.song, {
+    title: "Our song",
+    audioUrl: null,
+  });
   assert.deepEqual(
-    content.NAV_ITEMS.map((item) => item.id),
-    ["our-story", "schedule", "venue", "garden-whispers"]
+    content.WEDDING.dressCode.colors.map((color) => color.value),
+    ["#68414B", "#756078", "#A9707C", "#C7929B", "#BDA56E"]
   );
 });
