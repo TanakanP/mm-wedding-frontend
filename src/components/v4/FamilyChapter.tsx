@@ -33,7 +33,7 @@ export default function FamilyChapter() {
         {...reveal(reduceMotion)}
         className="relative mx-auto w-full max-w-3xl border border-wine/25 bg-paper px-6 py-16 text-center shadow-[0_24px_70px_rgba(104,65,75,0.09)] before:pointer-events-none before:absolute before:inset-2 before:border before:border-wine/15 md:px-16 md:py-24"
       >
-        <p className="relative text-[10px] uppercase tracking-[0.32em] text-wine/70">
+        <p className="relative text-[10px] uppercase tracking-[0.32em] text-wine">
           Together with our families
         </p>
         <h2
@@ -51,7 +51,7 @@ export default function FamilyChapter() {
           aria-hidden="true"
           className="relative mx-auto mt-8 h-px w-20 bg-accent-primary/70"
         />
-        <p className="relative mx-auto mt-8 max-w-xl font-serif text-lg leading-relaxed text-wine/75 md:text-xl">
+        <p className="relative mx-auto mt-8 max-w-xl font-serif text-lg leading-relaxed text-wine md:text-xl">
           Invite you to share in the joy of their wedding celebration.
         </p>
       </motion.div>

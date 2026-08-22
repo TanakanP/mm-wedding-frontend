@@ -16,3 +16,13 @@ test("sections two through four remain separately editable", async () => {
   assert.match(dress, /id="dress-code"/);
   assert.match(dress, /dressCode\.colors\.map/);
 });
+
+test("supporting invitation copy uses solid wine for readable contrast", async () => {
+  const [family, dress] = await Promise.all([
+    read("FamilyChapter"),
+    read("DressCodeChapter"),
+  ]);
+
+  assert.doesNotMatch(family, /text-wine\/\d+/);
+  assert.doesNotMatch(dress, /text-wine\/\d+/);
+});

@@ -50,7 +50,7 @@ export default function DressCodeChapter() {
           {...chapterMotion(reduceMotion, -32)}
           className="border border-wine/20 bg-cream px-6 py-10 text-center shadow-[0_22px_60px_rgba(104,65,75,0.1)] md:px-10 md:py-14 md:text-left"
         >
-          <p className="text-[10px] uppercase tracking-[0.3em] text-wine/65">
+          <p className="text-[10px] uppercase tracking-[0.3em] text-wine">
             Dress code
           </p>
           <h2
@@ -59,7 +59,7 @@ export default function DressCodeChapter() {
           >
             {WEDDING.dressCode.title}
           </h2>
-          <p className="mt-5 font-serif text-lg leading-relaxed text-wine/75">
+          <p className="mt-5 font-serif text-lg leading-relaxed text-wine">
             {WEDDING.dressCode.description}
           </p>
 
@@ -78,7 +78,7 @@ export default function DressCodeChapter() {
                   className="mx-auto block h-14 w-10 rounded-t-full rounded-b-md border border-wine/10"
                   style={{ backgroundColor: color.value }}
                 />
-                <span className="mt-2 block text-xs leading-snug text-wine/75">
+                <span className="mt-2 block text-xs leading-snug text-wine">
                   {color.label}
                 </span>
               </motion.li>
@@ -100,7 +100,7 @@ export default function DressCodeChapter() {
               style={{ objectPosition: photo.objectPosition }}
             />
           </div>
-          <figcaption className="absolute inset-x-0 bottom-4 text-center font-serif text-sm italic text-wine/70 md:bottom-5 md:text-base">
+          <figcaption className="absolute inset-x-0 bottom-4 text-center font-serif text-sm italic text-wine md:bottom-5 md:text-base">
             Celebrate in color
           </figcaption>
         </motion.figure>
