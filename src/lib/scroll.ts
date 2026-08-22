@@ -59,6 +59,16 @@ export function scrollToTop() {
   });
 }
 
+export function jumpToTop() {
+  if (typeof window === "undefined") return;
+
+  const root = document.documentElement;
+  const previousBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = "auto";
+  window.scrollTo({ top: 0, behavior: "auto" });
+  root.style.scrollBehavior = previousBehavior;
+}
+
 export function lockDocumentScroll() {
   const rootOverflow = document.documentElement.style.overflow;
   const bodyOverflow = document.body.style.overflow;

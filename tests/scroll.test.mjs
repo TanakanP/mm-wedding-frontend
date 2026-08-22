@@ -26,9 +26,11 @@ function installBrowser({
   reducedMotion = false,
   rootOverflow = "",
   bodyOverflow = "",
+  rootScrollBehavior = "",
 } = {}) {
   let sectionOptions;
   let windowOptions;
+  let scrollBehaviorDuringCall;
   const mediaQueries = [];
 
   const section = {
@@ -38,7 +40,9 @@ function installBrowser({
   };
 
   globalThis.document = {
-    documentElement: { style: { overflow: rootOverflow } },
+    documentElement: {
+      style: { overflow: rootOverflow, scrollBehavior: rootScrollBehavior },
+    },
     body: { style: { overflow: bodyOverflow } },
     getElementById(id) {
       return id === "our-story" || id === "rsvp" ? section : null;
@@ -52,12 +56,15 @@ function installBrowser({
     },
     scrollTo(options) {
       windowOptions = options;
+      scrollBehaviorDuringCall =
+        document.documentElement.style.scrollBehavior;
     },
   };
 
   return {
     getMediaQueries: () => mediaQueries,
     getSectionOptions: () => sectionOptions,
+    getScrollBehaviorDuringCall: () => scrollBehaviorDuringCall,
     getWindowOptions: () => windowOptions,
   };
 }
@@ -126,6 +133,16 @@ test("top navigation is immediate when reduced motion is requested", () => {
   assert.deepEqual(browser.getMediaQueries(), [
     "(prefers-reduced-motion: reduce)",
   ]);
+});
+
+test("invitation replay bypasses CSS smooth scrolling before locking", () => {
+  const browser = installBrowser({ rootScrollBehavior: "smooth" });
+
+  scrolling.jumpToTop();
+
+  assert.equal(browser.getScrollBehaviorDuringCall(), "auto");
+  assert.equal(document.documentElement.style.scrollBehavior, "smooth");
+  assert.deepEqual(browser.getWindowOptions(), { top: 0, behavior: "auto" });
 });
 
 test("active section selection keeps the latest ratio for every section", () => {

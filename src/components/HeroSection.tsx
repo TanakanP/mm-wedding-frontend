@@ -73,7 +73,11 @@ export default function HeroSection() {
           <p className="text-[10px] tracking-[0.2em] uppercase text-accent-primary">
             Together with our families
           </p>
-          <h1 className="mt-3 font-serif text-5xl leading-none md:text-7xl">
+          <h1
+            id="wedding-title"
+            tabIndex={-1}
+            className="mt-3 font-serif text-5xl leading-none outline-none md:text-7xl"
+          >
             M &amp; M
           </h1>
           <p className="mt-4 text-sm tracking-[0.12em] uppercase">

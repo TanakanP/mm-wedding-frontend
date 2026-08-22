@@ -5,6 +5,8 @@ import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { WEDDING } from "@/content/wedding";
 import { useSections } from "@/hooks/useSections";
+import { INVITATION_REPLAY_EVENT } from "@/lib/invitation";
+import { jumpToTop } from "@/lib/scroll";
 
 const faqs = [
   {
@@ -55,6 +57,10 @@ export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { scrollToTop } = useSections();
   const reduceMotion = Boolean(useReducedMotion());
+  const replayInvitation = () => {
+    jumpToTop();
+    window.dispatchEvent(new Event(INVITATION_REPLAY_EVENT));
+  };
 
   return (
     <section
@@ -127,6 +133,13 @@ export default function FAQSection() {
               className="hover:text-accent-primary transition-colors focus:outline-none focus-visible:underline"
             >
               Back to the top
+            </button>
+            <span aria-hidden="true">•</span>
+            <button
+              onClick={replayInvitation}
+              className="hover:text-accent-primary transition-colors focus:outline-none focus-visible:underline"
+            >
+              Replay invitation
             </button>
             <span aria-hidden="true">•</span>
             <span className="text-sage/50">
