@@ -101,7 +101,7 @@ export default function RSVPChapter({ children }: RSVPChapterProps) {
             <button
               type="button"
               onClick={() => setIsRSVPOpen(true)}
-              className="relative mt-8 rounded-full bg-dusty px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-wine focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+              className="relative mt-8 rounded-full bg-wine px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
             >
               Open response card
             </button>

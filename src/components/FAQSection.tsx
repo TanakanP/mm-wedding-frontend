@@ -77,7 +77,7 @@ export default function FAQSection() {
           >
             Garden Whispers
           </motion.h2>
-          <p className="mb-10 text-center text-sm font-light tracking-wide text-wine/75">
+          <p className="mb-10 text-center text-sm font-light tracking-wide text-wine">
             A few gentle answers as you prepare your visit
           </p>
 
@@ -130,7 +130,7 @@ export default function FAQSection() {
             <p className="text-sm font-light tracking-wide text-wine/80">
               Planted with love • M &amp; M • {WEDDING.dateLabel} • {WEDDING.venue.name}
             </p>
-            <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-wine/70">
+            <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-wine">
               <button
                 onClick={scrollToTop}
                 className="transition-colors hover:text-foreground focus:outline-none focus-visible:underline"
@@ -145,11 +145,11 @@ export default function FAQSection() {
                 Replay invitation
               </button>
               <span aria-hidden="true">•</span>
-              <span className="text-wine/60">
+              <span className="text-wine">
                 Wander the garden above to RSVP and plant wishes
               </span>
             </div>
-            <p className="mt-4 text-[10px] text-wine/55">
+            <p className="mt-4 text-[10px] text-wine">
               © {WEDDING.venue.name} — all are welcome in spirit
             </p>
           </div>
