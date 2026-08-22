@@ -31,7 +31,10 @@ export default function GardenNav() {
     >
       <div className="max-w-5xl mx-auto px-3 md:px-6 h-12 md:h-14 flex items-center justify-between text-sm">
         <button
-          onClick={scrollToTop}
+          onClick={() => {
+            scrollToTop();
+            setIsMenuOpen(false);
+          }}
           className="font-serif text-lg md:text-xl tracking-[0.5px] text-foreground/80 hover:text-accent-primary transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary/50 rounded px-1 shrink-0"
           aria-label="Scroll to top"
         >
