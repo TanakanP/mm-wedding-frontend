@@ -8,6 +8,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { X } from "lucide-react";
 
 import { lockDocumentScroll } from "@/lib/scroll";
+import { WEDDING } from "@/content/wedding";
 import PlantWishWall from "./PlantWishWall";
 
 const rsvpSchema = z.object({
@@ -158,8 +159,8 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                 <X className="w-6 h-6" />
               </button>
               <h2 className="font-serif text-4xl text-center text-accent-primary mb-2">The Invitation</h2>
-              <p className="text-center text-sage font-light">Hirouen at US Wedding & Event VENUE</p>
-              <p className="text-center text-sage font-light">18.00 - 22.00 | 5 December 2026</p>
+              <p className="text-center text-sage font-light">{WEDDING.venue.name}</p>
+              <p className="text-center text-sage font-light">{WEDDING.timeLabel} | {WEDDING.dateLabel}</p>
             </div>
 
             {/* Body & Footer */}
@@ -208,9 +209,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                         <h4 className="font-serif text-2xl text-foreground mb-6">{submittedData.name}</h4>
                         <div className="space-y-2 text-foreground/70 font-light text-sm">
                           <p>To celebrate their wedding</p>
-                          <p className="font-medium text-foreground mt-4">5 December 2026</p>
-                          <p>18.00 - 22.00</p>
-                          <p className="mt-4">Hirouen at US Wedding &amp; Event VENUE</p>
+                          <p className="font-medium text-foreground mt-4">{WEDDING.dateLabel}</p>
+                          <p>{WEDDING.timeLabel}</p>
+                          <p className="mt-4">{WEDDING.venue.name}</p>
                         </div>
                       </div>
 
