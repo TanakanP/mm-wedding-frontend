@@ -38,17 +38,17 @@ export default function LocationChapter() {
       aria-labelledby="venue-title"
       className="garden-section garden-texture overflow-hidden bg-cream px-5 py-20 md:px-[7vw] md:py-28"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-12 md:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)] md:gap-[clamp(48px,7vw,104px)]">
+      <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,.95fr)] lg:gap-[clamp(48px,7vw,104px)]">
         <motion.figure
           {...reveal(reduceMotion, -40)}
           className="relative bg-paper p-3 pb-12 shadow-[0_28px_70px_rgba(104,65,75,0.16)] md:p-4 md:pb-14"
         >
-          <div className="relative aspect-[4/5] overflow-hidden bg-petal md:min-h-[42rem] md:aspect-auto">
+          <div className="relative aspect-[4/5] overflow-hidden bg-petal md:min-h-[42rem] md:aspect-auto lg:min-h-[34rem] xl:min-h-[42rem]">
             <Image
               src={photo.src}
               alt={photo.alt}
               fill
-              sizes="(max-width: 767px) calc(100vw - 64px), 48vw"
+              sizes="(max-width: 767px) calc(100vw - 64px), (max-width: 1023px) calc(86vw - 32px), (max-width: 1439px) 39vw, 585px"
               className="object-cover"
               style={{ objectPosition: photo.objectPosition }}
             />
@@ -73,10 +73,10 @@ export default function LocationChapter() {
             <p className="font-serif text-2xl leading-tight">
               {WEDDING.venue.name}
             </p>
-            <p className="mt-2 text-xs uppercase tracking-[0.16em] text-wine/75">
+            <p className="mt-2 text-xs uppercase tracking-[0.16em] text-wine">
               {WEDDING.venue.receptionName}
             </p>
-            <p className="mt-5 max-w-md text-sm leading-7 text-wine/85">
+            <p className="mt-5 max-w-md text-sm leading-7 text-wine">
               {WEDDING.venue.address}
             </p>
             <p className="mt-4 font-serif text-base leading-7 text-wine">
@@ -86,7 +86,7 @@ export default function LocationChapter() {
             </p>
           </div>
 
-          <div className="mt-7 border border-wine/25 bg-paper p-4 shadow-[0_16px_40px_rgba(104,65,75,0.08)] sm:grid sm:grid-cols-[minmax(0,1fr)_176px] sm:items-center sm:gap-5">
+          <div className="mt-7 border border-wine/25 bg-paper p-4 shadow-[0_16px_40px_rgba(104,65,75,0.08)] xl:grid xl:grid-cols-[minmax(0,1fr)_176px] xl:items-center xl:gap-5">
             <div>
               <div
                 aria-hidden="true"
@@ -106,14 +106,14 @@ export default function LocationChapter() {
                   href={locationUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="border-b border-wine pb-1 text-wine transition-colors hover:text-accent-secondary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+                  className="border-b border-wine pb-1 text-wine transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
                 >
                   Open location
                 </a>
                 {WEDDING.venue.calendarUrl && (
                   <a
                     href={WEDDING.venue.calendarUrl}
-                    className="border-b border-wine/40 pb-1 text-wine/75 transition-colors hover:text-wine focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+                    className="border-b border-wine/40 pb-1 text-wine transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
                   >
                     Add to calendar
                   </a>
@@ -121,7 +121,7 @@ export default function LocationChapter() {
               </div>
             </div>
 
-            <div className="mt-7 flex flex-col items-center border-t border-wine/15 pt-6 sm:mt-0 sm:border-l sm:border-t-0 sm:py-1 sm:pl-5">
+            <div className="mt-7 flex flex-col items-center border-t border-wine/15 pt-6 xl:mt-0 xl:border-l xl:border-t-0 xl:py-1 xl:pl-5">
               <QRCodeSVG
                 value={locationUrl}
                 size={144}
