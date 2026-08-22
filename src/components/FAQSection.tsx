@@ -63,18 +63,21 @@ export default function FAQSection() {
   };
 
   return (
-    <section
+    <div
       id="garden-whispers"
-      className="garden-section w-full bg-cream garden-texture px-4 py-20 md:py-28"
+      aria-labelledby="garden-whispers-title"
+      className="garden-section w-full px-4 pb-10 pt-4 md:px-8 md:pb-16"
     >
-      <div className="mx-auto w-full max-w-3xl">
+      <div className="mx-auto w-full max-w-4xl border border-wine/15 bg-cream px-5 py-16 shadow-[0_24px_65px_rgba(72,36,46,.13)] sm:px-8 md:px-14 md:py-20">
+        <div className="mx-auto w-full max-w-3xl">
           <motion.h2
             {...reveal(reduceMotion)}
-            className="font-serif text-4xl md:text-5xl text-center text-accent-primary mb-3"
+            id="garden-whispers-title"
+            className="mb-3 text-center font-serif text-4xl italic text-wine md:text-5xl"
           >
             Garden Whispers
           </motion.h2>
-          <p className="text-center text-sage/70 font-light mb-10 tracking-wide text-sm">
+          <p className="mb-10 text-center text-sm font-light tracking-wide text-wine/75">
             A few gentle answers as you prepare your visit
           </p>
 
@@ -85,21 +88,21 @@ export default function FAQSection() {
                 <motion.div
                   key={index}
                   {...reveal(reduceMotion, index * 0.1)}
-                  className={`overflow-hidden rounded-sm border bg-cream/95 transition-colors ${isOpen ? "border-accent-secondary/50 shadow-sm" : "border-sage/30"}`}
+                  className={`overflow-hidden border bg-paper/70 transition-colors ${isOpen ? "border-dusty shadow-sm" : "border-wine/20"}`}
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? null : index)}
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${index}`}
-                    className="w-full px-6 py-4 flex items-center justify-between text-left focus:outline-none focus-visible:ring-1 focus-visible:ring-accent-primary/40 rounded-lg"
+                    className="flex w-full items-center justify-between px-5 py-4 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-wine md:px-6"
                   >
                     <span
-                      className={`font-medium transition-colors ${isOpen ? "text-accent-secondary" : "text-foreground"}`}
+                      className={`font-medium transition-colors ${isOpen ? "text-wine" : "text-foreground"}`}
                     >
                       {faq.question}
                     </span>
                     <ChevronDown
-                      className={`h-5 w-5 ${reduceMotion ? "" : "transition-all duration-300"} ${isOpen ? "rotate-180 text-accent-secondary" : "text-sage/60"}`}
+                      className={`h-5 w-5 shrink-0 ${reduceMotion ? "" : "transition-all duration-300"} ${isOpen ? "rotate-180 text-wine" : "text-wine/60"}`}
                     />
                   </button>
 
@@ -110,7 +113,7 @@ export default function FAQSection() {
                         {...accordionMotion(reduceMotion)}
                         className="origin-top"
                       >
-                        <div className="px-6 pb-5 pt-1 text-foreground/75 font-light leading-relaxed border-t border-sage/10">
+                        <div className="border-t border-wine/10 px-5 pb-5 pt-3 font-light leading-relaxed text-foreground/80 md:px-6">
                           {faq.answer}
                         </div>
                       </motion.div>
@@ -122,35 +125,36 @@ export default function FAQSection() {
           </div>
         </div>
 
-      <footer className="mt-20 w-full border-t border-sage/30 py-12 text-center">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-sage/80 font-light tracking-wide text-sm">
-            Planted with love • M &amp; M • {WEDDING.dateLabel} • {WEDDING.venue.name}
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-sage/60">
-            <button
-              onClick={scrollToTop}
-              className="hover:text-accent-primary transition-colors focus:outline-none focus-visible:underline"
-            >
-              Back to the top
-            </button>
-            <span aria-hidden="true">•</span>
-            <button
-              onClick={replayInvitation}
-              className="hover:text-accent-primary transition-colors focus:outline-none focus-visible:underline"
-            >
-              Replay invitation
-            </button>
-            <span aria-hidden="true">•</span>
-            <span className="text-sage/50">
-              Wander the garden above to RSVP and plant wishes
-            </span>
+        <footer className="mt-16 w-full border-t border-wine/20 pb-0 pt-10 text-center">
+          <div className="mx-auto max-w-3xl">
+            <p className="text-sm font-light tracking-wide text-wine/80">
+              Planted with love • M &amp; M • {WEDDING.dateLabel} • {WEDDING.venue.name}
+            </p>
+            <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-1 text-xs text-wine/70">
+              <button
+                onClick={scrollToTop}
+                className="transition-colors hover:text-foreground focus:outline-none focus-visible:underline"
+              >
+                Back to the top
+              </button>
+              <span aria-hidden="true">•</span>
+              <button
+                onClick={replayInvitation}
+                className="transition-colors hover:text-foreground focus:outline-none focus-visible:underline"
+              >
+                Replay invitation
+              </button>
+              <span aria-hidden="true">•</span>
+              <span className="text-wine/60">
+                Wander the garden above to RSVP and plant wishes
+              </span>
+            </div>
+            <p className="mt-4 text-[10px] text-wine/55">
+              © {WEDDING.venue.name} — all are welcome in spirit
+            </p>
           </div>
-          <p className="mt-4 text-[10px] text-sage/40">
-            © {WEDDING.venue.name} — all are welcome in spirit
-          </p>
-        </div>
-      </footer>
-    </section>
+        </footer>
+      </div>
+    </div>
   );
 }

@@ -220,7 +220,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-foreground/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-wine/55 p-0 backdrop-blur-sm md:p-4">
           <motion.div
             {...motionProps(reduceMotion, {
               initial: { opacity: 0 },
@@ -242,20 +242,20 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
               animate: { opacity: 1, scale: 1, y: 0 },
               exit: { opacity: 0, scale: 0.95, y: 20 },
             })}
-            className="relative w-full h-full md:h-auto max-w-2xl bg-cream md:bg-cream backdrop-blur-md rounded-none md:rounded-2xl shadow-xl border-0 md:border md:border-sage/20 max-h-full md:max-h-[90vh] overflow-hidden flex flex-col"
+            className="relative flex h-full max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-none border-0 bg-cream shadow-[0_28px_80px_rgba(46,32,36,.35)] backdrop-blur-md md:h-auto md:max-h-[90vh] md:rounded-sm md:border md:border-wine/20"
           >
             {/* Header - Static */}
-            <div className="shrink-0 px-6 pt-8 pb-4 sm:px-8 sm:pt-10 sm:pb-6 md:px-12 border-b border-sage/20 relative bg-cream z-10">
+            <div className="relative z-10 shrink-0 border-b border-wine/15 bg-cream px-6 pb-4 pt-8 sm:px-8 sm:pb-6 sm:pt-10 md:px-12">
               <button 
                 onClick={handleClose}
-                className="absolute top-4 right-4 p-2 text-sage/70 hover:text-foreground transition-colors bg-cream/70 md:bg-transparent rounded-full backdrop-blur-sm md:backdrop-blur-none"
+                className="absolute right-4 top-4 rounded-full bg-cream/70 p-2 text-wine/70 backdrop-blur-sm transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine md:bg-transparent md:backdrop-blur-none"
                 aria-label="Close RSVP dialog"
               >
                 <X className="w-6 h-6" />
               </button>
-              <h2 id="rsvp-dialog-title" className="font-serif text-4xl text-center text-accent-primary mb-2">The Invitation</h2>
-              <p className="text-center text-sage font-light">{WEDDING.venue.name}</p>
-              <p className="text-center text-sage font-light">{WEDDING.timeLabel} | {WEDDING.dateLabel}</p>
+              <h2 id="rsvp-dialog-title" className="mb-2 text-center font-serif text-4xl italic text-wine">The Invitation</h2>
+              <p className="text-center font-light text-wine/80">{WEDDING.venue.name}</p>
+              <p className="text-center font-light text-wine/80">{WEDDING.timeLabel} | {WEDDING.dateLabel}</p>
               <p id="rsvp-dialog-description" className="sr-only">
                 Complete this form to respond to M and M&apos;s wedding invitation.
               </p>
@@ -607,7 +607,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-accent-primary hover:bg-foreground text-foreground hover:text-cream font-medium py-3 rounded-lg transition-colors disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+                    className="w-full rounded-sm bg-wine py-3 font-medium text-cream transition-colors hover:bg-foreground disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-wine focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
                     {isSubmitting ? "Sending..." : "Submit"}
                   </button>
