@@ -15,6 +15,12 @@ export default function GalleryChapter() {
     >
       {V4_GALLERY_PHOTO_IDS.map((id, index) => {
         const photo = PHOTOS[id];
+        const imageSizes =
+          index === 0
+            ? "(max-width: 767px) 100vw, 50vw"
+            : index === 3
+              ? "100vw"
+              : "50vw";
         const revealMotion = reduceMotion
           ? {}
           : {
@@ -56,7 +62,7 @@ export default function GalleryChapter() {
                 src={photo.src}
                 alt={photo.alt}
                 fill
-                sizes="(max-width: 767px) 100vw, 50vw"
+                sizes={imageSizes}
                 className="object-cover"
                 style={{ objectPosition: photo.objectPosition }}
               />

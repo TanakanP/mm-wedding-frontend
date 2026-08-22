@@ -10,7 +10,11 @@ const source = await readFile(
 test("V4 gallery is a borderless full-width section", () => {
   assert.match(source, /id="gallery"/);
   assert.match(source, /V4_GALLERY_PHOTO_IDS\.map/);
-  assert.match(source, /sizes="\(max-width: 767px\) 100vw, 50vw"/);
+  assert.match(
+    source,
+    /const imageSizes =\s*index === 0\s*\? "\(max-width: 767px\) 100vw, 50vw"\s*: index === 3\s*\? "100vw"\s*: "50vw";/
+  );
+  assert.match(source, /sizes=\{imageSizes\}/);
   assert.doesNotMatch(source, /border-\[/);
   assert.doesNotMatch(source, /max-w-/);
 });
