@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -32,10 +32,15 @@ interface RSVPFormProps {
 const groomRelations = ["Family", "High School Friend", "University Friend", "Colleague", "Other"];
 const brideRelations = ["Family", "Childhood Friend", "University Friend", "Colleague", "Other"];
 
+function motionProps<T extends object>(reduceMotion: boolean, props: T) {
+  return reduceMotion ? {} : props;
+}
+
 export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedData, setSubmittedData] = useState<RSVPFormValues | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = Boolean(useReducedMotion());
 
   // Transient petal shower (outside the cardRef so it does not affect downloads)
   const [showerPetals, setShowerPetals] = useState<
@@ -137,16 +142,20 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-0 md:p-4 bg-foreground/40 backdrop-blur-sm">
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            {...motionProps(reduceMotion, {
+              initial: { opacity: 0 },
+              animate: { opacity: 1 },
+              exit: { opacity: 0 },
+            })}
             className="absolute inset-0"
             onClick={handleClose}
           />
           <motion.div 
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            {...motionProps(reduceMotion, {
+              initial: { opacity: 0, scale: 0.95, y: 20 },
+              animate: { opacity: 1, scale: 1, y: 0 },
+              exit: { opacity: 0, scale: 0.95, y: 20 },
+            })}
             className="relative w-full h-full md:h-auto max-w-2xl bg-cream md:bg-cream backdrop-blur-md rounded-none md:rounded-2xl shadow-xl border-0 md:border md:border-sage/20 max-h-full md:max-h-[90vh] overflow-hidden flex flex-col"
           >
             {/* Header - Static */}
@@ -177,9 +186,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                         {/* Living growing flower (inside card so captured by download) */}
                         <div className="flex justify-center -mt-2 mb-4">
                           <motion.div
-                            initial={{ scale: 0.45, opacity: 0.65, rotate: -6 }}
-                            animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                            transition={{ type: "spring", stiffness: 110, damping: 13, delay: 0.12 }}
+                            {...motionProps(reduceMotion, {
+                              initial: { scale: 0.45, opacity: 0.65, rotate: -6 },
+                              animate: { scale: 1, opacity: 1, rotate: 0 },
+                              transition: { type: "spring", stiffness: 110, damping: 13, delay: 0.12 },
+                            })}
                             className="relative w-14 h-14"
                             aria-hidden="true"
                           >
@@ -235,9 +246,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                             key={p.id}
                             className="petal"
                             style={{ left: `${p.x}%`, top: "-4%" }}
-                            initial={{ y: 0, opacity: 0.85, rotate: 0 }}
-                            animate={{ y: "170%", opacity: 0, rotate: p.rotate }}
-                            transition={{ duration: p.duration, delay: p.delay, ease: "easeOut" }}
+                            {...motionProps(reduceMotion, {
+                              initial: { y: 0, opacity: 0.85, rotate: 0 },
+                              animate: { y: "170%", opacity: 0, rotate: p.rotate },
+                              transition: { duration: p.duration, delay: p.delay, ease: "easeOut" },
+                            })}
                           />
                         ))}
                       </div>
@@ -303,9 +316,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   <AnimatePresence>
                     {side && (
                       <motion.div 
-                        initial={{ opacity: 0, height: 0 }} 
-                        animate={{ opacity: 1, height: "auto" }} 
-                        exit={{ opacity: 0, height: 0 }}
+                        {...motionProps(reduceMotion, {
+                          initial: { opacity: 0, height: 0 },
+                          animate: { opacity: 1, height: "auto" },
+                          exit: { opacity: 0, height: 0 },
+                        })}
                         className="overflow-hidden shrink-0"
                       >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
@@ -326,9 +341,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                           <AnimatePresence>
                             {relation === "Other" && (
                               <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                exit={{ opacity: 0 }}
+                                {...motionProps(reduceMotion, {
+                                  initial: { opacity: 0 },
+                                  animate: { opacity: 1 },
+                                  exit: { opacity: 0 },
+                                })}
                               >
                                 <label className="block text-sm font-medium text-foreground mb-1">Please specify</label>
                                 <input
@@ -365,9 +382,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                     {attending === "yes" && (
                       <motion.div 
                         key="attending"
-                        initial={{ opacity: 0, height: 0 }} 
-                        animate={{ opacity: 1, height: "auto" }} 
-                        exit={{ opacity: 0, height: 0 }}
+                        {...motionProps(reduceMotion, {
+                          initial: { opacity: 0, height: 0 },
+                          animate: { opacity: 1, height: "auto" },
+                          exit: { opacity: 0, height: 0 },
+                        })}
                         className="flex flex-col gap-2 md:gap-6 overflow-hidden shrink-0"
                       >
                         {/* Guest Count */}
@@ -400,9 +419,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   <AnimatePresence>
                     {attending && (
                       <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
+                        {...motionProps(reduceMotion, {
+                          initial: { opacity: 0, height: 0 },
+                          animate: { opacity: 1, height: "auto" },
+                          exit: { opacity: 0, height: 0 },
+                        })}
                         className="overflow-hidden shrink-0"
                       >
                         <div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { WEDDING } from "@/content/wedding";
@@ -29,9 +29,32 @@ const faqs = [
   },
 ];
 
+function reveal(reduceMotion: boolean, delay = 0) {
+  return reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 10 },
+        whileInView: { opacity: 1, y: 0 },
+        viewport: { once: true },
+        transition: { delay },
+      };
+}
+
+function accordionMotion(reduceMotion: boolean) {
+  return reduceMotion
+    ? {}
+    : {
+        initial: { height: 0, opacity: 0, scaleY: 0.96, rotateX: -1 },
+        animate: { height: "auto", opacity: 1, scaleY: 1, rotateX: 0 },
+        exit: { height: 0, opacity: 0, scaleY: 0.96, rotateX: -1 },
+        transition: { duration: 0.35, ease: [0.23, 1, 0.32, 1] as const },
+      };
+}
+
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { scrollToTop } = useSections();
+  const reduceMotion = Boolean(useReducedMotion());
 
   return (
     <section
@@ -40,9 +63,7 @@ export default function FAQSection() {
     >
       <div className="mx-auto w-full max-w-3xl">
           <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            {...reveal(reduceMotion)}
             className="font-serif text-4xl md:text-5xl text-center text-accent-primary mb-3"
           >
             Garden Whispers
@@ -57,10 +78,7 @@ export default function FAQSection() {
               return (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 10 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.1 }}
+                  {...reveal(reduceMotion, index * 0.1)}
                   className={`overflow-hidden rounded-sm border bg-cream/95 transition-colors ${isOpen ? "border-accent-secondary/50 shadow-sm" : "border-sage/30"}`}
                 >
                   <button
@@ -75,7 +93,7 @@ export default function FAQSection() {
                       {faq.question}
                     </span>
                     <ChevronDown
-                      className={`h-5 w-5 transition-all duration-300 ${isOpen ? "rotate-180 text-accent-secondary" : "text-sage/60"}`}
+                      className={`h-5 w-5 ${reduceMotion ? "" : "transition-all duration-300"} ${isOpen ? "rotate-180 text-accent-secondary" : "text-sage/60"}`}
                     />
                   </button>
 
@@ -83,10 +101,7 @@ export default function FAQSection() {
                     {isOpen && (
                       <motion.div
                         id={`faq-answer-${index}`}
-                        initial={{ height: 0, opacity: 0, scaleY: 0.96, rotateX: -1 }}
-                        animate={{ height: "auto", opacity: 1, scaleY: 1, rotateX: 0 }}
-                        exit={{ height: 0, opacity: 0, scaleY: 0.96, rotateX: -1 }}
-                        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                        {...accordionMotion(reduceMotion)}
                         className="origin-top"
                       >
                         <div className="px-6 pb-5 pt-1 text-foreground/75 font-light leading-relaxed border-t border-sage/10">
