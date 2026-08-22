@@ -1,197 +1,107 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
-import PhotoCarousel from "./our-story/PhotoCarousel";
-import PinnedPhoto from "./our-story/PinnedPhoto";
-import StoryLetter from "./our-story/StoryLetter";
-import {
-  MOBILE_CAROUSEL_BOTTOM,
-  MOBILE_CAROUSEL_TOP,
-  PHOTO_PLACEMENTS,
-  STORY_LETTER,
-  STORY_TITLE,
-  TIMING,
-  type LetterPhase,
-  type Phase,
-} from "./our-story/constants";
-import { usePreloadStoryPhotos } from "./our-story/usePreloadStoryPhotos";
+import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
+import { PHOTOS, WEDDING } from "@/content/wedding";
 
-function letterPhaseFrom(phase: Phase): LetterPhase {
-  switch (phase) {
-    case "letter":
-      return "empty";
-    case "typing":
-      return "typing";
-    case "photos":
-    case "done":
-      return "complete";
-    default:
-      return "hidden";
-  }
-}
+const viewport = { once: true, amount: 0.2 } as const;
 
-const IS_DEV = process.env.NODE_ENV === "development";
-
-function estimateTypingMs() {
-  return (
-    STORY_TITLE.length * TIMING.typeTitleSpeed +
-    200 +
-    STORY_LETTER.length * TIMING.typeBodySpeed +
-    300
-  );
+function reveal(reduceMotion: boolean, delay = 0) {
+  return reduceMotion
+    ? {}
+    : {
+        initial: { opacity: 0, y: 16 },
+        whileInView: { opacity: 1, y: 0 },
+        transition: {
+          duration: 0.6,
+          delay,
+          ease: [0.23, 1, 0.32, 1] as const,
+        },
+        viewport,
+      };
 }
 
 export default function OurStory() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.45 });
-  const [phase, setPhase] = useState<Phase>("waiting");
-  const [animationKey, setAnimationKey] = useState(0);
-  const [reduceMotion, setReduceMotion] = useState(false);
-  const startedRef = useRef(false);
-  const typingDoneRef = useRef(false);
-  const runIdRef = useRef(0);
-
-  const schedule = useCallback((fn: () => void, ms: number) => {
-    const runId = runIdRef.current;
-    return window.setTimeout(() => {
-      if (runIdRef.current === runId) fn();
-    }, ms);
-  }, []);
-
-  const startAnimation = useCallback(() => {
-    runIdRef.current += 1;
-    typingDoneRef.current = false;
-
-    const prefersReduced = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-    if (prefersReduced) {
-      setReduceMotion(true);
-      setPhase("done");
-      return;
-    }
-
-    setReduceMotion(false);
-    setPhase("letter");
-    schedule(
-      () => setPhase("typing"),
-      TIMING.letterAppear + TIMING.letterAppearHold
-    );
-  }, [schedule]);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduceMotion(mq.matches);
-  }, []);
-
-  useEffect(() => {
-    if (!isInView || startedRef.current) return;
-    startedRef.current = true;
-    startAnimation();
-  }, [isInView, startAnimation]);
-
-  const handleRestart = useCallback(() => {
-    setAnimationKey((k) => k + 1);
-    startAnimation();
-  }, [startAnimation]);
-
-  const handleTypingComplete = useCallback(() => {
-    if (typingDoneRef.current) return;
-    typingDoneRef.current = true;
-    setPhase("photos");
-    schedule(
-      () => setPhase("done"),
-      PHOTO_PLACEMENTS.length * TIMING.photoStagger + 500
-    );
-  }, [schedule]);
-
-  useEffect(() => {
-    if (phase !== "typing") return;
-    const fallback = schedule(handleTypingComplete, estimateTypingMs());
-    return () => window.clearTimeout(fallback);
-  }, [phase, handleTypingComplete, schedule]);
-
-  const currentLetterPhase = letterPhaseFrom(phase);
-  const showLetter = phase !== "waiting";
-  const showPhotos = phase === "photos" || phase === "done";
-
-  usePreloadStoryPhotos(phase === "letter" || phase === "typing");
+  const reduceMotion = Boolean(useReducedMotion());
 
   return (
     <section
-      ref={sectionRef}
       id="our-story"
-      className="garden-section relative w-full flex flex-col items-center justify-center bg-cream garden-texture px-0 md:px-6 overflow-visible pt-[var(--nav-offset)] md:pt-0"
+      aria-labelledby="our-story-title"
+      className="garden-section bg-cream garden-texture px-5 py-20 md:px-8 md:py-28"
     >
-      {IS_DEV && (
-        <button
-          type="button"
-          onClick={handleRestart}
-          className="absolute top-[calc(var(--nav-offset)+0.5rem)] left-1/2 -translate-x-1/2 z-50 rounded-md border border-sage/30 bg-background/90 px-3 py-1.5 text-xs font-medium text-foreground/70 shadow-sm backdrop-blur-sm hover:bg-background hover:text-foreground transition-colors"
+      <div className="mx-auto grid max-w-6xl gap-10 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] md:items-center md:gap-16">
+        <motion.div
+          className="md:col-start-2 md:row-start-1"
+          {...reveal(reduceMotion)}
         >
-          ↺ Restart animation
-        </button>
-      )}
+          <p className="text-xs font-medium tracking-[0.22em] text-accent-secondary uppercase">
+            A little of us
+          </p>
+          <div className="mt-4 h-px w-16 bg-accent-primary/70" />
+          <h2
+            id="our-story-title"
+            className="mt-5 font-serif text-4xl leading-none text-foreground md:text-5xl"
+          >
+            Our story
+          </h2>
+          <p className="mt-6 max-w-prose font-serif text-lg leading-relaxed text-foreground/75 md:text-xl md:leading-loose">
+            {WEDDING.story}
+          </p>
+        </motion.div>
 
-      {/* Mobile: top carousel */}
-      <div className="w-full shrink-0 md:hidden">
-        <PhotoCarousel
-          key={`top-${animationKey}`}
-          photos={MOBILE_CAROUSEL_TOP}
-          direction="ltr"
-          visible={showPhotos}
-        />
-      </div>
+        <motion.figure
+          className="relative aspect-[4/5] overflow-hidden border-[10px] border-[#fffaf1] bg-[#fffaf1] shadow-[0_18px_45px_rgba(70,51,31,0.18)] md:col-start-1 md:row-span-2 md:row-start-1"
+          {...reveal(reduceMotion, 0.1)}
+        >
+          <Image
+            src={PHOTOS[7].src}
+            alt={PHOTOS[7].alt}
+            fill
+            sizes="(max-width: 767px) 100vw, 58vw"
+            className="object-cover"
+            style={{ objectPosition: PHOTOS[7].objectPosition }}
+          />
+          <span
+            className="absolute -top-2 left-1/2 h-5 w-24 -translate-x-1/2 rotate-[-2deg] bg-accent-secondary/65"
+            aria-hidden
+          />
+          <figcaption className="absolute bottom-4 left-4 bg-[#fffaf1]/90 px-3 py-2 text-[10px] tracking-[0.18em] text-foreground/70 uppercase">
+            The beginning
+          </figcaption>
+        </motion.figure>
 
-      <div className="relative mx-auto w-full flex-1 flex items-center justify-center min-h-0 md:h-[min(580px,84dvh)] max-w-[min(100%,520px)] md:max-w-[920px] overflow-visible">
-        <div
-          className="absolute inset-0 rounded-lg opacity-[0.35] pointer-events-none hidden md:block"
-          style={{
-            backgroundImage: `radial-gradient(circle, rgba(74,102,79,0.08) 1px, transparent 1px)`,
-            backgroundSize: "12px 12px",
-          }}
-          aria-hidden
-        />
-
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="relative overflow-visible px-4 md:px-28">
-            {PHOTO_PLACEMENTS.map((placement, index) => (
-              <PinnedPhoto
-                key={`${animationKey}-${placement.id}`}
-                placement={placement}
-                index={index}
-                visible={showPhotos}
+        <motion.div
+          className="grid grid-cols-2 gap-4 md:col-start-2 md:row-start-2"
+          {...reveal(reduceMotion, 0.15)}
+        >
+          {[PHOTOS[1], PHOTOS[2]].map((photo, index) => (
+            <figure
+              key={photo.id}
+              className={`relative aspect-[4/5] overflow-hidden border-[7px] border-[#fffaf1] bg-[#fffaf1] shadow-[0_10px_26px_rgba(70,51,31,0.14)] ${
+                reduceMotion
+                  ? ""
+                  : index === 0
+                    ? "rotate-[-2deg]"
+                    : "translate-y-4 rotate-[2deg]"
+              }`}
+            >
+              <Image
+                src={photo.src}
+                alt={photo.alt}
+                fill
+                sizes="(max-width: 767px) 50vw, 18vw"
+                className="object-cover"
+                style={{ objectPosition: photo.objectPosition }}
               />
-            ))}
-            {showLetter && (
-              <StoryLetter
-                key={animationKey}
-                letterPhase={currentLetterPhase}
-                onTypingComplete={handleTypingComplete}
+              <span
+                className="absolute -top-2 left-1/2 h-4 w-14 -translate-x-1/2 bg-accent-secondary/60"
+                aria-hidden
               />
-            )}
-          </div>
-        </div>
+            </figure>
+          ))}
+        </motion.div>
       </div>
-
-      {/* Mobile: bottom carousel — bottom padding matches section top nav offset */}
-      <div
-        className={`w-full shrink-0 md:hidden`}
-      >
-        <PhotoCarousel
-          key={`bottom-${animationKey}`}
-          photos={MOBILE_CAROUSEL_BOTTOM}
-          direction="rtl"
-          visible={showPhotos}
-        />
-      </div>
-
-      {reduceMotion && phase === "done" && (
-        <motion.span className="sr-only" aria-live="polite">
-          Our story letter and photos
-        </motion.span>
-      )}
     </section>
   );
 }
