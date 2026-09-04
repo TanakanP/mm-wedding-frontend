@@ -7,8 +7,8 @@ import { PHOTOS } from "@/content/wedding";
 
 const flapEase = [0.65, 0, 0.35, 1] as const;
 const photoEase = [0.22, 1, 0.36, 1] as const;
-const tucked = { y: "8%", rotate: -1, opacity: 0 };
-const risen = { y: "-62%", rotate: 1.5, opacity: 1 };
+const tucked = { y: "8%", rotate: -1, opacity: 0, z: 0 };
+const risen = { y: "-62%", rotate: 1.5, opacity: 1, z: 24 };
 
 export interface InvitationEnvelopeProps {
   open: boolean;
@@ -62,11 +62,17 @@ export default function InvitationEnvelope({
           </span>
         </motion.div>
 
-        <div className="pointer-events-none absolute inset-0 z-[4] [perspective:1200px]">
+        <div
+          className={`pointer-events-none absolute inset-0 [perspective:1200px] ${open ? "z-[1]" : "z-[4]"}`}
+        >
           <motion.div
             className="absolute inset-x-0 top-0 h-[58%] origin-top [transform-style:preserve-3d]"
-            initial={reduceMotion ? false : { rotateX: 0 }}
-            animate={{ rotateX: open ? 178 : 0 }}
+            initial={reduceMotion ? false : { rotateX: 0, scaleY: 1, z: 0 }}
+            animate={{
+              rotateX: open ? 170 : 0,
+              scaleY: open ? 0.14 : 1,
+              z: open ? -80 : 0,
+            }}
             transition={{
               duration: reduceMotion ? 0 : 0.72,
               ease: flapEase,

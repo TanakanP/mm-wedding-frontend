@@ -28,7 +28,9 @@ test("the flap is two-sided paper with a petal lining", () => {
     envelope,
     /bg-petal \[clip-path:polygon\(0_0,100%_0,50%_100%\)\] \[transform:rotateX\(180deg\)\] \[backface-visibility:hidden\]/
   );
-  assert.match(envelope, /rotateX: open \? 178 : 0/);
+  assert.match(envelope, /rotateX: open \? 170 : 0/);
+  assert.match(envelope, /scaleY: open \? 0\.14 : 1/);
+  assert.match(envelope, /z: open \? -80 : 0/);
   assert.doesNotMatch(envelope, /style=\{\{[\s\S]*backfaceVisibility:\s*"hidden"/);
   assert.doesNotMatch(
     envelope,
@@ -38,14 +40,14 @@ test("the flap is two-sided paper with a petal lining", () => {
     envelope,
     /h-\[46vw\] min-h-56 max-h-\[335px\] w-\[min\(88vw,610px\)\]/
   );
-  assert.match(
-    envelope,
-    /pointer-events-none absolute inset-0 z-\[4\] \[perspective:1200px\]/
-  );
+  assert.match(envelope, /\[perspective:1200px\]/);
+  assert.match(envelope, /open \? "z-\[1\]" : "z-\[4\]"/);
 });
 
 test("an open photograph stacks above the folded flap", () => {
   assert.match(envelope, /open \? "z-\[6\]" : "z-\[2\]"/);
+  assert.match(envelope, /open \? "z-\[1\]" : "z-\[4\]"/);
+  assert.match(envelope, /opacity: 1, z: 24/);
   // preserve-3d on the shared parent depth-sorts the lining over z-index.
   assert.doesNotMatch(
     envelope,
