@@ -30,6 +30,14 @@ test("the flap is two-sided paper with a petal lining", () => {
   );
   assert.match(envelope, /rotateX: open \? 178 : 0/);
   assert.doesNotMatch(envelope, /style=\{\{[\s\S]*backfaceVisibility:\s*"hidden"/);
+  assert.doesNotMatch(
+    envelope,
+    /origin-top[^\n]*\[transform-style:preserve-3d\][^\n]*\[backface-visibility:hidden\]/
+  );
+  assert.match(
+    envelope,
+    /h-\[46vw\] min-h-56 max-h-\[335px\] w-\[min\(88vw,610px\)\] \[perspective:1200px\]/
+  );
 });
 
 test("an open photograph stacks above the folded flap", () => {
@@ -49,6 +57,10 @@ test("intro and hero render the shared envelope at the handoff anchor", () => {
   assert.match(envelope, /InvitationEnvelope/);
   assert.match(opening, /<InvitationEnvelope/);
   assert.match(intro, /<InvitationEnvelope/);
+  assert.match(opening, /<InvitationEnvelope[\s\S]*?\bopen\b/);
+  assert.match(opening, /seal="decorative"/);
+  assert.match(intro, /open=\{opening\}/);
+  assert.match(intro, /seal="button"/);
   assert.match(opening, viewportAnchor);
   assert.match(intro, viewportAnchor);
   assert.doesNotMatch(opening, /backfaceVisibility:\s*"hidden"/);
