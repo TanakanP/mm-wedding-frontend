@@ -1,9 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { PHOTOS } from "@/content/wedding";
+import InvitationEnvelope from "@/components/InvitationEnvelope";
 import {
   INVITATION_REPLAY_EVENT,
   INVITATION_STORAGE_KEY,
@@ -182,79 +181,14 @@ export default function InvitationIntro() {
           A little invitation
         </motion.p>
 
-        <div className="relative h-[46vw] min-h-56 max-h-[335px] w-[min(88vw,610px)] [perspective:1200px]">
-          <div className="absolute inset-0 [transform-style:preserve-3d]">
-            <div className="absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
-
-            <motion.div
-              aria-hidden={!opening}
-              className="absolute inset-x-[8%] top-[9%] z-[2] h-[82%] bg-cream p-2 pb-8 text-foreground shadow-[0_14px_30px_rgba(60,30,38,0.24)] md:p-3 md:pb-10"
-              animate={
-                !opening
-                  ? { y: "8%", rotate: -1, opacity: 0 }
-                  : { y: "-62%", rotate: 1.5, opacity: 1 }
-              }
-              transition={{
-                duration: reduceMotion ? 0 : 1.05,
-                delay: reduceMotion ? 0 : opening ? 0.72 : 0,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-            >
-              <div className="relative h-full overflow-hidden">
-                <Image
-                  src={PHOTOS[1].src}
-                  alt={PHOTOS[1].alt}
-                  fill
-                  loading="eager"
-                  sizes="(max-width: 768px) 74vw, 500px"
-                  className="object-cover"
-                  style={{ objectPosition: PHOTOS[1].objectPosition }}
-                />
-              </div>
-              <span className="absolute inset-x-0 bottom-2 text-center font-serif text-sm italic md:bottom-3 md:text-base">
-                You&apos;re invited
-              </span>
-            </motion.div>
-
-            <motion.div
-              className="absolute inset-x-0 top-0 z-[4] h-[58%] origin-top bg-paper [clip-path:polygon(0_0,100%_0,50%_100%)]"
-              animate={{ rotateX: opening ? 178 : 0 }}
-              transition={{
-                duration: reduceMotion ? 0 : 0.72,
-                ease: [0.65, 0, 0.35, 1],
-              }}
-              style={{ backfaceVisibility: "hidden" }}
-            />
-
-            <div
-              className="absolute inset-0 z-[3] bg-petal [clip-path:polygon(0_12%,50%_60%,100%_12%,100%_100%,0_100%)]"
-              aria-hidden="true"
-            />
-            <div
-              className="absolute inset-0 z-[3] border border-cream/35 [clip-path:polygon(0_12%,50%_60%,100%_12%,100%_100%,0_100%)]"
-              aria-hidden="true"
-            />
-
-            <motion.button
-              ref={openButtonRef}
-              type="button"
-              onClick={openInvitation}
-              disabled={opening || stage === "checking"}
-              aria-label="Open M and M wedding invitation"
-              className={`absolute left-1/2 top-[54%] z-[5] grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full border border-foreground/15 bg-accent-primary text-foreground shadow-[0_11px_25px_rgba(75,44,34,0.22)] outline-none focus-visible:ring-4 focus-visible:ring-cream/80 disabled:pointer-events-none md:h-[68px] md:w-[68px] ${reduceMotion ? "" : "transition-transform hover:scale-105"}`}
-              animate={
-                !opening
-                  ? { opacity: 1, scale: 1 }
-                  : { opacity: 0, scale: 0.55, rotate: -12 }
-              }
-              transition={{ duration: reduceMotion ? 0 : 0.35 }}
-            >
-              <span className="font-serif text-sm tracking-[0.08em]">
-                M&amp;M
-              </span>
-            </motion.button>
-          </div>
-        </div>
+        <InvitationEnvelope
+          open={opening}
+          seal="button"
+          reduceMotion={reduceMotion}
+          onOpen={openInvitation}
+          openButtonRef={openButtonRef}
+          sealDisabled={stage === "checking"}
+        />
 
         <motion.div
           className="mt-6 text-center md:absolute md:inset-x-0 md:bottom-full md:mb-5 md:mt-0"

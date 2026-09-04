@@ -46,6 +46,9 @@ const require = (specifier) => {
   if (specifier === "@/hooks/useHydrationSafeReducedMotion") {
     return { useHydrationSafeReducedMotion: () => false };
   }
+  if (specifier === "@/components/InvitationEnvelope") {
+    return { __esModule: true, default: () => null };
+  }
   throw new Error(`Unexpected import: ${specifier}`);
 };
 
