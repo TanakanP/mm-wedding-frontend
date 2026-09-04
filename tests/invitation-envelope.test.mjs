@@ -36,13 +36,16 @@ test("the flap is two-sided paper with a petal lining", () => {
   );
   assert.match(
     envelope,
-    /h-\[46vw\] min-h-56 max-h-\[335px\] w-\[min\(88vw,610px\)\] \[perspective:1200px\]/
+    /h-\[46vw\] min-h-56 max-h-\[335px\] w-\[min\(88vw,610px\)\]/
+  );
+  assert.match(
+    envelope,
+    /pointer-events-none absolute inset-0 z-\[4\] \[perspective:1200px\]/
   );
 });
 
 test("an open photograph stacks above the folded flap", () => {
   assert.match(envelope, /open \? "z-\[6\]" : "z-\[2\]"/);
-  assert.match(envelope, /z-\[4\] h-\[58%\] origin-top/);
   // preserve-3d on the shared parent depth-sorts the lining over z-index.
   assert.doesNotMatch(
     envelope,
