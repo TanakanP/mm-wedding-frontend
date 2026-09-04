@@ -25,9 +25,9 @@ test("the flap is two-sided paper with a petal lining", () => {
     envelope,
     /bg-petal \[clip-path:polygon\(0_0,100%_0,50%_100%\)\] \[transform:rotateX\(180deg\)\] \[backface-visibility:hidden\]/
   );
-  assert.match(envelope, /rotateX: open \? 105 : 0/);
+  assert.match(envelope, /rotateX: open \? 180 : 0/);
   assert.doesNotMatch(envelope, /scaleY:/);
-  assert.doesNotMatch(envelope, /rotateX: open \? 178/);
+  assert.doesNotMatch(envelope, /rotateX: open \? 105/);
   assert.doesNotMatch(envelope, /style=\{\{[\s\S]*backfaceVisibility:\s*"hidden"/);
   assert.match(
     envelope,
@@ -44,9 +44,9 @@ test("the photograph stays inside the original envelope pocket", () => {
   );
 });
 
-test("the open flap stays on the front hinge so the flip is visible", () => {
-  assert.match(envelope, /z-\[4\] h-\[58%\] origin-top/);
-  assert.doesNotMatch(envelope, /open \? "z-0"/);
+test("the open flap lies behind the letter like an opened envelope", () => {
+  assert.match(envelope, /open \? "z-0" : "z-\[4\]"/);
+  assert.doesNotMatch(envelope, /z-\[4\] h-\[58%\] origin-top/);
 });
 
 test("reduced motion skips the flip and still shows the lining", () => {
