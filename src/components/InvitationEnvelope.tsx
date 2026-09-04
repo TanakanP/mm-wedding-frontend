@@ -32,7 +32,7 @@ export default function InvitationEnvelope({
 
   return (
     <div className="relative mx-auto h-[46vw] min-h-56 max-h-[335px] w-[min(88vw,610px)] [perspective:1200px]">
-      <div className="absolute inset-0 [transform-style:preserve-3d]">
+      <div className="absolute inset-0">
         <div className="absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
 
         <motion.div

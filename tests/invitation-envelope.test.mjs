@@ -43,6 +43,11 @@ test("the flap is two-sided paper with a petal lining", () => {
 test("an open photograph stacks above the folded flap", () => {
   assert.match(envelope, /open \? "z-\[6\]" : "z-\[2\]"/);
   assert.match(envelope, /z-\[4\] h-\[58%\] origin-top/);
+  // preserve-3d on the shared parent depth-sorts the lining over z-index.
+  assert.doesNotMatch(
+    envelope,
+    /absolute inset-0 \[transform-style:preserve-3d\]/
+  );
 });
 
 test("reduced motion skips the flip and still shows the lining", () => {
