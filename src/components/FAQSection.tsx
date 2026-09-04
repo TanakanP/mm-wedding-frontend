@@ -1,11 +1,12 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { WEDDING } from "@/content/wedding";
 import { useSections } from "@/hooks/useSections";
 import { INVITATION_REPLAY_EVENT } from "@/lib/invitation";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { jumpToTop } from "@/lib/scroll";
 
 const faqs = [
@@ -56,7 +57,7 @@ function accordionMotion(reduceMotion: boolean) {
 export default function FAQSection() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { scrollToTop } = useSections();
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const replayInvitation = () => {
     jumpToTop();
     window.dispatchEvent(new Event(INVITATION_REPLAY_EVENT));

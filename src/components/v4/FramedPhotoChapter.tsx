@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
 import { PHOTOS } from "@/content/wedding";
 
@@ -21,7 +22,7 @@ function frameMotion(reduceMotion: boolean) {
 }
 
 export default function FramedPhotoChapter() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const photo = PHOTOS[7];
 
   return (
@@ -32,15 +33,15 @@ export default function FramedPhotoChapter() {
     >
       <motion.figure
         {...frameMotion(reduceMotion)}
-        className="relative w-[min(82vw,600px)]"
+        className="relative w-[min(88vw,600px)] sm:w-[min(82vw,600px)]"
       >
         <div className="v4-scalloped-frame bg-cream p-3 shadow-[0_32px_72px_rgba(46,32,36,0.32)] sm:p-4 md:p-5">
-          <div className="relative aspect-[3/2] overflow-hidden bg-paper">
+          <div className="relative aspect-[4/5] overflow-hidden bg-paper">
             <Image
               src={photo.src}
               alt={photo.alt}
               fill
-              sizes="(max-width: 767px) 78vw, 560px"
+              sizes="(max-width: 639px) calc(88vw - 24px), (max-width: 731px) calc(82vw - 32px), (max-width: 767px) 568px, 560px"
               className="object-cover"
               style={{ objectPosition: photo.objectPosition }}
             />

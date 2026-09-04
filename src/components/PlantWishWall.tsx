@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 
 interface Wish {
   id: number;
@@ -47,7 +48,7 @@ function WishFlower({
             whileTap: { scale: 0.96 },
             transition: { type: "spring", stiffness: 180, damping: 14, delay: isNew ? 0.05 : 0 },
           })}
-      className="group relative flex flex-col items-center focus:outline-none"
+      className="group relative flex flex-col items-center rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-wine focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       aria-label={`Wish from ${wish.name}`}
     >
       {/* Stem */}
@@ -84,7 +85,7 @@ function WishFlower({
 }
 
 export default function PlantWishWall({ userWish }: PlantWishWallProps) {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const [wishes, setWishes] = useState<Wish[]>(() =>
     sampleWishes.map((w, index) => ({ ...w, id: 1000 + index }))
   );
@@ -105,16 +106,14 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
         return; // already planted this exact user wish for this instance
       }
 
-      // Claim immediately so rapid re-renders (showerPetals etc.) do not schedule duplicates
-      plantedRef.current = sig;
-
       const userPlanted: Wish = {
         id: Date.now(),
         name,
         message,
       };
 
-      const plantTimer = setTimeout(() => {
+      const plantWish = () => {
+        plantedRef.current = sig;
         setWishes((prev) => {
           // Safety: do not append if an identical wish is already present
           if (prev.some((w) => w.name === name && w.message === message)) {
@@ -128,11 +127,18 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
         setTimeout(() => {
           setSelectedWish((cur) => (cur?.id === userPlanted.id ? null : cur));
         }, 1800);
-      }, 650);
+      };
+
+      if (reduceMotion) {
+        plantWish();
+        return;
+      }
+
+      const plantTimer = setTimeout(plantWish, 650);
 
       return () => clearTimeout(plantTimer);
     }
-  }, [userWish]);
+  }, [reduceMotion, userWish]);
 
   const handleSelect = (wish: Wish) => {
     setSelectedWish((cur) => (cur?.id === wish.id ? null : wish));
@@ -141,8 +147,8 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
   return (
     <div className="w-full">
       <div className="text-center mb-3">
-        <p className="font-serif text-xl text-accent-primary tracking-tight">Plant Your Wish Wall</p>
-        <p className="text-xs text-sage/70 font-light mt-0.5">Each bloom carries a blessing for M &amp; M</p>
+        <p className="font-serif text-xl text-wine tracking-tight">Plant Your Wish Wall</p>
+        <p className="text-xs text-violet font-light mt-0.5">Each bloom carries a blessing for M &amp; M</p>
       </div>
 
       {/* Garden area with texture and soft cream base */}
@@ -177,14 +183,14 @@ export default function PlantWishWall({ userWish }: PlantWishWallProps) {
             className="mt-3 mx-auto max-w-[28ch] text-center"
           >
             <div className="inline-block px-4 py-2 rounded-xl bg-background/80 border border-sage/15 text-sm text-foreground font-light tracking-tight shadow-sm">
-              <span className="font-medium text-accent-primary">{selectedWish.name}:</span>{" "}
+              <span className="font-medium text-wine">{selectedWish.name}:</span>{" "}
               {selectedWish.message}
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <p className="mt-2 text-[10px] text-sage/60 text-center tracking-wide">
+      <p className="mt-2 text-[10px] text-violet text-center tracking-wide">
         Tap a flower to hear its wish
         {userWish && userWish.message?.trim() && " • Yours is planted and growing"}
       </p>

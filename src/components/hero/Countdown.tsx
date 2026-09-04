@@ -34,7 +34,7 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
 
   if (timeLeft.isPast) {
     return (
-      <div className="mt-10 text-[10px] uppercase tracking-[0.2em] text-accent-primary">
+      <div className="mt-10 text-[10px] uppercase tracking-[0.2em] text-petal">
         THE NEW CHAPTER BEGINS TODAY, SEE YOU SOON.
       </div>
     );

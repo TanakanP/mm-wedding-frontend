@@ -1,11 +1,12 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
 import { PHOTOS, V4_GALLERY_PHOTO_IDS } from "@/content/wedding";
 
 export default function GalleryChapter() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   return (
     <section

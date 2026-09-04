@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { PHOTOS } from "@/content/wedding";
@@ -9,16 +9,57 @@ import {
   INVITATION_STORAGE_KEY,
   shouldShowInvitation,
 } from "@/lib/invitation";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { lockDocumentScroll } from "@/lib/scroll";
 
 type IntroStage = "checking" | "sealed" | "opening" | "dismissed";
 
+const focusableSelector = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  '[tabindex]:not([tabindex="-1"])',
+].join(",");
+
+export function containIntroFocus(
+  event: KeyboardEvent,
+  dialog: HTMLElement,
+  activeElement: Element | null = document.activeElement
+) {
+  if (event.key !== "Tab") return;
+
+  const focusableElements = Array.from(
+    dialog.querySelectorAll<HTMLElement>(focusableSelector)
+  ).filter((element) => element.getClientRects().length > 0);
+
+  if (focusableElements.length === 0) {
+    event.preventDefault();
+    dialog.focus({ preventScroll: true });
+    return;
+  }
+
+  const first = focusableElements[0];
+  const last = focusableElements[focusableElements.length - 1];
+  const focusIsInside = activeElement !== null && dialog.contains(activeElement);
+
+  if (event.shiftKey && (activeElement === first || !focusIsInside)) {
+    event.preventDefault();
+    last.focus({ preventScroll: true });
+  } else if (!event.shiftKey && (activeElement === last || !focusIsInside)) {
+    event.preventDefault();
+    first.focus({ preventScroll: true });
+  }
+}
+
 export default function InvitationIntro() {
   const [stage, setStage] = useState<IntroStage>("checking");
+  const dialogRef = useRef<HTMLDivElement>(null);
   const openButtonRef = useRef<HTMLButtonElement>(null);
   const dismissTimerRef = useRef<number | null>(null);
   const openedRef = useRef(false);
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const isVisible = stage !== "dismissed";
 
   useEffect(() => {
@@ -55,8 +96,14 @@ export default function InvitationIntro() {
       page.setAttribute("aria-hidden", "true");
     }
     const unlock = lockDocumentScroll();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (dialogRef.current) containIntroFocus(event, dialogRef.current);
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      document.removeEventListener("keydown", handleKeyDown);
       unlock();
       if (!page) return;
       page.inert = false;
@@ -66,14 +113,19 @@ export default function InvitationIntro() {
   }, [isVisible]);
 
   useEffect(() => {
-    if (stage === "sealed") {
-      window.requestAnimationFrame(() => openButtonRef.current?.focus());
-    }
-    if (stage === "dismissed" && openedRef.current) {
-      window.requestAnimationFrame(() =>
-        document.getElementById("wedding-title")?.focus()
-      );
-    }
+    const focusFrame = window.requestAnimationFrame(() => {
+      if (stage === "sealed") {
+        openButtonRef.current?.focus({ preventScroll: true });
+      } else if (stage === "opening") {
+        dialogRef.current?.focus({ preventScroll: true });
+      } else if (stage === "dismissed" && openedRef.current) {
+        document
+          .getElementById("wedding-title")
+          ?.focus({ preventScroll: true });
+      }
+    });
+
+    return () => window.cancelAnimationFrame(focusFrame);
   }, [stage]);
 
   const openInvitation = () => {
@@ -98,10 +150,12 @@ export default function InvitationIntro() {
 
   return (
     <motion.div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-labelledby="invitation-intro-title"
       aria-describedby="invitation-intro-description"
+      tabIndex={-1}
       className="fixed inset-0 z-[100] overflow-hidden bg-wine/70 backdrop-blur-xl"
       animate={{ opacity: opening ? 0 : 1 }}
       transition={

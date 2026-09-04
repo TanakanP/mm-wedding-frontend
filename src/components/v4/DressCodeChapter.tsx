@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
 import { PHOTOS, WEDDING } from "@/content/wedding";
 
@@ -36,7 +37,7 @@ function swatchMotion(reduceMotion: boolean, index: number) {
 }
 
 export default function DressCodeChapter() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const photo = PHOTOS[2];
 
   return (

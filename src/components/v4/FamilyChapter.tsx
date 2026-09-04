@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { WEDDING } from "@/content/wedding";
 
 const viewport = { once: true, amount: 0.35 } as const;
@@ -20,7 +21,7 @@ function reveal(reduceMotion: boolean) {
 }
 
 export default function FamilyChapter() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const [firstInitial, secondInitial] = WEDDING.couple.split(" & ");
 
   return (

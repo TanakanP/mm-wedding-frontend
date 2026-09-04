@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 
 interface ScheduleItem {
   readonly time: string;
@@ -15,7 +16,7 @@ const routeMask =
   'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27 preserveAspectRatio=%27none%27%3E%3Cpath d=%27M50 0 C14 24 86 72 50 100%27 fill=%27none%27 stroke=%27black%27 stroke-width=%271.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E")';
 
 export default function GardenPath({ schedule }: GardenPathProps) {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   return (
     <div className="relative mx-auto mt-12 max-w-4xl md:mt-16">

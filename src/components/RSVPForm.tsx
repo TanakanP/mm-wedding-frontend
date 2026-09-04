@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { X } from "lucide-react";
 
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { lockDocumentScroll } from "@/lib/scroll";
 import { WEDDING } from "@/content/wedding";
 import PlantWishWall from "./PlantWishWall";
@@ -51,7 +52,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
   const submissionStatusRef = useRef<HTMLParagraphElement>(null);
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   // Transient petal shower (outside the cardRef so it does not affect downloads)
   const [showerPetals, setShowerPetals] = useState<
@@ -317,7 +318,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                         </div>
 
                         <div className="absolute top-0 left-0 w-full h-2 bg-accent-secondary"></div>
-                        <h3 className="font-serif text-3xl text-accent-primary mb-6">M &amp; M</h3>
+                        <h3 className="font-serif text-3xl text-wine mb-6">M &amp; M</h3>
                         <p className="text-sage font-light mb-2">Joyfully invite</p>
                         <h4 className="font-serif text-2xl text-foreground mb-6">{submittedData.name}</h4>
                         <div className="space-y-2 text-foreground/70 font-light text-sm">
@@ -365,7 +366,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   </>
                 ) : (
                   <div className="w-full max-w-md bg-cream p-8 md:p-12 border border-sage/20 shadow-sm rounded-xl flex flex-col items-center">
-                    <h3 className="font-serif text-2xl text-accent-primary mb-4">Thank You, {submittedData.name}</h3>
+                    <h3 className="font-serif text-2xl text-wine mb-4">Thank You, {submittedData.name}</h3>
                     <p className="text-foreground/70 font-light mb-8">We appreciate your kind wishes from afar.</p>
                     
                     <div className="w-48 h-48 bg-background border-2 border-dashed border-sage/30 flex items-center justify-center rounded-lg mb-6">

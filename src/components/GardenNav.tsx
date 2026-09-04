@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { NAV_ITEMS, type SectionId } from "@/content/wedding";
 import { useSections } from "@/hooks/useSections";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 
 export default function GardenNav() {
   const { scrollTo: sectionsScrollTo, scrollToTop, currentSectionId } =
     useSections();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   const isOnHero = currentSectionId === "hero";
   const isVisible = !isOnHero;
@@ -22,7 +24,7 @@ export default function GardenNav() {
     <motion.nav
       initial={false}
       animate={{ opacity: isVisible ? 1 : 0, y: isVisible ? 0 : -10 }}
-      transition={{ duration: 0.2, ease: "easeOut" }}
+      transition={{ duration: reduceMotion ? 0 : 0.2, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 border-b border-wine/15 bg-cream/95 backdrop-blur-md"
       aria-label="Primary garden navigation"
       aria-hidden={!isVisible}
@@ -35,7 +37,7 @@ export default function GardenNav() {
             scrollToTop();
             setIsMenuOpen(false);
           }}
-          className="shrink-0 rounded px-1 font-serif text-lg tracking-[0.5px] text-wine transition-colors hover:text-accent-secondary focus:outline-none focus-visible:ring-1 focus-visible:ring-wine/50 md:text-xl"
+          className="shrink-0 rounded px-1 font-serif text-lg tracking-[0.5px] text-wine transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-wine md:text-xl"
           aria-label="Scroll to top"
         >
           M &amp; M
@@ -49,10 +51,10 @@ export default function GardenNav() {
                 <button
                   key={item.id}
                   onClick={() => navigateTo(item.id)}
-                  className={`rounded-full px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-wine/50 ${
+                  className={`rounded-full px-3 py-1.5 text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-wine ${
                     isActive
                       ? "bg-petal font-medium text-wine"
-                      : "text-wine/70 hover:bg-petal/60 hover:text-wine"
+                      : "text-wine hover:bg-petal hover:text-foreground"
                   }`}
                   aria-current={isActive ? "location" : undefined}
                 >
@@ -65,7 +67,7 @@ export default function GardenNav() {
           <button
             type="button"
             onClick={() => setIsMenuOpen((open) => !open)}
-            className="rounded-full border border-wine/30 px-3 py-1.5 text-xs font-medium tracking-wide text-wine focus:outline-none focus-visible:ring-2 focus-visible:ring-dusty/70 md:hidden"
+            className="rounded-full border border-wine/30 px-3 py-1.5 text-xs font-medium tracking-wide text-wine focus:outline-none focus-visible:ring-2 focus-visible:ring-wine md:hidden"
             aria-expanded={isMenuOpen}
             aria-controls="garden-mobile-menu"
           >
@@ -83,10 +85,10 @@ export default function GardenNav() {
                   <button
                     key={item.id}
                     onClick={() => navigateTo(item.id)}
-                    className={`block w-full rounded-sm px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-wine/60 ${
+                    className={`block w-full rounded-sm px-3 py-2 text-left text-sm transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-wine ${
                       isActive
                         ? "bg-petal font-medium text-wine"
-                        : "text-wine hover:bg-petal/60"
+                        : "text-wine hover:bg-petal hover:text-foreground"
                     }`}
                     aria-current={isActive ? "location" : undefined}
                   >
@@ -100,10 +102,14 @@ export default function GardenNav() {
 
         <motion.button
           onClick={() => navigateTo("rsvp")}
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.975 }}
-          transition={{ type: "spring", stiffness: 260, damping: 18 }}
-          className="shrink-0 rounded-full bg-wine px-3.5 py-1 text-xs font-medium text-cream shadow-sm transition-colors hover:bg-dusty hover:text-wine focus:outline-none focus-visible:ring-2 focus-visible:ring-wine/70 focus-visible:ring-offset-1 focus-visible:ring-offset-cream md:px-5 md:py-1.5 md:text-sm"
+          whileHover={reduceMotion ? undefined : { scale: 1.04 }}
+          whileTap={reduceMotion ? undefined : { scale: 0.975 }}
+          transition={
+            reduceMotion
+              ? undefined
+              : { type: "spring", stiffness: 260, damping: 18 }
+          }
+          className="shrink-0 rounded-full bg-wine px-3.5 py-1 text-xs font-medium text-cream shadow-sm transition-colors hover:bg-foreground hover:text-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-wine focus-visible:ring-offset-1 focus-visible:ring-offset-cream md:px-5 md:py-1.5 md:text-sm"
           aria-label="Scroll to RSVP"
         >
           RSVP

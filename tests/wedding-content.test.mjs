@@ -50,6 +50,13 @@ test("V4 assigns every primary photograph once", () => {
   }
 });
 
+test("photo nine describes the indoor witch-hat moment", () => {
+  assert.equal(
+    content.PHOTOS[9].alt,
+    "M and M wearing witch hats together at an indoor restaurant"
+  );
+});
+
 test("song and dress-code content have stable fallbacks", () => {
   assert.deepEqual(content.WEDDING.song, {
     title: "Our song",

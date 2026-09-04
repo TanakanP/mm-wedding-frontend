@@ -68,7 +68,7 @@ export const PHOTOS = {
   6: { id: 6, src: "/photos/display/6.jpeg", alt: "M and M standing together beside a misty garden path", objectPosition: "50% 45%" },
   7: { id: 7, src: "/photos/display/7.jpeg", alt: "M and M standing beneath warm autumn leaves", objectPosition: "50% 45%" },
   8: { id: 8, src: "/photos/display/8.jpeg", alt: "M and M sharing a candid moment together", objectPosition: "50% 45%" },
-  9: { id: 9, src: "/photos/display/9.jpeg", alt: "M and M smiling together during their travels", objectPosition: "50% 45%" },
+  9: { id: 9, src: "/photos/display/9.jpeg", alt: "M and M wearing witch hats together at an indoor restaurant", objectPosition: "50% 45%" },
   10: { id: 10, src: "/photos/display/10.jpeg", alt: "M and M together during a garden journey", objectPosition: "50% 45%" },
 } as const;
 

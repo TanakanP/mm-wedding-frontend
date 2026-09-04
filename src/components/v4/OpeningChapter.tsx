@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import Countdown from "@/components/hero/Countdown";
@@ -9,7 +10,7 @@ import { PHOTOS, WEDDING } from "@/content/wedding";
 export default function OpeningChapter() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const audioUrl = WEDDING.song.audioUrl;
 
   const toggleSong = async () => {

@@ -1,16 +1,17 @@
 "use client";
 
-import { motion, useReducedMotion, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 
 import { PHOTOS } from "@/content/wedding";
 import { useElementScrollProgress } from "@/hooks/useElementScrollProgress";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { mapScrollProgress } from "@/lib/scrollAnimations";
 
 export default function FinalImageChapter() {
   const sectionRef = useRef<HTMLElement>(null);
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const scrollProgress = useElementScrollProgress(sectionRef);
   const imageScale = useTransform(scrollProgress, (progress) =>
     mapScrollProgress(progress, [0, 1], [1, 1.045])

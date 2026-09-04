@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
 import { useState, type ReactNode } from "react";
 
@@ -13,7 +14,7 @@ interface RSVPChapterProps {
 
 export default function RSVPChapter({ children }: RSVPChapterProps) {
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
 
   return (
     <section

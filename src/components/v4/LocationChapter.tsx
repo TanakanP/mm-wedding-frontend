@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { MapPin } from "lucide-react";
 import Image from "next/image";
 import { QRCodeSVG } from "qrcode.react";
@@ -25,7 +26,7 @@ function reveal(reduceMotion: boolean, x: number) {
 }
 
 export default function LocationChapter() {
-  const reduceMotion = Boolean(useReducedMotion());
+  const reduceMotion = useHydrationSafeReducedMotion();
   const photo = PHOTOS[10];
   const locationUrl = getLocationUrl(
     WEDDING.venue.mapUrl,
