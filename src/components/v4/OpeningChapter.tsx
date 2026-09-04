@@ -1,10 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import Countdown from "@/components/hero/Countdown";
+import InvitationEnvelope from "@/components/InvitationEnvelope";
 import { PHOTOS, WEDDING } from "@/content/wedding";
 
 export default function OpeningChapter() {
@@ -59,63 +59,12 @@ export default function OpeningChapter() {
           </p>
         </header>
 
-        <div className="absolute inset-x-0 top-[43%] z-10 mx-auto h-[46vw] min-h-56 max-h-[335px] w-[min(88vw,610px)] [perspective:1200px] md:top-[54%]">
-          <div className="absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
-          <motion.div
-            className="absolute inset-x-[8%] top-[9%] z-[2] h-[82%] rotate-[1.5deg] bg-cream p-2 pb-8 shadow-[0_14px_30px_rgba(60,30,38,0.24)] md:p-3 md:pb-10"
-            initial={reduceMotion ? false : { y: "8%", rotate: -1, opacity: 0 }}
-            animate={{ y: "-62%", rotate: 1.5, opacity: 1 }}
-            transition={{
-              duration: reduceMotion ? 0 : 1.05,
-              delay: reduceMotion ? 0 : 0.72,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          >
-            <div className="relative h-full overflow-hidden">
-              <Image
-                src={PHOTOS[1].src}
-                alt={PHOTOS[1].alt}
-                fill
-                loading="eager"
-                sizes="(max-width: 768px) 74vw, 500px"
-                className="object-cover"
-                style={{ objectPosition: PHOTOS[1].objectPosition }}
-              />
-            </div>
-            <span className="absolute inset-x-0 bottom-2 text-center font-serif text-sm italic text-foreground md:bottom-3 md:text-base">
-              You&apos;re invited
-            </span>
-          </motion.div>
-          <motion.div
-            className="absolute inset-x-0 top-0 z-[4] h-[58%] origin-top bg-paper [clip-path:polygon(0_0,100%_0,50%_100%)]"
-            initial={reduceMotion ? false : { rotateX: 0 }}
-            animate={{ rotateX: 178 }}
-            transition={{
-              duration: reduceMotion ? 0 : 0.72,
-              ease: [0.65, 0, 0.35, 1],
-            }}
-            style={{ backfaceVisibility: "hidden" }}
-            aria-hidden="true"
+        <div className="absolute inset-x-0 top-[43%] z-10 md:top-[54%]">
+          <InvitationEnvelope
+            open
+            seal="decorative"
+            reduceMotion={reduceMotion}
           />
-          <div
-            className="absolute inset-0 z-[3] bg-petal [clip-path:polygon(0_12%,50%_60%,100%_12%,100%_100%,0_100%)]"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute inset-0 z-[3] border border-cream/35 [clip-path:polygon(0_12%,50%_60%,100%_12%,100%_100%,0_100%)]"
-            aria-hidden="true"
-          />
-          <motion.div
-            className="absolute left-1/2 top-[54%] z-[5] grid h-16 w-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-accent-primary font-serif text-sm text-foreground shadow-[0_11px_25px_rgba(75,44,34,0.22)] md:h-[68px] md:w-[68px]"
-            initial={
-              reduceMotion ? false : { opacity: 1, scale: 1, rotate: 0 }
-            }
-            animate={{ opacity: 0, scale: 0.55, rotate: -12 }}
-            transition={{ duration: reduceMotion ? 0 : 0.35 }}
-            aria-hidden="true"
-          >
-            M&amp;M
-          </motion.div>
         </div>
       </div>
 
