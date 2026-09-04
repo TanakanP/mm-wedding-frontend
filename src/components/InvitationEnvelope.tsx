@@ -32,25 +32,7 @@ export default function InvitationEnvelope({
 
   return (
     <div className="relative mx-auto h-[46vw] min-h-56 max-h-[335px] w-[min(88vw,610px)] [perspective:1200px]">
-      <div
-        className={`pointer-events-none absolute inset-0 ${open ? "z-0" : "z-[4]"}`}
-      >
-        <motion.div
-          className="absolute inset-x-0 top-0 h-[58%] origin-top [transform-style:preserve-3d]"
-          initial={reduceMotion ? false : { rotateX: 0 }}
-          animate={{ rotateX: open ? 178 : 0 }}
-          transition={{
-            duration: reduceMotion ? 0 : 0.72,
-            ease: flapEase,
-          }}
-          aria-hidden="true"
-        >
-          <div className="absolute inset-0 bg-paper [clip-path:polygon(0_0,100%_0,50%_100%)] [backface-visibility:hidden]" />
-          <div className="absolute inset-0 bg-petal [clip-path:polygon(0_0,100%_0,50%_100%)] [transform:rotateX(180deg)] [backface-visibility:hidden]" />
-        </motion.div>
-      </div>
-
-      <div className="absolute inset-0 z-[1] bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
+      <div className="absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
 
       <motion.div
         aria-hidden={!open}
@@ -77,6 +59,20 @@ export default function InvitationEnvelope({
         <span className="absolute inset-x-0 bottom-2 text-center font-serif text-sm italic md:bottom-3 md:text-base">
           You&apos;re invited
         </span>
+      </motion.div>
+
+      <motion.div
+        className="absolute inset-x-0 top-0 z-[4] h-[58%] origin-top [transform-style:preserve-3d]"
+        initial={reduceMotion ? false : { rotateX: 0 }}
+        animate={{ rotateX: open ? 105 : 0 }}
+        transition={{
+          duration: reduceMotion ? 0 : 0.72,
+          ease: flapEase,
+        }}
+        aria-hidden="true"
+      >
+        <div className="absolute inset-0 bg-paper [clip-path:polygon(0_0,100%_0,50%_100%)] [backface-visibility:hidden]" />
+        <div className="absolute inset-0 bg-petal [clip-path:polygon(0_0,100%_0,50%_100%)] [transform:rotateX(180deg)] [backface-visibility:hidden]" />
       </motion.div>
 
       <div
