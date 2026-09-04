@@ -16,10 +16,7 @@ const intro = await readFile(
 );
 
 test("the flap is two-sided paper with a petal lining", () => {
-  assert.match(
-    envelope,
-    /origin-top \[transform-style:preserve-3d\]/
-  );
+  assert.match(envelope, /origin-top \[transform-style:preserve-3d\]/);
   assert.match(
     envelope,
     /bg-paper \[clip-path:polygon\(0_0,100%_0,50%_100%\)\] \[backface-visibility:hidden\]/
@@ -28,31 +25,26 @@ test("the flap is two-sided paper with a petal lining", () => {
     envelope,
     /bg-petal \[clip-path:polygon\(0_0,100%_0,50%_100%\)\] \[transform:rotateX\(180deg\)\] \[backface-visibility:hidden\]/
   );
-  assert.match(envelope, /rotateX: open \? 170 : 0/);
-  assert.match(envelope, /scaleY: open \? 0\.14 : 1/);
-  assert.match(envelope, /z: open \? -80 : 0/);
+  assert.match(envelope, /rotateX: open \? 178 : 0/);
+  assert.doesNotMatch(envelope, /scaleY:/);
   assert.doesNotMatch(envelope, /style=\{\{[\s\S]*backfaceVisibility:\s*"hidden"/);
-  assert.doesNotMatch(
-    envelope,
-    /origin-top[^\n]*\[transform-style:preserve-3d\][^\n]*\[backface-visibility:hidden\]/
-  );
   assert.match(
     envelope,
-    /h-\[46vw\] min-h-56 max-h-\[335px\] w-\[min\(88vw,610px\)\]/
+    /h-\[46vw\] min-h-56 max-h-\[335px\] w-\[min\(88vw,610px\)\] \[perspective:1200px\]/
   );
-  assert.match(envelope, /\[perspective:1200px\]/);
-  assert.match(envelope, /open \? "z-\[1\]" : "z-\[4\]"/);
 });
 
-test("an open photograph stacks above the folded flap", () => {
-  assert.match(envelope, /open \? "z-\[6\]" : "z-\[2\]"/);
-  assert.match(envelope, /open \? "z-\[1\]" : "z-\[4\]"/);
-  assert.match(envelope, /opacity: 1, z: 24/);
-  // preserve-3d on the shared parent depth-sorts the lining over z-index.
-  assert.doesNotMatch(
+test("the photograph stays inside the original envelope pocket", () => {
+  assert.match(envelope, /z-\[2\] h-\[82%\] rotate-\[1\.5deg\]/);
+  assert.doesNotMatch(envelope, /z-\[6\]/);
+  assert.match(
     envelope,
-    /absolute inset-0 \[transform-style:preserve-3d\]/
+    /z-\[3\] bg-petal \[clip-path:polygon\(0_12%,50%_60%,100%_12%,100%_100%,0_100%\)\]/
   );
+});
+
+test("the open flap sits behind the envelope", () => {
+  assert.match(envelope, /open \? "z-0" : "z-\[4\]"/);
 });
 
 test("reduced motion skips the flip and still shows the lining", () => {
