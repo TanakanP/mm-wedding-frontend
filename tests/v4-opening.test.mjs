@@ -25,6 +25,8 @@ test("invitation handoff shares the hero envelope viewport anchor", () => {
 
   assert.match(source, viewportAnchor);
   assert.match(introSource, viewportAnchor);
+  assert.match(source, /<InvitationEnvelope/);
+  assert.match(introSource, /<InvitationEnvelope/);
   assert.doesNotMatch(introSource, /y:\s*70/);
 });
 
