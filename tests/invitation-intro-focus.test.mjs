@@ -38,8 +38,6 @@ const require = (specifier) => {
   if (specifier === "@/lib/invitation") {
     return {
       INVITATION_REPLAY_EVENT: "invitation:replay",
-      INVITATION_STORAGE_KEY: "invitation",
-      shouldShowInvitation: () => true,
     };
   }
   if (specifier === "@/lib/scroll") return { lockDocumentScroll: () => () => {} };
@@ -117,9 +115,9 @@ test("intro source moves focus by stage and installs a Tab boundary", () => {
   assert.match(source, /document\.addEventListener\("keydown", handleKeyDown\)/);
   assert.match(source, /containIntroFocus\(event, dialogRef\.current\)/);
   assert.match(source, /ref=\{dialogRef\}[\s\S]*tabIndex=\{-1\}/);
-  assert.match(
+  assert.doesNotMatch(
     source,
     /document\s*\.getElementById\("wedding-title"\)\s*\?\.focus/
   );
-  assert.match(source, /reduceMotion \? 160 : 3200/);
+  assert.match(source, /reduceMotion \? 160 : 2420/);
 });

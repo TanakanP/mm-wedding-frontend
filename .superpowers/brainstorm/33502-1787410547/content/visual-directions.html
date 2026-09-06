@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M&amp;M — visual direction comparison</title>
+  <style>
+    :root {
+      --ink: #183229;
+      --cream: #f7f1e7;
+      --paper: #fffaf1;
+      --rose: #c58e84;
+      --gold: #b79c64;
+      --sage: #78856f;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #eee8df;
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+    }
+    header {
+      padding: 28px clamp(20px, 5vw, 72px) 20px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font: 500 clamp(30px, 4vw, 54px)/1.02 Georgia, serif; }
+    header p { margin-top: 9px; max-width: 680px; color: #52635c; line-height: 1.55; }
+    .hint { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #7d766d; white-space: nowrap; }
+    .compare {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(16px, 2vw, 28px);
+      padding: 0 clamp(16px, 4vw, 56px) 48px;
+    }
+    .choice {
+      border: 1px solid rgba(24,50,41,.16);
+      border-radius: 18px;
+      background: rgba(255,255,255,.62);
+      padding: 12px;
+      cursor: pointer;
+      transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+    }
+    .choice:hover { transform: translateY(-3px); border-color: var(--gold); }
+    .choice.selected { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(183,156,100,.2); }
+    .preview {
+      position: relative;
+      min-height: 650px;
+      overflow: hidden;
+      border-radius: 11px;
+      isolation: isolate;
+    }
+    .copy { padding: 20px 12px 12px; }
+    .eyebrow { color: var(--rose); font-size: 10px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+    .copy h2 { margin-top: 5px; font: 500 27px/1.1 Georgia, serif; }
+    .copy p { margin-top: 8px; color: #637069; font-size: 13px; line-height: 1.55; }
+    .tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 13px; }
+    .tags span { padding: 6px 9px; border-radius: 99px; background: #eee7dc; font-size: 10px; color: #4d5e56; }
+
+    /* A — dense scrapbook */
+    .dense { background: #172820; color: #fff9ef; }
+    .dense::before {
+      content: ""; position: absolute; inset: 0; z-index: -2;
+      background: radial-gradient(circle at 72% 12%, rgba(203,151,139,.2), transparent 24%), linear-gradient(140deg,#102019,#24382e);
+    }
+    .dense::after {
+      content: ""; position: absolute; inset: 0; z-index: -1; opacity: .25;
+      background-image: repeating-linear-gradient(22deg, transparent 0 9px, rgba(255,255,255,.025) 10px 11px);
+    }
+    .dense-title { position:absolute; left:7%; top:5%; z-index:8; }
+    .dense-title small { display:block; letter-spacing:.25em; font-size:8px; text-transform:uppercase; color:#d7c69e; }
+    .dense-title strong { display:block; margin-top:5px; font:italic 34px Georgia,serif; font-weight:400; }
+    .lily { position:absolute; z-index:7; font-size:64px; filter:drop-shadow(0 8px 10px rgba(0,0,0,.25)); animation:sway 4s ease-in-out infinite alternate; transform-origin:bottom center; }
+    .lily.one { right:-2px; top:40px; }
+    .lily.two { left:-8px; top:276px; transform:rotate(-18deg); }
+    .polaroid { position:absolute; padding:8px 8px 25px; background:#fffaf1; box-shadow:0 18px 32px rgba(0,0,0,.3); animation:arrive .9s cubic-bezier(.2,.9,.2,1) both; }
+    .polaroid img { display:block; width:100%; height:100%; object-fit:cover; }
+    .p1 { left:10%; top:116px; width:47%; height:230px; transform:rotate(-5deg); animation-delay:.1s; }
+    .p2 { right:7%; top:170px; width:39%; height:205px; transform:rotate(6deg); animation-delay:.25s; }
+    .p3 { left:28%; top:380px; width:48%; height:205px; transform:rotate(2deg); animation-delay:.4s; }
+    .lace { position:absolute; right:4%; top:340px; width:132px; height:132px; border:10px double rgba(255,250,241,.78); border-radius:50%; display:grid; place-items:center; font:26px Georgia,serif; color:#f8ebd7; transform:rotate(8deg); }
+    .stamp { position:absolute; left:7%; bottom:30px; border:1px solid #d7c69e; padding:12px 15px; transform:rotate(-5deg); font:italic 16px Georgia,serif; color:#d7c69e; }
+    .film { position:absolute; right:4%; bottom:24px; display:grid; grid-template-columns:repeat(3,42px); gap:4px; padding:7px; background:#111; transform:rotate(3deg); }
+    .film img { width:42px; height:54px; object-fit:cover; opacity:.9; }
+
+    /* B — restrained editorial */
+    .editorial { background: var(--cream); }
+    .editorial::before { content:"";position:absolute;inset:0;opacity:.55;background-image:linear-gradient(rgba(183,156,100,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(183,156,100,.06) 1px,transparent 1px);background-size:24px 24px; }
+    .hero-photo { position:absolute; inset:0 0 48% 0; overflow:hidden; }
+    .hero-photo img { width:100%;height:100%;object-fit:cover;filter:saturate(.88) contrast(.95);animation:slowzoom 8s ease-in-out infinite alternate; }
+    .hero-photo::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(18,42,32,.06),rgba(18,42,32,.4)); }
+    .name-card { position:absolute; right:7%; top:31%; z-index:5; width:52%; background:#fffaf1; padding:20px; box-shadow:0 18px 36px rgba(45,45,34,.2); transform:rotate(1.5deg); animation:cardfloat 4s ease-in-out infinite alternate; }
+    .name-card small { color:var(--rose);font-size:8px;letter-spacing:.2em;text-transform:uppercase; }
+    .name-card strong { display:block;margin:7px 0;font:42px Georgia,serif;font-weight:400; }
+    .name-card span { color:#607068;font-size:10px;letter-spacing:.12em;text-transform:uppercase; }
+    .editorial-body { position:absolute; inset:55% 0 0; padding:25px 7%; }
+    .chapter { font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--rose); }
+    .editorial-body h3 { margin-top:5px;font:32px Georgia,serif;font-weight:400; }
+    .story-grid { display:grid;grid-template-columns:1.4fr .8fr;gap:15px;margin-top:18px;align-items:start; }
+    .story-main { position:relative;height:210px;padding:8px 8px 24px;background:#fffaf1;box-shadow:0 12px 28px rgba(64,55,42,.15);transform:rotate(-1.5deg);animation:softreveal 1s ease both .15s; }
+    .story-main img { width:100%;height:100%;object-fit:cover; }
+    .story-side { display:grid;gap:12px; }
+    .story-side img { width:100%;height:90px;object-fit:cover;border:5px solid #fffaf1;box-shadow:0 8px 18px rgba(64,55,42,.12); }
+    .date-tag { margin-top:10px;padding:10px;border-top:1px solid rgba(183,156,100,.6);font:italic 15px Georgia,serif;color:var(--ink); }
+    .pressed { position:absolute;left:2%;top:47%;z-index:6;color:var(--rose);font-size:50px;transform:rotate(-28deg);opacity:.65; }
+    .seal { position:absolute;right:5%;bottom:18px;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:var(--gold);font:15px Georgia,serif;color:var(--ink);box-shadow:0 8px 18px rgba(64,55,42,.2); }
+
+    @keyframes arrive { from { opacity:0; translate:0 45px; scale:.9; } to { opacity:1; translate:0 0; scale:1; } }
+    @keyframes sway { to { rotate:4deg; } }
+    @keyframes slowzoom { to { scale:1.05; } }
+    @keyframes cardfloat { to { translate:0 -7px; rotate:-.7deg; } }
+    @keyframes softreveal { from { opacity:0; translate:-18px 16px; } }
+    @media (max-width: 840px) { .compare { grid-template-columns:1fr; } header { align-items:start; flex-direction:column; } }
+    @media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important;transition:none!important; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>How fancy should M&amp;M feel?</h1>
+      <p>Both use your photography. The difference is whether every scroll moment behaves like a layered scrapbook, or the existing wedding theme stays dominant with a few cinematic photo moments.</p>
+    </div>
+    <div class="hint">Click a direction to select it</div>
+  </header>
+
+  <main class="compare">
+    <article class="choice" data-choice="dense-scrapbook" onclick="toggleSelect(this)">
+      <div class="preview dense">
+        <div class="dense-title"><small>You’re invited</small><strong>M &amp; M</strong></div>
+        <div class="lily one">⚜</div>
+        <div class="lily two">❀</div>
+        <figure class="polaroid p1"><img src="http://localhost:3000/photos/display/6.jpeg" alt="M and M in the garden" /></figure>
+        <figure class="polaroid p2"><img src="http://localhost:3000/photos/display/1.jpeg" alt="M and M smiling" /></figure>
+        <figure class="polaroid p3"><img src="http://localhost:3000/photos/display/8.jpeg" alt="M and M sharing a candid moment" /></figure>
+        <div class="lace">05</div>
+        <div class="stamp">Our story<br />in photographs</div>
+        <div class="film">
+          <img src="http://localhost:3000/photos/display/2.jpeg" alt="" />
+          <img src="http://localhost:3000/photos/display/4.jpeg" alt="" />
+          <img src="http://localhost:3000/photos/display/9.jpeg" alt="" />
+        </div>
+      </div>
+      <div class="copy">
+        <div class="eyebrow">Direction A</div>
+        <h2>Full scrapbook theatre</h2>
+        <p>Photos continuously overlap, rotate, slide, and peel into view. Decorative paper, flowers, stamps, lace, film strips, and handwritten labels fill nearly every chapter.</p>
+        <div class="tags"><span>Highest visual impact</span><span>Closest to video</span><span>Most complex</span></div>
+      </div>
+    </article>
+
+    <article class="choice" data-choice="editorial-set-pieces" onclick="toggleSelect(this)">
+      <div class="preview editorial">
+        <div class="hero-photo"><img src="http://localhost:3000/photos/display/6.jpeg" alt="M and M in the garden" /></div>
+        <div class="name-card"><small>Together with our families</small><strong>M &amp; M</strong><span>5 December 2026</span></div>
+        <div class="pressed">❀</div>
+        <div class="editorial-body">
+          <div class="chapter">A little of us</div>
+          <h3>Our story</h3>
+          <div class="story-grid">
+            <figure class="story-main"><img src="http://localhost:3000/photos/display/7.jpeg" alt="M and M beneath autumn leaves" /></figure>
+            <div class="story-side">
+              <img src="http://localhost:3000/photos/display/1.jpeg" alt="M and M smiling" />
+              <img src="http://localhost:3000/photos/display/2.jpeg" alt="M and M travelling" />
+              <div class="date-tag">A story still unfolding</div>
+            </div>
+          </div>
+        </div>
+        <div class="seal">M&amp;M</div>
+      </div>
+      <div class="copy">
+        <div class="eyebrow">Direction B — recommended</div>
+        <h2>Editorial with cinematic set pieces</h2>
+        <p>The current cream, rose, and gold identity remains. Each chapter gets one composed photo reveal, while restrained paper, pressed-flower, tag, and seal details make the full page feel finished.</p>
+        <div class="tags"><span>Elegant</span><span>Photography-first</span><span>Better readability</span></div>
+      </div>
+    </article>
+  </main>
+</body>
+</html>

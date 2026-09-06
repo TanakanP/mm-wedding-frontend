@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>M&amp;M — V1 V2 V3 Comparison</title>
+  <style>
+    :root{--ivory:#fffaf3;--cream:#f5eae6;--rose:#bd8992;--wine:#67414a;--gold:#baa16b;--muted:#846b70}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(145deg,#f6ece8,#ead8d8);color:var(--wine);font-family:Inter,Arial,sans-serif}header{padding:34px clamp(20px,5vw,70px) 24px;display:flex;align-items:end;justify-content:space-between;gap:25px}h1,h2,p{margin:0}h1{font:italic clamp(38px,5vw,64px)/1 Georgia,serif;font-weight:400}header p{margin-top:10px;max-width:700px;font-size:13px;line-height:1.55;color:var(--muted)}.hint{font-size:9px;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;color:var(--rose)}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;padding:0 clamp(14px,3vw,42px) 46px}.version{padding:10px;border:1px solid rgba(103,65,74,.17);border-radius:16px;background:rgba(255,250,243,.72);box-shadow:0 16px 40px rgba(77,45,54,.08);transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}.version:hover{transform:translateY(-3px);border-color:var(--gold)}.version.selected{border-color:var(--gold);box-shadow:0 0 0 4px rgba(186,161,107,.17),0 18px 45px rgba(77,45,54,.12)}.preview{position:relative;height:680px;overflow:hidden;border-radius:9px;background:#fff}.preview iframe{width:100%;height:100%;border:0;background:#fff}.scroll-note{position:absolute;z-index:4;right:9px;top:9px;padding:6px 9px;border-radius:99px;background:rgba(84,51,60,.78);color:#fff;font-size:7px;letter-spacing:.13em;text-transform:uppercase;pointer-events:none}.body{padding:19px 9px 10px}.label{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--rose)}.body h2{margin-top:5px;font:italic 29px Georgia,serif;font-weight:400}.body p{margin-top:9px;font-size:12px;line-height:1.55;color:var(--muted)}.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}.chips span{padding:6px 9px;border-radius:99px;background:#f0e1df;font-size:9px}.select{width:100%;margin-top:16px;padding:11px;border:1px solid var(--rose);border-radius:99px;background:transparent;color:var(--wine);font-size:9px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.version.selected .select{background:var(--wine);border-color:var(--wine);color:var(--ivory)}
+    @media(max-width:1050px){.grid{grid-template-columns:1fr}.preview{height:740px}header{align-items:start;flex-direction:column}}@media(prefers-reduced-motion:reduce){.version{transition:none}}
+  </style>
+</head>
+<body>
+  <header><div><h1>Compare V1, V2, and V3</h1><p>Scroll inside each preview. V1 prioritizes the reference’s clean continuous sequence, V2 adds the most invitation components, and V3 connects those components with stronger transitional motion.</p></div><div class="hint">Select a version below</div></header>
+  <main class="grid">
+    <article class="version" data-choice="v1-continuous" onclick="toggleSelect(this)">
+      <div class="preview"><span class="scroll-note">Scroll inside</span><iframe src="/files/pink-continuous-responsive-scroll.html" title="V1 continuous responsive preview"></iframe></div>
+      <div class="body"><div class="label">V1</div><h2>Clean continuous reference</h2><p>Closest to the three original strips joined into one page. Larger photographs, fewer decorative elements, and the calmest motion.</p><div class="chips"><span>Reference-first</span><span>Cleanest</span><span>Fastest</span></div><button class="select" type="button">Choose V1</button></div>
+    </article>
+    <article class="version" data-choice="v2-components" onclick="toggleSelect(this)">
+      <div class="preview"><span class="scroll-note">Scroll inside</span><iframe src="/files/pink-continuous-elegant-v2.html" title="V2 elegant component preview"></iframe></div>
+      <div class="body"><div class="label">V2</div><h2>Component-rich elegance</h2><p>Adds the animated envelope, calendar, lace date, music, dress-code palette, Polaroids, map, gallery, and richer RSVP composition.</p><div class="chips"><span>Most components</span><span>Soft elegance</span><span>Decorative</span></div><button class="select" type="button">Choose V2</button></div>
+    </article>
+    <article class="version" data-choice="v3-fusion" onclick="toggleSelect(this)">
+      <div class="preview"><span class="scroll-note">Scroll inside</span><iframe src="/files/pink-continuous-fusion-v3.html" title="V3 continuous fusion preview"></iframe></div>
+      <div class="body"><div class="label">V3</div><h2>Choreographed fusion</h2><p>Combines the continuous reference structure and component richness, then adds seals, ribbons, scalloped edges, and photo motion that bridge sections.</p><div class="chips"><span>Strongest transitions</span><span>Most animated</span><span>Balanced</span></div><button class="select" type="button">Choose V3</button></div>
+    </article>
+  </main>
+</body>
+</html>

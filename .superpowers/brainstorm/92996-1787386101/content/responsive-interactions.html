@@ -1,0 +1,93 @@
+<style>
+  #mm-responsive {
+    --forest: #17352b;
+    --moss: #59654a;
+    --cream: #f3ecdf;
+    --paper: #fffaf1;
+    --gold: #c1aa73;
+  }
+  #mm-responsive .preview-grid { display: grid; grid-template-columns: .72fr 1.28fr; gap: 1.25rem; align-items: start; }
+  #mm-responsive .surface { overflow: hidden; border-radius: 15px; background: var(--cream); color: var(--forest); box-shadow: 0 15px 38px rgba(0,0,0,.18); }
+  #mm-responsive .surface img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  #mm-responsive .label { font: 500 8px/1.2 Arial, sans-serif; letter-spacing: .17em; text-transform: uppercase; }
+  #mm-responsive .tag { padding: 12px; transform: rotate(2deg); background: var(--paper); box-shadow: 0 8px 20px rgba(0,0,0,.2); }
+  #mm-responsive .tag strong { display: block; margin: 3px 0; font: italic 400 25px Georgia, serif; }
+  #mm-responsive .mobile-hero { position: relative; height: 265px; }
+  #mm-responsive .mobile-hero img { filter: brightness(.68) saturate(.82); }
+  #mm-responsive .mobile-hero .tag { position: absolute; right: 14px; bottom: 20px; width: 70%; }
+  #mm-responsive .mobile-nav { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; background: rgba(255,250,241,.96); font: 500 10px Arial, sans-serif; }
+  #mm-responsive .mobile-rsvp { padding: 6px 10px; border-radius: 999px; background: var(--forest); color: var(--paper); }
+  #mm-responsive .mobile-flow { display: grid; grid-template-columns: 1fr 1fr; min-height: 140px; }
+  #mm-responsive .mobile-copy { display: flex; flex-direction: column; justify-content: center; padding: 14px; background: var(--moss); color: var(--paper); }
+  #mm-responsive .mobile-copy strong { font: 400 22px Georgia, serif; }
+  #mm-responsive .mobile-end { padding: 16px; background: var(--paper); text-align: center; font: 400 13px Georgia, serif; }
+
+  #mm-responsive .desktop-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 17px; background: var(--paper); font: 500 9px Arial, sans-serif; letter-spacing: .05em; }
+  #mm-responsive .desktop-nav span:nth-child(2) { word-spacing: 18px; }
+  #mm-responsive .desktop-hero { position: relative; height: 235px; }
+  #mm-responsive .desktop-hero img { filter: brightness(.66) saturate(.82); }
+  #mm-responsive .desktop-hero .tag { position: absolute; width: 35%; right: 8%; bottom: 24px; }
+  #mm-responsive .desktop-story { display: grid; grid-template-columns: 1.25fr .75fr; min-height: 180px; }
+  #mm-responsive .desktop-copy { display: flex; flex-direction: column; justify-content: center; padding: 25px; background: var(--paper); }
+  #mm-responsive .desktop-copy strong { margin: 5px 0; font: italic 400 27px Georgia, serif; }
+  #mm-responsive .desktop-logistics { display: grid; grid-template-columns: .8fr 1.2fr; min-height: 150px; background: var(--forest); color: var(--paper); }
+  #mm-responsive .desktop-logistics > div:first-child { display: flex; flex-direction: column; justify-content: center; padding: 22px; }
+  #mm-responsive .desktop-logistics strong { font: 400 23px Georgia, serif; }
+
+  #mm-responsive .rules { margin-top: 1.25rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+  #mm-responsive .rule { padding-top: .75rem; border-top: 2px solid var(--border); }
+  #mm-responsive .rule strong { display: block; margin-bottom: .25rem; }
+  #mm-responsive .rule p { margin: 0; color: var(--muted-foreground); font-size: .88rem; }
+  #mm-responsive .approval { margin-top: 1rem; }
+  @media (max-width: 760px) {
+    #mm-responsive .preview-grid { grid-template-columns: 1fr; }
+    #mm-responsive .rules { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+
+<div id="mm-responsive">
+  <h2>Responsive behavior and interaction</h2>
+  <p class="subtitle">The same visual identity adapts rather than shrinking. Mobile becomes a focused photo journal; desktop opens into an editorial spread.</p>
+
+  <div class="preview-grid">
+    <div>
+      <p class="label">Mobile · one narrative rail</p>
+      <div class="surface">
+        <div class="mobile-hero">
+          <img src="/files/6.jpeg" alt="Mobile hero">
+          <div class="tag"><span class="label">Together with our families</span><strong>M &amp; M</strong><span class="label">05.12.2026</span></div>
+        </div>
+        <div class="mobile-nav"><span>M &amp; M</span><span>Menu</span><span class="mobile-rsvp">RSVP</span></div>
+        <div class="mobile-flow"><div class="mobile-copy"><span class="label">The celebration</span><strong>December Fifth</strong></div><div><img src="/files/7.jpeg" alt="Mobile story photo"></div></div>
+        <div class="mobile-end">Single-column story → timeline → venue → RSVP</div>
+      </div>
+    </div>
+
+    <div>
+      <p class="label">Desktop · editorial spread</p>
+      <div class="surface">
+        <div class="desktop-nav"><span>M &amp; M</span><span>Story Schedule Venue FAQ</span><span>RSVP →</span></div>
+        <div class="desktop-hero">
+          <img src="/files/6.jpeg" alt="Desktop hero">
+          <div class="tag"><span class="label">Together with our families</span><strong>M &amp; M</strong><span class="label">Save our date · 05.12.2026</span></div>
+        </div>
+        <div class="desktop-story"><div><img src="/files/7.jpeg" alt="Desktop story photo"></div><div class="desktop-copy"><span class="label">Our story</span><strong>Some paths are found together</strong><span class="label">Continue reading ↓</span></div></div>
+        <div class="desktop-logistics"><div><span class="label">When &amp; where</span><strong>The Garden Hiroen</strong><span class="label">Open map →</span></div><div><img src="/files/10.jpeg" alt="Desktop venue photo"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="rules">
+    <div class="rule"><strong>Navigation</strong><p>Hidden over the hero, then a slim sticky bar. Mobile keeps only M &amp; M, menu, and RSVP.</p></div>
+    <div class="rule"><strong>Motion</strong><p>One hero-to-date transition, then subtle image reveals. Reduced-motion users receive the complete static page.</p></div>
+    <div class="rule"><strong>Actions</strong><p>Calendar, map, RSVP, FAQ, and wish interactions remain obvious and keyboard accessible.</p></div>
+    <div class="rule"><strong>Performance</strong><p>Hero loads first; remaining photos load responsively as guests approach them. No new animation library.</p></div>
+  </div>
+
+  <div class="options approval">
+    <div class="option" data-choice="approve-responsive-interactions" onclick="toggleSelect(this)">
+      <div class="letter">✓</div>
+      <div class="content"><h3>Approve responsive behavior</h3><p>Continue to the implementation boundaries and verification strategy.</p></div>
+    </div>
+  </div>
+</div>

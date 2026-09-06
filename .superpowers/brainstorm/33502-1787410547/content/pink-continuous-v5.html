@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>M&amp;M — V5 Floral Marks</title>
+  <style>
+    body{margin:0;background:#fffaf3;color:#573640;font-family:Inter,Arial,sans-serif}
+    .loading{min-height:100vh;display:grid;place-items:center;background:linear-gradient(145deg,#f8eee9,#eed4d8);text-align:center}
+    .loading h1{margin:0;font:italic 52px Georgia,serif;font-weight:400}.loading p{margin-top:10px;font-size:9px;letter-spacing:.2em;text-transform:uppercase}
+  </style>
+</head>
+<body>
+  <div class="loading"><div><h1>Preparing V5…</h1><p>V4 with floral background marks</p></div></div>
+  <script>
+    (async function loadV5() {
+      const response = await fetch('/files/pink-continuous-v4.html');
+      if (!response.ok) throw new Error('Unable to load V4');
+      const source = await response.text();
+      const sourceDocument = new DOMParser().parseFromString(source, 'text/html');
+
+      sourceDocument.querySelectorAll('style').forEach((style) => {
+        document.head.append(style.cloneNode(true));
+      });
+      document.body.innerHTML = sourceDocument.body.innerHTML;
+
+      const preview = document.querySelector('.preview');
+      if (preview) preview.textContent = 'V5 · V4 with floral background marks';
+      const approve = document.querySelector('.approve');
+      if (approve) {
+        approve.dataset.choice = 'approve-v5-floral';
+        approve.textContent = 'Use V5 direction';
+      }
+
+      const floralStyles = document.createElement('style');
+      floralStyles.textContent = `
+        .floral-layer{position:absolute;inset:0;z-index:1;overflow:hidden;pointer-events:none}
+        .floral-mark{position:absolute;width:clamp(72px,10vw,150px);height:auto;overflow:visible;color:rgba(169,112,124,.26);filter:drop-shadow(0 8px 12px rgba(75,45,54,.05));animation:floralDrift 5s ease-in-out infinite alternate;transform-origin:bottom center}
+        .floral-mark path,.floral-mark ellipse,.floral-mark circle{vector-effect:non-scaling-stroke}
+        .floral-mark.light{color:rgba(255,250,243,.25)}
+        .floral-mark.gold{color:rgba(189,165,110,.3)}
+        .floral-mark.violet{color:rgba(238,212,216,.28)}
+        .fm-tr{--flower-rotate:18deg;right:clamp(-35px,-2vw,-10px);top:7%;rotate:var(--flower-rotate)}
+        .fm-tl{--flower-rotate:-23deg;left:clamp(-38px,-2vw,-12px);top:9%;rotate:var(--flower-rotate);animation-delay:-1.6s}
+        .fm-br{--flower-rotate:-12deg;right:2%;bottom:-26px;rotate:var(--flower-rotate);animation-delay:-2.4s}
+        .fm-bl{--flower-rotate:15deg;left:2%;bottom:-32px;rotate:var(--flower-rotate);animation-delay:-.8s}
+        .fm-mid-r{--flower-rotate:24deg;right:-25px;top:44%;rotate:var(--flower-rotate);animation-delay:-3s}
+        .fm-mid-l{--flower-rotate:-26deg;left:-28px;top:42%;rotate:var(--flower-rotate);animation-delay:-2s}
+        .opening .floral-layer,.violet-photo .floral-layer,.schedule .floral-layer,.last-image .floral-layer{z-index:3}
+        .gallery .floral-layer{z-index:4}
+        @keyframes floralDrift{to{translate:4px -8px;rotate:calc(var(--flower-rotate,0deg) + 3deg)}}
+        @media(max-width:760px){.floral-mark{width:82px;opacity:.8}.fm-mid-r,.fm-mid-l{top:52%}}
+        @media(prefers-reduced-motion:reduce){.floral-mark{animation:none}}
+      `;
+      document.head.append(floralStyles);
+
+      const flowerSvg = (classes) => `
+        <svg class="floral-mark ${classes}" viewBox="0 0 120 190" fill="none" aria-hidden="true">
+          <path d="M59 188C57 147 61 103 58 59" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M59 145C38 134 27 118 22 101M59 121C78 112 91 98 99 82M58 92C39 82 31 67 28 53" stroke="currentColor" stroke-width="1.2"/>
+          <ellipse cx="17" cy="91" rx="13" ry="25" transform="rotate(-39 17 91)" stroke="currentColor" stroke-width="1.3"/>
+          <ellipse cx="99" cy="73" rx="13" ry="26" transform="rotate(37 99 73)" stroke="currentColor" stroke-width="1.3"/>
+          <ellipse cx="24" cy="43" rx="14" ry="27" transform="rotate(-28 24 43)" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M58 62C37 55 35 36 48 24C51 41 62 40 58 62Z" stroke="currentColor" stroke-width="1.3"/>
+          <path d="M59 61C77 53 80 35 68 23C65 40 54 42 59 61Z" stroke="currentColor" stroke-width="1.3"/>
+          <circle cx="58" cy="58" r="5" stroke="currentColor" stroke-width="1.3"/>
+        </svg>`;
+
+      const decorate = (selector, marks) => {
+        const section = document.querySelector(selector);
+        if (!section) return;
+        const layer = document.createElement('div');
+        layer.className = 'floral-layer';
+        layer.setAttribute('aria-hidden', 'true');
+        layer.innerHTML = marks.map(flowerSvg).join('');
+        section.prepend(layer);
+      };
+
+      decorate('.opening', ['light fm-tl', 'gold fm-br', 'light fm-mid-r']);
+      decorate('.count-song', ['light fm-tl', 'gold fm-br', 'light fm-mid-r']);
+      decorate('.families', ['fm-tl', 'gold fm-tr', 'fm-bl', 'gold fm-br']);
+      decorate('.violet-photo', ['violet fm-tl', 'gold fm-tr', 'violet fm-bl', 'gold fm-br']);
+      decorate('.dress', ['fm-tr', 'gold fm-bl', 'fm-mid-l']);
+      decorate('.schedule', ['light fm-tl', 'gold fm-tr', 'light fm-mid-l', 'gold fm-br']);
+      decorate('.gallery', ['light fm-tl', 'gold fm-br', 'light fm-mid-r']);
+      decorate('.location', ['gold fm-tl', 'fm-tr', 'fm-bl', 'gold fm-mid-r']);
+      decorate('.last-image', ['light fm-tl', 'gold fm-tr', 'light fm-br']);
+      decorate('.rsvp', ['fm-tl', 'gold fm-tr', 'fm-bl', 'gold fm-br']);
+    })().catch((error) => {
+      document.body.innerHTML = '<div class="loading"><div><h1>V5 could not load</h1><p>' + error.message + '</p></div></div>';
+    });
+  </script>
+</body>
+</html>

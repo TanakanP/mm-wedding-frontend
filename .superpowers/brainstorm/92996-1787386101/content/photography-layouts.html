@@ -1,0 +1,312 @@
+<style>
+  #mm-directions {
+    --mm-forest: #17352b;
+    --mm-moss: #59654a;
+    --mm-olive: #7b7a58;
+    --mm-cream: #f4eee2;
+    --mm-paper: #fffaf1;
+    --mm-rose: #b9827f;
+    --mm-gold: #b29a61;
+    color: var(--foreground);
+  }
+
+  #mm-directions .intro {
+    max-width: 68ch;
+    margin-bottom: 1.25rem;
+  }
+
+  #mm-directions .direction-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+
+  #mm-directions .direction {
+    appearance: none;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--card);
+    color: var(--card-foreground);
+    text-align: left;
+    cursor: pointer;
+  }
+
+  #mm-directions .direction:hover,
+  #mm-directions .direction:focus-visible {
+    border-color: var(--ring);
+  }
+
+  #mm-directions .direction.is-selected {
+    box-shadow: 0 0 0 3px var(--ring);
+  }
+
+  #mm-directions .phone {
+    width: 100%;
+    height: 700px;
+    overflow: hidden;
+    background: var(--mm-cream);
+    color: var(--mm-forest);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+
+  #mm-directions .phone img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  #mm-directions .photo {
+    overflow: hidden;
+    background: #d8d1c4;
+  }
+
+  #mm-directions .tiny-label {
+    font: 500 8px/1.2 Arial, sans-serif;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  #mm-directions .script {
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  #mm-directions .choice-copy {
+    padding: 1rem;
+  }
+
+  #mm-directions .choice-copy h3 {
+    margin: 0 0 .35rem;
+  }
+
+  #mm-directions .choice-copy p {
+    margin: 0;
+    color: var(--muted-foreground);
+  }
+
+  #mm-directions .recommendation {
+    display: inline-block;
+    margin-bottom: .5rem;
+    color: var(--primary);
+    font-size: .78rem;
+    font-weight: 500;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* A — cinematic editorial */
+  #mm-directions .cinematic .hero {
+    position: relative;
+    height: 220px;
+  }
+
+  #mm-directions .cinematic .hero img { filter: brightness(.64) saturate(.78); }
+
+  #mm-directions .cinematic .hero-copy {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff9ef;
+    text-align: center;
+  }
+
+  #mm-directions .cinematic .hero-copy strong {
+    margin: .4rem 0;
+    font-size: 35px;
+    font-weight: 400;
+    letter-spacing: .03em;
+  }
+
+  #mm-directions .cinematic .date-band {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    min-height: 110px;
+  }
+
+  #mm-directions .cinematic .date-copy {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 15px;
+    background: var(--mm-moss);
+    color: var(--mm-paper);
+  }
+
+  #mm-directions .cinematic .date-copy strong { font-size: 25px; font-weight: 400; }
+
+  #mm-directions .cinematic .story {
+    display: grid;
+    grid-template-columns: 1.25fr .75fr;
+    gap: 8px;
+    padding: 9px;
+    background: var(--mm-paper);
+  }
+
+  #mm-directions .cinematic .story-main { height: 146px; }
+  #mm-directions .cinematic .story-side { display: grid; gap: 8px; }
+  #mm-directions .cinematic .story-side .photo { height: 69px; }
+
+  #mm-directions .cinematic .timeline {
+    padding: 17px 20px;
+    background: var(--mm-forest);
+    color: var(--mm-paper);
+  }
+
+  #mm-directions .cinematic .timeline h4 { margin: 0 0 10px; font-size: 18px; font-weight: 400; }
+  #mm-directions .cinematic .timeline-row { display: flex; gap: 10px; margin-top: 7px; font: 400 8px/1.3 Arial, sans-serif; }
+  #mm-directions .cinematic .timeline-row span { color: #d8c896; }
+
+  #mm-directions .cinematic .closing {
+    position: relative;
+    height: 126px;
+  }
+
+  #mm-directions .cinematic .closing span {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    padding: 6px 10px;
+    background: var(--mm-paper);
+    color: var(--mm-forest);
+    font: 500 8px Arial, sans-serif;
+    letter-spacing: .14em;
+  }
+
+  /* B — scrapbook */
+  #mm-directions .scrapbook { background: var(--mm-moss); }
+  #mm-directions .scrapbook .scrap-hero { position: relative; height: 225px; padding: 14px; }
+  #mm-directions .scrapbook .scrap-hero > .photo { height: 100%; transform: rotate(-2deg); border: 7px solid var(--mm-paper); }
+  #mm-directions .scrapbook .postcard {
+    position: absolute;
+    right: 7px;
+    bottom: 14px;
+    width: 55%;
+    padding: 11px;
+    transform: rotate(3deg);
+    background: var(--mm-paper);
+    box-shadow: 0 8px 16px rgba(0,0,0,.2);
+  }
+  #mm-directions .scrapbook .postcard strong { display: block; font-size: 24px; font-weight: 400; }
+  #mm-directions .scrapbook .countdown { padding: 17px 13px; color: var(--mm-paper); text-align: center; }
+  #mm-directions .scrapbook .countdown strong { display: block; font-size: 25px; font-weight: 400; letter-spacing: .08em; }
+  #mm-directions .scrapbook .polaroids { position: relative; height: 190px; background: var(--mm-cream); }
+  #mm-directions .scrapbook .polaroid { position: absolute; width: 42%; height: 135px; padding: 6px 6px 20px; background: var(--mm-paper); box-shadow: 0 5px 12px rgba(23,53,43,.18); }
+  #mm-directions .scrapbook .polaroid:first-child { left: 10px; top: 20px; transform: rotate(-5deg); }
+  #mm-directions .scrapbook .polaroid:nth-child(2) { right: 11px; top: 32px; transform: rotate(5deg); }
+  #mm-directions .scrapbook .venue-card { margin: 13px; padding: 13px; background: var(--mm-paper); text-align: center; }
+  #mm-directions .scrapbook .venue-card .photo { height: 105px; margin-bottom: 9px; }
+  #mm-directions .scrapbook .venue-card strong { font-weight: 400; font-size: 18px; }
+  #mm-directions .scrapbook .rsvp-ticket { margin: 16px auto; width: 70%; padding: 12px; border: 1px dashed #d8c896; color: var(--mm-paper); text-align: center; }
+
+  /* C — quiet gallery */
+  #mm-directions .gallery { background: var(--mm-paper); }
+  #mm-directions .gallery .gallery-title { padding: 38px 20px 30px; text-align: center; }
+  #mm-directions .gallery .gallery-title strong { display: block; margin: 8px 0; font-size: 38px; font-weight: 400; }
+  #mm-directions .gallery .gallery-wide { height: 185px; }
+  #mm-directions .gallery .gallery-note { padding: 30px 28px; text-align: center; }
+  #mm-directions .gallery .gallery-note h4 { margin: 0 0 9px; font-size: 23px; font-weight: 400; }
+  #mm-directions .gallery .gallery-note p { margin: 0; font: 400 9px/1.6 Arial, sans-serif; }
+  #mm-directions .gallery .diptych { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; padding: 0 12px; }
+  #mm-directions .gallery .diptych .photo { height: 170px; }
+  #mm-directions .gallery .simple-info { margin: 30px 28px; padding-top: 20px; border-top: 1px solid #cfc5b4; text-align: center; }
+  #mm-directions .gallery .simple-info strong { display: block; font-size: 21px; font-weight: 400; }
+
+  @media (max-width: 800px) {
+    #mm-directions .direction-grid { grid-template-columns: 1fr; }
+    #mm-directions .phone { height: 620px; }
+  }
+</style>
+
+<div id="mm-directions">
+  <div class="intro">
+    <h2>Choose the photography rhythm</h2>
+    <p class="subtitle">All three directions reuse the same ten photographs. Click the page that feels most like M &amp; M.</p>
+  </div>
+
+  <div class="direction-grid">
+    <button class="direction" data-choice="cinematic-journal" onclick="toggleSelect(this)" aria-label="Select Cinematic Garden Journal">
+      <div class="phone cinematic">
+        <div class="hero photo">
+          <img src="http://localhost:3000/photos/6.jpeg" alt="Couple in the garden">
+          <div class="hero-copy">
+            <span class="tiny-label">We are getting married</span>
+            <strong>M <span class="script">&amp;</span> M</strong>
+            <span class="tiny-label">05 · 12 · 2026</span>
+          </div>
+        </div>
+        <div class="date-band">
+          <div class="date-copy"><span class="tiny-label">The celebration</span><strong>December<br>Fifth</strong></div>
+          <div class="photo"><img src="http://localhost:3000/photos/7.jpeg" alt="Couple outdoors"></div>
+        </div>
+        <div class="story">
+          <div class="photo story-main"><img src="http://localhost:3000/photos/3.jpeg" alt="A shared memory"></div>
+          <div class="story-side">
+            <div class="photo"><img src="http://localhost:3000/photos/4.jpeg" alt="A candid moment"></div>
+            <div class="photo"><img src="http://localhost:3000/photos/8.jpeg" alt="A garden memory"></div>
+          </div>
+        </div>
+        <div class="timeline">
+          <h4 class="script">An evening in the garden</h4>
+          <div class="timeline-row"><span>5:30 PM</span> Welcome &amp; cocktails</div>
+          <div class="timeline-row"><span>6:30 PM</span> Dinner beneath the trees</div>
+          <div class="timeline-row"><span>9:00 PM</span> Music, dancing &amp; wishes</div>
+        </div>
+        <div class="closing photo"><img src="http://localhost:3000/photos/9.jpeg" alt="Couple together"><span>RSVP WITH LOVE →</span></div>
+      </div>
+      <div class="choice-copy">
+        <span class="recommendation">Recommended</span>
+        <h3>A. Cinematic Garden Journal</h3>
+        <p>Immersive photographs, strong olive/cream chapters, and clear guest information. Closest to the references without becoming busy.</p>
+      </div>
+    </button>
+
+    <button class="direction" data-choice="modern-scrapbook" onclick="toggleSelect(this)" aria-label="Select Modern Memory Scrapbook">
+      <div class="phone scrapbook">
+        <div class="scrap-hero">
+          <div class="photo"><img src="http://localhost:3000/photos/1.jpeg" alt="Couple memory"></div>
+          <div class="postcard"><span class="tiny-label">Together with our families</span><strong class="script">M &amp; M</strong><span class="tiny-label">Save our date</span></div>
+        </div>
+        <div class="countdown"><span class="tiny-label">Until forever begins</span><strong>105 : 12 : 24</strong></div>
+        <div class="polaroids">
+          <div class="polaroid photo"><img src="http://localhost:3000/photos/2.jpeg" alt="Travel memory"></div>
+          <div class="polaroid photo"><img src="http://localhost:3000/photos/5.jpeg" alt="Happy moment"></div>
+        </div>
+        <div class="venue-card">
+          <div class="photo"><img src="http://localhost:3000/photos/10.jpeg" alt="Garden moment"></div>
+          <span class="tiny-label">Meet us in the garden</span>
+          <strong class="script">The Garden Hiroen</strong>
+        </div>
+        <div class="rsvp-ticket"><span class="tiny-label">Admit one beautiful guest</span><br><span class="script">RSVP →</span></div>
+      </div>
+      <div class="choice-copy">
+        <h3>B. Modern Memory Scrapbook</h3>
+        <p>Layered prints, postcards, stamps, and playful rotations. Highly personal and reference-forward, but visually busier.</p>
+      </div>
+    </button>
+
+    <button class="direction" data-choice="quiet-gallery" onclick="toggleSelect(this)" aria-label="Select Quiet Editorial Gallery">
+      <div class="phone gallery">
+        <div class="gallery-title"><span class="tiny-label">December 5, 2026</span><strong>M <span class="script">&amp;</span> M</strong><span class="tiny-label">The Garden Hiroen</span></div>
+        <div class="photo gallery-wide"><img src="http://localhost:3000/photos/6.jpeg" alt="Couple outdoors"></div>
+        <div class="gallery-note"><span class="tiny-label">Our story</span><h4 class="script">Some paths are found together</h4><p>A quiet collection of moments that brought us here, shared with the people we love most.</p></div>
+        <div class="diptych">
+          <div class="photo"><img src="http://localhost:3000/photos/3.jpeg" alt="Shared memory"></div>
+          <div class="photo"><img src="http://localhost:3000/photos/9.jpeg" alt="Shared memory"></div>
+        </div>
+        <div class="simple-info"><span class="tiny-label">When &amp; where</span><strong class="script">An evening in the garden</strong><span class="tiny-label">5:30 PM · RSVP</span></div>
+      </div>
+      <div class="choice-copy">
+        <h3>C. Quiet Editorial Gallery</h3>
+        <p>Large imagery, calm typography, and generous breathing room. Most timeless, but least like the dense reference rhythm.</p>
+      </div>
+    </button>
+  </div>
+</div>

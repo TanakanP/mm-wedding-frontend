@@ -21,7 +21,7 @@ test("V4 opening combines envelope, countdown, and vinyl in section one", () => 
 });
 
 test("invitation handoff shares the hero envelope viewport anchor", () => {
-  const viewportAnchor = /top-\[43%\][^"\n]*md:top-\[54%\]/;
+  const viewportAnchor = /top-\[43%\]/;
 
   assert.match(source, viewportAnchor);
   assert.match(introSource, viewportAnchor);

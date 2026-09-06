@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>M&amp;M — Soft Editorial Scrapbook</title>
+  <style>
+    :root{--cream:#f7f3eb;--paper:#fffaf1;--ink:#183229;--rose:#c48a7f;--gold:#b89e68;--sage:#78856f;--line:rgba(24,50,41,.18)}
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,sans-serif;overflow-x:hidden}
+    h1,h2,h3,p,figure{margin:0} h1,h2,h3,.script{font-family:Georgia,'Times New Roman',serif;font-weight:400}
+    .grain{position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.22;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.09'/%3E%3C/svg%3E")}
+    .topnote{position:fixed;z-index:60;top:14px;left:50%;transform:translateX(-50%);padding:8px 14px;border:1px solid rgba(255,255,255,.5);border-radius:99px;background:rgba(24,50,41,.72);backdrop-filter:blur(12px);color:#fff;font-size:9px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
+    .chapter{position:relative;min-height:720px;padding:clamp(70px,10vw,130px) clamp(22px,7vw,110px);overflow:hidden}
+    .eyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--rose)}
+    .display{font-size:clamp(46px,7vw,92px);line-height:.95;letter-spacing:-.04em}
+    .bodycopy{font:clamp(17px,2vw,23px)/1.7 Georgia,serif;color:rgba(24,50,41,.72)}
+    .paper{background:var(--paper);box-shadow:0 24px 60px rgba(55,45,33,.16)}
+    .tape{position:absolute;width:86px;height:21px;background:rgba(196,138,127,.48);backdrop-filter:blur(2px)}
+    .seal{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:var(--gold);box-shadow:0 10px 22px rgba(55,45,33,.2);font:17px Georgia,serif}
+    .flower{position:absolute;width:90px;height:150px;opacity:.58;transform:rotate(-12deg)}
+    .flower:before{content:"";position:absolute;left:43px;top:34px;width:2px;height:116px;background:var(--sage);transform:rotate(8deg);transform-origin:bottom}
+    .flower i{position:absolute;width:34px;height:52px;border:1px solid var(--rose);border-radius:70% 30% 70% 30%;background:rgba(255,250,241,.38)}
+    .flower i:nth-child(1){left:27px;top:3px;transform:rotate(-25deg)} .flower i:nth-child(2){left:48px;top:9px;transform:rotate(38deg)} .flower i:nth-child(3){left:37px;top:25px;transform:rotate(88deg)}
+    .reveal{animation:reveal linear both;animation-timeline:view();animation-range:entry 5% cover 35%}
+    @keyframes reveal{from{opacity:0;translate:0 55px;scale:.96}to{opacity:1;translate:0 0;scale:1}}
+
+    /* hero */
+    .hero{min-height:100svh;padding:0;display:grid;place-items:end center;background:#d9d1c7}
+    .hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.82) contrast(.94)}
+    .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(24,50,41,.04),rgba(24,50,41,.48))}
+    .hero-card{position:relative;z-index:3;width:min(84vw,540px);margin-bottom:8vh;padding:34px clamp(28px,5vw,54px);text-align:center;transform:rotate(1deg)}
+    .hero-card .tape{left:50%;top:-10px;transform:translateX(-50%) rotate(-2deg)}
+    .hero-card h1{margin:9px 0 13px;font-size:clamp(58px,9vw,104px);line-height:.88}
+    .hero-card .date{font-size:11px;letter-spacing:.21em;text-transform:uppercase}
+    .hero-card .seal{position:absolute;right:-24px;bottom:-27px}
+    .hero .flower{z-index:4;left:6%;bottom:4%;filter:drop-shadow(0 8px 7px rgba(0,0,0,.16))}
+
+    /* countdown stationery */
+    .countdown{display:grid;place-items:center;background-image:linear-gradient(rgba(183,156,100,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(183,156,100,.07) 1px,transparent 1px);background-size:26px 26px}
+    .stationery{position:relative;width:min(920px,92vw);height:520px}
+    .date-card{position:absolute;left:4%;top:8%;width:48%;height:400px;padding:48px;text-align:center;transform:rotate(-2deg)}
+    .date-card h2{font-size:clamp(42px,6vw,72px);line-height:1}.date-card .bigdate{margin:35px auto 18px;width:176px;height:176px;border:14px double rgba(183,156,100,.52);border-radius:48% 52% 46% 54%;display:grid;place-items:center;font:64px Georgia,serif}.date-card .flower{right:-34px;bottom:-36px}
+    .count-card{position:absolute;right:3%;bottom:2%;width:52%;padding:38px 34px;transform:rotate(2.5deg);background:#e8ded0;box-shadow:0 22px 45px rgba(55,45,33,.16)}
+    .numbers{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:22px}.numbers b{display:block;font:32px Georgia,serif;font-weight:400}.numbers span{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage)}
+    .mini-strip{position:absolute;right:-12px;top:-96px;display:flex;gap:5px;padding:7px 7px 24px;background:var(--paper);transform:rotate(4deg);box-shadow:0 14px 24px rgba(55,45,33,.18)}.mini-strip img{width:75px;height:90px;object-fit:cover}
+
+    /* story */
+    .story{min-height:980px;background:#efe5da}.story-head{max-width:650px;margin:0 auto;text-align:center}.story-head h2{margin:10px 0 22px}
+    .collage{position:relative;width:min(1050px,95vw);height:650px;margin:55px auto 0}.photo{position:absolute;padding:10px 10px 34px;background:var(--paper);box-shadow:0 22px 44px rgba(55,45,33,.18)}.photo img{width:100%;height:100%;object-fit:cover;display:block}.photo .caption{position:absolute;left:13px;bottom:10px;font:italic 13px Georgia,serif;color:rgba(24,50,41,.66)}
+    .photo-a{left:4%;top:3%;width:46%;height:520px;transform:rotate(-3deg)}.photo-b{right:5%;top:1%;width:32%;height:350px;transform:rotate(4deg)}.photo-c{right:18%;bottom:0;width:38%;height:310px;transform:rotate(-1deg)}
+    .photo-a .tape{left:38%;top:-10px;transform:rotate(-4deg)}.photo-b .tape{right:17%;top:-9px;background:rgba(183,156,100,.48);transform:rotate(4deg)}
+    .thread{position:absolute;left:48%;top:76px;width:20%;height:380px;border-right:1px dashed var(--gold);border-bottom:1px dashed var(--gold);border-radius:0 0 90% 0;opacity:.8}.story-seal{position:absolute;left:48%;top:265px;z-index:6}.story-note{position:absolute;left:5%;bottom:1%;padding:22px 28px;border:1px solid rgba(183,156,100,.45);background:rgba(255,250,241,.72);backdrop-filter:blur(6px);font:italic 20px Georgia,serif;transform:rotate(1deg)}
+
+    /* schedule */
+    .schedule{display:grid;grid-template-columns:.9fr 1.1fr;gap:8vw;align-items:center}.schedule-copy{position:relative;z-index:3}.schedule-copy h2{margin:10px 0 36px}.timeline{position:relative;padding-left:45px}.timeline:before{content:"";position:absolute;left:11px;top:8px;bottom:8px;border-left:1px dashed var(--gold)}.event{position:relative;margin:0 0 26px;padding:18px 22px;background:rgba(255,250,241,.76);border:1px solid rgba(183,156,100,.25);box-shadow:0 9px 20px rgba(55,45,33,.08);transform:rotate(-.5deg)}.event:nth-child(2){transform:rotate(.7deg)}.event:before{content:"M&M";position:absolute;left:-64px;top:14px;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--gold);font:9px Georgia,serif}.event time{font:18px Georgia,serif}.event p{margin-top:4px;font-size:12px;color:var(--sage)}
+    .schedule-visual{position:relative;height:650px}.schedule-visual .back{position:absolute;inset:8% 0 0 15%;border:1px solid rgba(183,156,100,.38);background:#e8ded0;transform:rotate(4deg)}.schedule-visual figure{position:absolute;inset:0 9% 8% 0;padding:11px 11px 38px;background:var(--paper);box-shadow:0 24px 55px rgba(55,45,33,.2);transform:rotate(-2deg)}.schedule-visual img{width:100%;height:100%;object-fit:cover}.schedule-visual .flower{right:-6%;bottom:0}.ribbon{position:absolute;right:1%;top:3%;width:140px;height:30px;background:rgba(196,138,127,.5);transform:rotate(38deg)}
+
+    /* gallery */
+    .gallery{min-height:900px;background:#e9ded2;text-align:center}.gallery h2{margin:10px 0}.tabletop{position:relative;width:min(1100px,96vw);height:620px;margin:30px auto 0}.tabletop .photo{transition:transform .35s ease,filter .35s ease}.tabletop .photo:hover{z-index:20;transform:rotate(0) translateY(-12px) scale(1.03)}.g1{left:3%;top:70px;width:29%;height:440px;transform:rotate(-6deg)}.g2{left:28%;top:12px;width:34%;height:480px;transform:rotate(2deg)}.g3{right:10%;top:74px;width:30%;height:410px;transform:rotate(6deg)}.g4{left:17%;bottom:0;width:28%;height:270px;transform:rotate(3deg)}.g5{right:19%;bottom:-4px;width:29%;height:280px;transform:rotate(-4deg)}
+    .pearl{position:absolute;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff,#d8cfc0 70%);box-shadow:0 4px 8px rgba(55,45,33,.18)}.pearl.one{width:18px;height:18px;left:4%;top:30px}.pearl.two{width:13px;height:13px;right:3%;top:190px}.pearl.three{width:22px;height:22px;right:8%;bottom:30px}
+
+    /* rsvp */
+    .rsvp{min-height:780px;display:grid;place-items:center;text-align:center}.response{position:relative;width:min(650px,90vw);padding:80px clamp(30px,8vw,90px);border:1px solid rgba(183,156,100,.4);background:rgba(255,250,241,.9);box-shadow:0 28px 70px rgba(55,45,33,.16)}.response:before{content:"";position:absolute;inset:14px;border:1px solid rgba(196,138,127,.28)}.response h2{margin:10px 0 18px}.response p{color:var(--sage);line-height:1.6}.response button{position:relative;margin-top:32px;border:0;border-radius:99px;padding:15px 31px;background:var(--ink);color:var(--paper);font:12px Inter,sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}.response .seal{position:absolute;left:50%;top:-32px;transform:translateX(-50%)}.response .flower{right:-28px;bottom:-20px}.lace-edge{position:absolute;left:0;right:0;bottom:-12px;height:24px;background:radial-gradient(circle at 12px 0,transparent 12px,var(--paper) 13px) 0 0/24px 24px repeat-x}
+    .approve{position:relative;z-index:3;margin-top:24px;border:1px solid var(--gold)!important;background:transparent!important;color:var(--ink)!important}.approve.selected{background:var(--gold)!important;box-shadow:0 0 0 5px rgba(183,156,100,.18)}
+    footer{padding:35px;text-align:center;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--sage)}
+
+    @media(max-width:760px){.chapter{min-height:650px;padding:76px 22px}.topnote{top:8px}.stationery{height:620px}.date-card{left:0;width:82%;height:350px;padding:34px}.count-card{right:0;width:82%;bottom:0}.mini-strip img{width:52px;height:64px}.story{min-height:900px}.collage{height:610px}.photo-a{left:0;width:66%;height:420px}.photo-b{right:0;width:42%;height:280px}.photo-c{right:3%;width:58%;height:270px}.thread{display:none}.story-seal{left:50%;top:310px}.story-note{font-size:15px}.schedule{grid-template-columns:1fr;gap:50px}.schedule-visual{height:480px}.gallery{min-height:820px}.tabletop{height:600px}.g1{width:44%;height:340px}.g2{left:32%;width:48%;height:360px}.g3{right:0;top:245px;width:42%;height:300px}.g4{left:5%;width:40%;height:250px}.g5{display:none}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{animation:none}.tabletop .photo{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="topnote">Concept preview · scroll slowly</div>
+
+  <section class="chapter hero">
+    <img class="hero-photo" src="http://localhost:3000/photos/display/6.jpeg" alt="M and M beside a misty garden path" />
+    <div class="flower"><i></i><i></i><i></i></div>
+    <div class="hero-card paper">
+      <span class="tape"></span><p class="eyebrow">Together with our families</p><h1>M &amp; M</h1><p class="date">5 December 2026 · The Garden Hiroen</p><div class="seal">M&amp;M</div>
+    </div>
+  </section>
+
+  <section class="chapter countdown">
+    <div class="stationery reveal">
+      <article class="date-card paper"><p class="eyebrow">Save the date</p><h2>The celebration</h2><div class="bigdate">05</div><p class="script">December · Two thousand twenty-six</p><div class="flower"><i></i><i></i><i></i></div></article>
+      <article class="count-card"><div class="mini-strip"><img src="http://localhost:3000/photos/display/1.jpeg" alt="" /><img src="http://localhost:3000/photos/display/2.jpeg" alt="" /></div><p class="eyebrow">Counting every moment</p><div class="numbers"><div><b>105</b><span>Days</span></div><div><b>08</b><span>Hours</span></div><div><b>21</b><span>Minutes</span></div><div><b>09</b><span>Seconds</span></div></div></article>
+    </div>
+  </section>
+
+  <section class="chapter story">
+    <header class="story-head reveal"><p class="eyebrow">Chapter one</p><h2 class="display">Our story</h2><p class="bodycopy">Some paths are wandered alone, and some are found together. Ours became a collection of quiet places, shared laughter, and photographs worth keeping.</p></header>
+    <div class="collage">
+      <figure class="photo photo-a reveal"><span class="tape"></span><img src="http://localhost:3000/photos/display/7.jpeg" alt="M and M beneath autumn leaves" /><figcaption class="caption">Where the story began</figcaption></figure>
+      <figure class="photo photo-b reveal"><span class="tape"></span><img src="http://localhost:3000/photos/display/1.jpeg" alt="M and M smiling" /><figcaption class="caption">A favorite afternoon</figcaption></figure>
+      <figure class="photo photo-c reveal"><img src="http://localhost:3000/photos/display/2.jpeg" alt="M and M travelling" /><figcaption class="caption">The adventure continues</figcaption></figure>
+      <div class="thread"></div><div class="seal story-seal">M&amp;M</div><div class="story-note reveal">Three photographs, one unfolding story.</div>
+    </div>
+  </section>
+
+  <section class="chapter schedule">
+    <div class="schedule-copy reveal"><p class="eyebrow">The celebration</p><h2 class="display">The day unfolds</h2><div class="timeline"><article class="event"><time>5:30 PM</time><p>Reception begins in the garden</p></article><article class="event"><time>7:00 PM</time><p>Dinner, toasts, and photographs</p></article><article class="event"><time>9:00 PM</time><p>Dancing beneath the lights</p></article></div></div>
+    <div class="schedule-visual reveal"><div class="back"></div><figure><img src="http://localhost:3000/photos/display/3.jpeg" alt="M and M with a mountain landscape" /></figure><span class="ribbon"></span><div class="flower"><i></i><i></i><i></i></div></div>
+  </section>
+
+  <section class="chapter gallery">
+    <p class="eyebrow reveal">Collected along the way</p><h2 class="display reveal">Ten photographs,<br />countless memories</h2>
+    <div class="tabletop">
+      <figure class="photo g1 reveal"><img src="http://localhost:3000/photos/display/4.jpeg" alt="A playful lakeside memory" /></figure>
+      <figure class="photo g2 reveal"><img src="http://localhost:3000/photos/display/8.jpeg" alt="A candid memory" /></figure>
+      <figure class="photo g3 reveal"><img src="http://localhost:3000/photos/display/9.jpeg" alt="M and M travelling" /></figure>
+      <figure class="photo g4 reveal"><img src="http://localhost:3000/photos/display/5.jpeg" alt="A playful portrait" /></figure>
+      <figure class="photo g5 reveal"><img src="http://localhost:3000/photos/display/10.jpeg" alt="M and M in the garden" /></figure>
+      <i class="pearl one"></i><i class="pearl two"></i><i class="pearl three"></i>
+    </div>
+  </section>
+
+  <section class="chapter rsvp">
+    <article class="response reveal"><div class="seal">M&amp;M</div><p class="eyebrow">With love</p><h2 class="display">Will you join us?</h2><p>We would be honored to celebrate this chapter with you.</p><button>Open RSVP card</button><button class="approve" data-choice="approve-soft-editorial-scrapbook" onclick="toggleSelect(this)">Choose this direction</button><div class="flower"><i></i><i></i><i></i></div><div class="lace-edge"></div></article>
+  </section>
+  <footer>Planted with love · M &amp; M · 5 December 2026</footer>
+</body>
+</html>

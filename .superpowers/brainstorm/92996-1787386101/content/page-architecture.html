@@ -1,0 +1,144 @@
+<style>
+  #mm-architecture {
+    --forest: #17352b;
+    --moss: #59654a;
+    --cream: #f3ecdf;
+    --paper: #fffaf1;
+    --rose: #b9827f;
+    --gold: #c1aa73;
+  }
+
+  #mm-architecture .architecture-grid {
+    display: grid;
+    grid-template-columns: minmax(360px, 1.1fr) minmax(250px, .9fr);
+    gap: 1.5rem;
+    align-items: start;
+  }
+
+  #mm-architecture .journey {
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--cream);
+    color: var(--forest);
+    box-shadow: 0 18px 45px rgba(0,0,0,.18);
+  }
+
+  #mm-architecture .chapter {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    min-height: 96px;
+    border-bottom: 1px solid rgba(23,53,43,.12);
+  }
+
+  #mm-architecture .chapter:last-child { border-bottom: 0; }
+  #mm-architecture .chapter-photo { overflow: hidden; background: #d9d0c2; }
+  #mm-architecture .chapter-photo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+  #mm-architecture .chapter-copy { display: flex; flex-direction: column; justify-content: center; padding: 15px 17px; }
+  #mm-architecture .chapter-copy h3 { margin: 2px 0 4px; color: inherit; font-family: Georgia, serif; font-weight: 400; }
+  #mm-architecture .chapter-copy p { margin: 0; color: inherit; opacity: .72; font-size: .84rem; }
+  #mm-architecture .chapter-no { font-size: .7rem; letter-spacing: .16em; text-transform: uppercase; opacity: .62; }
+
+  #mm-architecture .hero-row {
+    position: relative;
+    min-height: 185px;
+    display: block;
+    background: var(--forest);
+    color: var(--paper);
+  }
+  #mm-architecture .hero-row .chapter-photo { position: absolute; inset: 0; }
+  #mm-architecture .hero-row .chapter-photo img { filter: brightness(.58) saturate(.82); }
+  #mm-architecture .hero-row .chapter-copy { position: relative; min-height: 185px; width: 62%; margin-left: auto; }
+  #mm-architecture .hero-tag { padding: 13px; transform: rotate(2deg); background: var(--paper); color: var(--forest); box-shadow: 0 8px 22px rgba(0,0,0,.22); }
+
+  #mm-architecture .olive { background: var(--moss); color: var(--paper); }
+  #mm-architecture .forest { background: var(--forest); color: var(--paper); }
+  #mm-architecture .paper { background: var(--paper); }
+  #mm-architecture .photo-led { grid-template-columns: 1.35fr .65fr; min-height: 135px; }
+  #mm-architecture .photo-led .chapter-photo { order: 1; }
+  #mm-architecture .photo-led .chapter-copy { order: 2; }
+  #mm-architecture .gallery-row { display: grid; grid-template-columns: repeat(3, 1fr); min-height: 125px; }
+  #mm-architecture .gallery-row img { width: 100%; height: 125px; object-fit: cover; display: block; }
+  #mm-architecture .gallery-label { grid-column: 1 / -1; padding: 9px 14px; background: var(--paper); }
+
+  #mm-architecture .notes { position: sticky; top: 1rem; }
+  #mm-architecture .notes h3 { margin-bottom: .5rem; }
+  #mm-architecture .notes ol { padding-left: 1.2rem; }
+  #mm-architecture .notes li { margin-bottom: .7rem; }
+  #mm-architecture .guardrail { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--primary); }
+
+  @media (max-width: 760px) {
+    #mm-architecture .architecture-grid { grid-template-columns: 1fr; }
+    #mm-architecture .notes { position: static; }
+  }
+</style>
+
+<div id="mm-architecture">
+  <h2>Proposed page architecture</h2>
+  <p class="subtitle">One continuous invitation with eight chapters. Photography carries the emotion; information arrives exactly when guests need it.</p>
+
+  <div class="architecture-grid">
+    <div class="journey" aria-label="Proposed wedding website section order">
+      <section class="chapter hero-row">
+        <div class="chapter-photo"><img src="/files/6.jpeg" alt="Hero photograph"></div>
+        <div class="chapter-copy"><div class="hero-tag"><span class="chapter-no">Opening · Photo 6</span><h3>M &amp; M invitation tag</h3><p>Date, venue and a quiet cue to begin scrolling.</p></div></div>
+      </section>
+
+      <section class="chapter olive">
+        <div class="chapter-copy"><span class="chapter-no">01 · Essential</span><h3>Date &amp; countdown</h3><p>Calendar-style date, live countdown and “add to calendar.”</p></div>
+        <div class="chapter-copy"><span class="chapter-no">Natural flow</span><h3>No pinned runway</h3><p>Compact transition into the couple’s story.</p></div>
+      </section>
+
+      <section class="chapter photo-led paper">
+        <div class="chapter-photo"><img src="/files/7.jpeg" alt="Story photograph"></div>
+        <div class="chapter-copy"><span class="chapter-no">02 · Story · Photos 7, 1, 2</span><h3>Our story</h3><p>One cinematic image with two taped memory prints.</p></div>
+      </section>
+
+      <section class="chapter forest">
+        <div class="chapter-copy"><span class="chapter-no">03 · Schedule · Photo 3</span><h3>The garden path</h3><p>A readable vertical timeline—not hidden behind taps.</p></div>
+        <div class="chapter-photo"><img src="/files/3.jpeg" alt="Schedule photograph"></div>
+      </section>
+
+      <section class="chapter photo-led">
+        <div class="chapter-photo"><img src="/files/4.jpeg" alt="Full-width emotional photograph"></div>
+        <div class="chapter-copy"><span class="chapter-no">04 · Pause · Photo 4</span><h3>Photo interlude</h3><p>A large emotional beat between schedule and logistics.</p></div>
+      </section>
+
+      <section class="chapter paper">
+        <div class="chapter-copy"><span class="chapter-no">05 · Venue · Photo 10</span><h3>When &amp; where</h3><p>Venue, time, address and direct map action.</p></div>
+        <div class="chapter-photo"><img src="/files/10.jpeg" alt="Venue chapter photograph"></div>
+      </section>
+
+      <section class="gallery-row">
+        <img src="/files/5.jpeg" alt="Gallery photograph 5">
+        <img src="/files/8.jpeg" alt="Gallery photograph 8">
+        <img src="/files/9.jpeg" alt="Gallery photograph 9">
+        <div class="gallery-label"><span class="chapter-no">06 · Memory strip · Photos 5, 8, 9</span></div>
+      </section>
+
+      <section class="chapter olive">
+        <div class="chapter-copy"><span class="chapter-no">07 · Respond</span><h3>RSVP with love</h3><p>The existing form opens inline or as a focused sheet.</p></div>
+        <div class="chapter-copy"><span class="chapter-no">08 · Prepare</span><h3>FAQ &amp; wishes</h3><p>Guest answers, wish wall, closing message and footer.</p></div>
+      </section>
+    </div>
+
+    <aside class="notes">
+      <span class="chapter-no">Why this sequence</span>
+      <h3>Emotion first, logistics second</h3>
+      <ol>
+        <li>Welcome guests with a strong image and recognizable M &amp; M tag.</li>
+        <li>Answer the date immediately.</li>
+        <li>Build emotional connection through the story.</li>
+        <li>Introduce the event schedule, then give the eye a photographic rest.</li>
+        <li>Deliver venue and RSVP actions after guests are invested.</li>
+        <li>Finish with practical answers and personal wishes.</li>
+      </ol>
+      <p class="guardrail"><strong>Motion rule:</strong> one crafted hero transition, then gentle image reveals. No section should make guests wait for information.</p>
+      <div class="options">
+        <div class="option" data-choice="approve-page-architecture" onclick="toggleSelect(this)">
+          <div class="letter">✓</div>
+          <div class="content"><h3>Approve this page flow</h3><p>Continue to responsive behavior and interaction design.</p></div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>

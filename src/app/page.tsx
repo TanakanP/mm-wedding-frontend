@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import FAQSection from "@/components/FAQSection";
 import GardenNav from "@/components/GardenNav";
 import InvitationIntro from "@/components/InvitationIntro";
@@ -15,13 +16,14 @@ import ScheduleChapter from "@/components/v4/ScheduleChapter";
 import { SectionsProvider } from "@/hooks/useSections";
 
 export default function Home() {
+  const [invitationOpened, setInvitationOpened] = useState(false);
   return (
     <SectionsProvider>
-      <InvitationIntro />
+      <InvitationIntro onOpenChange={setInvitationOpened} />
       <div id="wedding-page">
         <GardenNav />
         <main className="overflow-x-clip bg-cream">
-          <OpeningChapter />
+          <OpeningChapter invitationOpened={invitationOpened} />
           <FamilyChapter />
           <FramedPhotoChapter />
           <DressCodeChapter />
