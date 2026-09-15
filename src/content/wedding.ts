@@ -36,19 +36,28 @@ export const WEDDING = {
     calendarUrl: null as string | null,
   },
   song: {
-    title: "Our song",
-    audioUrl: null as string | null,
+    title: "Forever and Ever and Always (The Softer Version)",
+    audioUrl: "/audio/forever-and-ever-and-always.mp3" as string | null,
+  },
+  invitation: {
+    brideName: "Natthida",
+    groomName: "Tanakan",
+    message:
+      "We warmly invite you to share in the joy of our wedding day. Join us for a celebration of love, laughter, and the beginning of our forever.",
+    hashtag: "#MeenToBeWithMi",
   },
   dressCode: {
-    title: "Pink garden formal",
+    title: "An Enchanted Palette",
     description:
-      "Soft rose, violet, champagne, blush, and warm neutral tones are warmly welcomed.",
+      "Dress for this special night with us in romantic attire, choosing soft, muted tones that feel elegant and joyful.",
     colors: [
-      { label: "Deep wine", value: "#68414B" },
-      { label: "Violet", value: "#756078" },
-      { label: "Muted rose", value: "#A9707C" },
-      { label: "Dusty pink", value: "#C7929B" },
-      { label: "Champagne gold", value: "#BDA56E" },
+      { label: "Apricot Peach", value: "#F5C19E" },
+      { label: "Petal Blush", value: "#E3C8C0" },
+      { label: "Mist Grey", value: "#C2C2BB" },
+      { label: "Champagne Sand", value: "#E1D1BA" },
+      { label: "Buttercream Yellow", value: "#ECDFA6" },
+      { label: "Blue Mist", value: "#C3CECD" },
+      { label: "Soft Sage", value: "#B4C1AE" },
     ],
   },
   story:

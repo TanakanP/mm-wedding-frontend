@@ -2,8 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
-import Image from "next/image";
-import { PHOTOS, WEDDING } from "@/content/wedding";
+import { WEDDING } from "@/content/wedding";
+import RetroVideoPlayer from "@/components/v4/RetroVideoPlayer";
 
 const viewport = { once: true, amount: 0.25 } as const;
 
@@ -36,9 +36,29 @@ function swatchMotion(reduceMotion: boolean, index: number) {
       };
 }
 
+function PaletteSample({ color }: { color: string }) {
+  return (
+    <span aria-hidden="true" className="relative block h-16 w-[4.5rem]">
+      {[-14, 0, 14].map((rotation, cardIndex) => (
+        <span
+          key={rotation}
+          className="absolute bottom-0 left-1/2 h-14 w-8 origin-bottom rounded-sm border border-wine/10 shadow-[0_3px_8px_rgba(81,49,58,0.14)]"
+          style={{
+            backgroundColor: color,
+            backgroundImage:
+              "linear-gradient(110deg, rgba(255,255,255,.14), transparent 48%)",
+            filter: `brightness(${0.94 + cardIndex * 0.06})`,
+            transform: `translateX(-50%) rotate(${rotation}deg)`,
+          }}
+        />
+      ))}
+      <span className="absolute bottom-1 left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-wine/45" />
+    </span>
+  );
+}
+
 export default function DressCodeChapter() {
   const reduceMotion = useHydrationSafeReducedMotion();
-  const photo = PHOTOS[2];
 
   return (
     <section
@@ -46,10 +66,10 @@ export default function DressCodeChapter() {
       aria-labelledby="dress-code-title"
       className="garden-section garden-texture bg-petal px-5 py-20 md:px-[7vw] md:py-28"
     >
-      <div className="mx-auto grid max-w-6xl items-center gap-12 md:min-h-[72svh] md:grid-cols-[minmax(0,.92fr)_minmax(0,1.08fr)] md:gap-[clamp(48px,8vw,112px)]">
+      <div className="mx-auto grid max-w-7xl items-center gap-14 lg:min-h-[72svh] lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,.8fr)] lg:gap-[clamp(48px,7vw,96px)]">
         <motion.div
           {...chapterMotion(reduceMotion, -32)}
-          className="border border-wine/20 bg-cream px-6 py-10 text-center shadow-[0_22px_60px_rgba(104,65,75,0.1)] md:px-10 md:py-14 md:text-left"
+          className="border border-wine/20 bg-cream px-6 py-10 text-center shadow-[0_22px_60px_rgba(104,65,75,0.1)] md:px-10 md:py-14 lg:text-left"
         >
           <p className="text-[10px] uppercase tracking-[0.3em] text-wine">
             Dress code
@@ -65,21 +85,19 @@ export default function DressCodeChapter() {
           </p>
 
           <ul
-            className="mt-8 flex flex-wrap justify-center gap-4 md:justify-start"
+            className="mx-auto mt-8 flex max-w-[42rem] flex-wrap justify-center gap-x-4 gap-y-6 lg:mx-0 lg:justify-start"
             aria-label="Suggested dress-code colors"
           >
             {WEDDING.dressCode.colors.map((color, index) => (
               <motion.li
                 key={color.label}
                 {...swatchMotion(reduceMotion, index)}
-                className="w-16 text-center"
+                className="w-20 text-center"
               >
-                <span
-                  aria-hidden="true"
-                  className="mx-auto block h-14 w-10 rounded-t-full rounded-b-md border border-wine/10"
-                  style={{ backgroundColor: color.value }}
-                />
-                <span className="mt-2 block text-xs leading-snug text-wine">
+                <span className="flex h-16 items-center justify-center">
+                  <PaletteSample color={color.value} />
+                </span>
+                <span className="mt-2 block text-[11px] leading-tight text-wine">
                   {color.label}
                 </span>
               </motion.li>
@@ -87,24 +105,12 @@ export default function DressCodeChapter() {
           </ul>
         </motion.div>
 
-        <motion.figure
+        <motion.div
           {...chapterMotion(reduceMotion, 32)}
-          className={`relative mx-auto w-full max-w-[560px] bg-cream p-3 pb-12 shadow-[0_28px_68px_rgba(104,65,75,0.2)] md:p-4 md:pb-14 ${reduceMotion ? "" : "md:rotate-[1.25deg]"}`}
+          className="mx-auto w-full max-w-[360px]"
         >
-          <div className="relative aspect-[4/3] overflow-hidden bg-paper">
-            <Image
-              src={photo.src}
-              alt={photo.alt}
-              fill
-              sizes="(max-width: 767px) calc(100vw - 40px), 520px"
-              className="object-cover"
-              style={{ objectPosition: photo.objectPosition }}
-            />
-          </div>
-          <figcaption className="absolute inset-x-0 bottom-4 text-center font-serif text-sm italic text-wine md:bottom-5 md:text-base">
-            Celebrate in color
-          </figcaption>
-        </motion.figure>
+          <RetroVideoPlayer />
+        </motion.div>
       </div>
     </section>
   );

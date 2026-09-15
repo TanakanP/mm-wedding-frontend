@@ -11,15 +11,21 @@ import { PHOTOS, WEDDING } from "@/content/wedding";
 export default function OpeningChapter({ invitationOpened = false }: { invitationOpened?: boolean }) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
   const reduceMotion = useHydrationSafeReducedMotion();
   const audioUrl = WEDDING.song.audioUrl;
 
   const toggleSong = async () => {
     const audio = audioRef.current;
-    if (!audio || !audioUrl) return;
+    if (!audio || !audioUrl) {
+      setHasPlayed(true);
+      setIsPlaying((playing) => !playing);
+      return;
+    }
 
     if (audio.paused) {
       await audio.play();
+      setHasPlayed(true);
       setIsPlaying(true);
     } else {
       audio.pause();
@@ -152,10 +158,10 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
       <div className="grid min-h-[520px] items-center gap-14 bg-wine px-5 py-20 text-cream md:grid-cols-[1.15fr_.85fr] md:gap-[clamp(30px,7vw,90px)] md:px-[7vw] md:py-24">
         <div className="text-center">
           <p className="text-[9px] uppercase tracking-[0.27em] text-petal">
-            The celebration begins in
+            EVERY MOMENT LEADS TO YOU
           </p>
           <h2 className="mt-3 font-serif text-5xl italic md:text-6xl">
-            Countdown
+            Until Forever
           </h2>
           <Countdown targetDateIso={WEDDING.dateIso} />
         </div>
@@ -164,25 +170,56 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
           <button
             type="button"
             onClick={toggleSong}
-            disabled={!audioUrl}
-            aria-pressed={audioUrl ? isPlaying : undefined}
+            aria-pressed={isPlaying}
             aria-label={
               audioUrl
                 ? `${isPlaying ? "Pause" : "Play"} ${WEDDING.song.title}`
-                : "Our song coming soon"
+                : `${isPlaying ? "Stop" : "Start"} spinning the disc`
             }
-            className="group mx-auto flex flex-col items-center gap-5 rounded-sm p-2 text-cream outline-none focus-visible:ring-2 focus-visible:ring-petal disabled:cursor-not-allowed disabled:opacity-75"
+            className="group mx-auto flex cursor-pointer flex-col items-center gap-5 rounded-sm p-2 text-cream outline-none focus-visible:ring-2 focus-visible:ring-petal"
           >
+            <span className="turntable-base block" aria-hidden="true">
+            <span className="relative block">
             <span
               aria-hidden="true"
-              className={`relative block aspect-square w-[min(58vw,250px)] rounded-full bg-[repeating-radial-gradient(circle,#2e2024_0_4px,#3c292f_5px_7px)] shadow-[0_18px_38px_rgba(30,14,19,0.3)] before:absolute before:inset-[34%] before:grid before:place-items-center before:rounded-full before:bg-dusty before:font-serif before:text-xl before:italic before:text-cream before:content-['M&M'] after:absolute after:left-1/2 after:top-1/2 after:h-2 after:w-2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full after:bg-cream ${isPlaying && !reduceMotion ? "animate-spin [animation-duration:6s]" : ""}`}
-            />
-            <span className="text-[9px] uppercase tracking-[0.22em]">
-              {audioUrl
-                ? isPlaying
-                  ? "Pause our song"
-                  : "Listen to our song"
-                : "Our song coming soon"}
+              className="vinyl-record relative block aspect-square w-[min(58vw,250px)] animate-spin rounded-full [animation-duration:6s]"
+              style={{ animationPlayState: isPlaying && !reduceMotion ? "running" : "paused" }}
+            >
+              <span className="vinyl-label absolute inset-[33%] rounded-full">
+                <span className="absolute inset-x-0 top-[12%] text-[5px] font-semibold tracking-[0.2em] text-wine/80">M & M RECORDS</span>
+                <span
+                  className="absolute left-[28%] top-[26%] block h-[43%] w-[44%] bg-wine"
+                  style={{ mask: "url('/seal-logo.svg') center / contain no-repeat" }}
+                />
+                <span className="absolute inset-x-0 bottom-[12%] text-[4px] font-semibold tracking-[0.15em] text-wine/80">SIDE A · 33⅓ RPM</span>
+              </span>
+              <span className="vinyl-spindle absolute left-1/2 top-1/2 size-[7px] -translate-x-1/2 -translate-y-1/2 rounded-full" />
+            </span>
+            <span className="vinyl-tonearm-base" />
+            <span
+              className="vinyl-tonearm"
+              style={{
+                transform: `rotate(${isPlaying ? 24 : -12}deg)`,
+                transitionDuration: reduceMotion ? "0ms" : "250ms",
+              }}
+            >
+              <span className={`vinyl-tonearm-body ${isPlaying && !reduceMotion ? "vinyl-tonearm-playing" : ""}`}>
+                <span className="vinyl-tonearm-weight" />
+                <span className="vinyl-tonearm-shaft" />
+                <span className="vinyl-tonearm-head" />
+              </span>
+            </span>
+            </span>
+            </span>
+            <span
+              className={`relative text-[9px] uppercase tracking-[0.22em] ${reduceMotion || isPlaying ? "" : hasPlayed ? "song-label-twitch" : "song-label-float"}`}
+            >
+              {isPlaying ? "LOVE IS PLAYING" : hasPlayed ? "RESUME THE VIBE" : "LISTEN TO OUR SONG"}
+              {isPlaying && (
+                <span className="absolute left-full ml-1 inline-block w-[3em] text-left" aria-hidden="true">
+                  <span className={reduceMotion ? "" : "song-playing-dots"}>. . .</span>
+                </span>
+              )}
             </span>
           </button>
           {audioUrl && (
@@ -190,6 +227,7 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
               ref={audioRef}
               src={audioUrl}
               preload="none"
+              loop
               onEnded={() => setIsPlaying(false)}
             />
           )}

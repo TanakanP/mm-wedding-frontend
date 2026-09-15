@@ -53,11 +53,11 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
       <div className="mb-4 text-[10px] uppercase tracking-[0.2em] text-petal">
         The new chapter awaits in
       </div>
-      <div className="grid grid-cols-2 items-start gap-x-3 gap-y-5 font-light text-cream sm:grid-cols-5 sm:gap-x-5 md:gap-x-7">
+      <div className="mx-auto grid max-w-[22rem] grid-cols-5 items-start gap-x-1 font-light text-cream sm:gap-x-2 md:max-w-none md:gap-x-4">
         {unitLabels.map((label, index) => (
           <div
             key={label}
-            className={`text-center ${index === unitLabels.length - 1 ? "col-span-2 sm:col-span-1" : ""}`}
+            className="min-w-0 text-center"
           >
             <div
               className="font-serif text-3xl tabular-nums sm:text-4xl md:text-5xl lg:text-6xl"
@@ -65,7 +65,7 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
             >
               {values[index]}
             </div>
-            <div className="mt-1 text-[8px] tracking-[0.2em] text-petal sm:text-[9px] md:text-[10px]">
+            <div className="mt-1 text-[8px] tracking-[0.08em] text-petal sm:text-[9px] sm:tracking-[0.15em] lg:text-[10px]">
               {label}
             </div>
           </div>

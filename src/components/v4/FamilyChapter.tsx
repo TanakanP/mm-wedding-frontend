@@ -22,38 +22,42 @@ function reveal(reduceMotion: boolean) {
 
 export default function FamilyChapter() {
   const reduceMotion = useHydrationSafeReducedMotion();
-  const [firstInitial, secondInitial] = WEDDING.couple.split(" & ");
+  const { brideName, groomName, message, hashtag } = WEDDING.invitation;
 
   return (
     <section
       id="families"
       aria-labelledby="families-title"
-      className="garden-section garden-texture flex min-h-[68svh] items-center bg-cream px-5 py-20 md:min-h-[76svh] md:px-10 md:py-28"
+      className="garden-section garden-texture bg-cream px-5 py-14 md:px-10 md:py-20"
     >
       <motion.div
         {...reveal(reduceMotion)}
-        className="relative mx-auto w-full max-w-3xl border border-wine/25 bg-paper px-6 py-16 text-center shadow-[0_24px_70px_rgba(104,65,75,0.09)] before:pointer-events-none before:absolute before:inset-2 before:border before:border-wine/15 md:px-16 md:py-24"
+        className="relative mx-auto w-full max-w-6xl border border-wine/25 bg-paper px-6 py-12 text-center shadow-[0_20px_55px_rgba(104,65,75,0.08)] before:pointer-events-none before:absolute before:inset-x-4 before:top-2 before:h-px before:bg-accent-primary/35 after:pointer-events-none after:absolute after:inset-x-4 after:bottom-2 after:h-px after:bg-accent-primary/35 md:px-16 md:py-16"
       >
         <p className="relative text-[10px] uppercase tracking-[0.32em] text-wine">
-          Together with our families
+          Our day will be brighter with you
         </p>
         <h2
           id="families-title"
-          aria-label={WEDDING.couple}
-          className="relative mt-7 font-serif text-6xl italic leading-none text-wine sm:text-7xl md:text-8xl"
+          aria-label={`${brideName} and ${groomName}`}
+          className="relative mt-7 flex flex-col items-center justify-center gap-4 font-serif text-5xl italic leading-none text-wine sm:flex-row sm:gap-6 sm:text-6xl md:text-7xl lg:text-8xl"
         >
-          {firstInitial}{" "}
-          <span aria-hidden="true" className="text-accent-primary">
-            &amp;
-          </span>{" "}
-          {secondInitial}
+          <span>{brideName}</span>
+          <span aria-hidden="true" className="relative block h-9 w-14 shrink-0 sm:h-10 sm:w-16">
+            <span className="absolute left-1 top-1 size-8 rounded-full border-2 border-accent-primary sm:size-9" />
+            <span className="absolute right-1 top-1 size-8 rounded-full border-2 border-accent-primary sm:size-9" />
+          </span>
+          <span>{groomName}</span>
         </h2>
         <div
           aria-hidden="true"
           className="relative mx-auto mt-8 h-px w-20 bg-accent-primary/70"
         />
         <p className="relative mx-auto mt-8 max-w-xl font-serif text-lg leading-relaxed text-wine md:text-xl">
-          Invite you to share in the joy of their wedding celebration.
+          {message}
+        </p>
+        <p className="relative mt-8 text-[11px] font-medium tracking-[0.18em] text-wine/75 md:text-xs">
+          {hashtag}
         </p>
       </motion.div>
     </section>

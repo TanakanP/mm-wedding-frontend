@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FAQSection from "@/components/FAQSection";
 import GardenNav from "@/components/GardenNav";
 import InvitationIntro from "@/components/InvitationIntro";
@@ -14,9 +14,21 @@ import OpeningChapter from "@/components/v4/OpeningChapter";
 import RSVPChapter from "@/components/v4/RSVPChapter";
 import ScheduleChapter from "@/components/v4/ScheduleChapter";
 import { SectionsProvider } from "@/hooks/useSections";
+import { jumpToTop } from "@/lib/scroll";
 
 export default function Home() {
   const [invitationOpened, setInvitationOpened] = useState(false);
+
+  useEffect(() => {
+    const previousScrollRestoration = window.history.scrollRestoration;
+    window.history.scrollRestoration = "manual";
+    jumpToTop();
+
+    return () => {
+      window.history.scrollRestoration = previousScrollRestoration;
+    };
+  }, []);
+
   return (
     <SectionsProvider>
       <InvitationIntro onOpenChange={setInvitationOpened} />
