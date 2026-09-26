@@ -3,7 +3,14 @@
 import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
-import { PHOTOS, V4_GALLERY_PHOTO_IDS } from "@/content/wedding";
+import { GALLERY_PHOTOS } from "@/content/wedding";
+
+const galleryLayouts = [
+  "col-span-2 aspect-[3/4] w-full md:h-[36rem] md:aspect-auto",
+  "aspect-[3/4] md:h-[36rem] md:aspect-auto",
+  "aspect-[3/4] md:h-[36rem] md:aspect-auto",
+  "col-span-2 aspect-[3/2] w-full md:h-[28rem] md:aspect-auto",
+] as const;
 
 export default function GalleryChapter() {
   const reduceMotion = useHydrationSafeReducedMotion();
@@ -14,14 +21,8 @@ export default function GalleryChapter() {
       aria-label="Our photo gallery"
       className="garden-section grid w-full grid-cols-2 gap-0 overflow-hidden bg-wine"
     >
-      {V4_GALLERY_PHOTO_IDS.map((id, index) => {
-        const photo = PHOTOS[id];
-        const imageSizes =
-          index === 0
-            ? "(max-width: 767px) 100vw, 50vw"
-            : index === 3
-              ? "100vw"
-              : "50vw";
+      {GALLERY_PHOTOS.map((photo, index) => {
+        const imageSizes = index === 0 || index === 3 ? "100vw" : "50vw";
         const revealMotion = reduceMotion
           ? {}
           : {
@@ -45,14 +46,8 @@ export default function GalleryChapter() {
 
         return (
           <figure
-            key={photo.id}
-            className={`relative overflow-hidden ${
-              index === 0
-                ? "col-span-2 aspect-[4/5] md:col-span-1 md:row-span-2 md:aspect-auto md:min-h-[44rem]"
-                : index === 3
-                  ? "col-span-2 aspect-[16/10] md:aspect-[16/7]"
-                  : "aspect-[3/4] md:min-h-[22rem] md:aspect-auto"
-            }`}
+            key={photo.src}
+            className={`relative overflow-hidden ${galleryLayouts[index]}`}
           >
             <motion.div
               {...revealMotion}

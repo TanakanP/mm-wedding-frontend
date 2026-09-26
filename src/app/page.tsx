@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FAQSection from "@/components/FAQSection";
 import GardenNav from "@/components/GardenNav";
 import InvitationIntro from "@/components/InvitationIntro";
 import DressCodeChapter from "@/components/v4/DressCodeChapter";
@@ -43,9 +42,7 @@ export default function Home() {
           <GalleryChapter />
           <LocationChapter />
           <FinalImageChapter />
-          <RSVPChapter>
-            <FAQSection />
-          </RSVPChapter>
+          <RSVPChapter />
         </main>
       </div>
     </SectionsProvider>

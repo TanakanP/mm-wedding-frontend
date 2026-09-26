@@ -22,7 +22,7 @@ export default function FinalImageChapter() {
     <section
       ref={sectionRef}
       id="final-image"
-      aria-label="One final memory before RSVP"
+      aria-label="One final leap before RSVP"
       className="garden-section relative h-[130vw] min-h-[38rem] max-h-[59.375rem] w-full overflow-hidden bg-wine md:h-[88vw]"
     >
       <motion.div
@@ -34,20 +34,20 @@ export default function FinalImageChapter() {
           alt={photo.alt}
           fill
           sizes="100vw"
-          className="object-cover"
+          className="object-cover opacity-65 saturate-[0.65] contrast-[1.25]"
           style={{ objectPosition: photo.objectPosition }}
         />
       </motion.div>
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-wine/80"
+        className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/30 to-foreground/85"
       />
       <div className="absolute inset-x-5 bottom-[8%] z-10 text-cream md:inset-x-[7vw] md:bottom-[9%]">
         <h2 className="font-serif text-5xl italic leading-none drop-shadow-[0_2px_16px_rgba(46,32,36,.7)] md:text-7xl">
-          One more memory
+          One more leap
         </h2>
-        <p className="mt-4 text-[10px] font-medium uppercase tracking-[0.24em] text-cream drop-shadow-[0_2px_10px_rgba(46,32,36,.85)] md:text-xs">
-          Before the next chapter begins
+        <p className="ml-3 mt-4 text-[10px] font-medium uppercase tracking-[0.24em] text-cream drop-shadow-[0_2px_10px_rgba(46,32,36,.85)] md:text-xs">
+          Before the next chapter
         </p>
       </div>
     </section>

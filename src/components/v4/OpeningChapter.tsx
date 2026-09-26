@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import PetalsCanvas from "@/components/hero/PetalsCanvas";
 import Countdown from "@/components/hero/Countdown";
-import { PHOTOS, WEDDING } from "@/content/wedding";
+import { OPENING_PHOTOS, WEDDING } from "@/content/wedding";
 
 export default function OpeningChapter({ invitationOpened = false }: { invitationOpened?: boolean }) {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -37,13 +37,13 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
     <section id="hero" className="garden-section overflow-hidden bg-wine">
       <div className="relative min-h-[100svh] overflow-hidden bg-foreground text-cream">
         <Image
-          src={PHOTOS[6].src}
-          alt={PHOTOS[6].alt}
+          src={OPENING_PHOTOS.background.src}
+          alt={OPENING_PHOTOS.background.alt}
           fill
           preload
           sizes="100vw"
           className="object-cover opacity-35 saturate-[.65] contrast-[.92]"
-          style={{ objectPosition: PHOTOS[6].objectPosition }}
+          style={{ objectPosition: OPENING_PHOTOS.background.objectPosition }}
         />
         <div
           className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/30 to-foreground/85"
@@ -97,13 +97,13 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
           >
             <div className="relative h-full overflow-hidden">
               <Image
-                src={PHOTOS[1].src}
-                alt={PHOTOS[1].alt}
+                src={OPENING_PHOTOS.envelope.src}
+                alt={OPENING_PHOTOS.envelope.alt}
                 fill
                 loading="eager"
                 sizes="(max-width: 768px) 74vw, 500px"
-                className="object-cover"
-                style={{ objectPosition: PHOTOS[1].objectPosition }}
+                className="scale-[1.35] object-cover"
+                style={{ objectPosition: OPENING_PHOTOS.envelope.objectPosition }}
               />
             </div>
             <span className="absolute inset-x-0 bottom-2 text-center font-serif text-sm italic text-foreground md:bottom-3 md:text-base">

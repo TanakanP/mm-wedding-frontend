@@ -23,7 +23,7 @@ const SECTION_LABELS: Record<SectionId, string> = {
   schedule: "Schedule",
   gallery: "Photo gallery",
   venue: "Location",
-  "final-image": "Final memory",
+  "final-image": "Final leap",
   rsvp: "RSVP",
   "garden-whispers": "Frequently asked questions",
 };

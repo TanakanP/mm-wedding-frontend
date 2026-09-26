@@ -3,16 +3,12 @@
 import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import Image from "next/image";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 
 import RSVPForm from "@/components/RSVPForm";
 import { PHOTOS } from "@/content/wedding";
 
-interface RSVPChapterProps {
-  children: ReactNode;
-}
-
-export default function RSVPChapter({ children }: RSVPChapterProps) {
+export default function RSVPChapter() {
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
   const reduceMotion = useHydrationSafeReducedMotion();
 
@@ -61,30 +57,14 @@ export default function RSVPChapter({ children }: RSVPChapterProps) {
             />
             <div
               aria-hidden="true"
-              className="absolute left-1/2 top-0 z-20 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-accent-primary font-serif text-sm italic tracking-[0.06em] text-wine shadow-[0_11px_25px_rgba(75,44,34,.22)] md:size-[4.5rem] md:text-base"
+              className="envelope-seal absolute left-1/2 top-0 z-20 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center md:size-[4.5rem]"
             >
-              M&amp;M
-            </div>
-
-            <div
-              aria-hidden="true"
-              className="absolute left-3 top-8 z-10 w-[4.5rem] -rotate-[7deg] bg-white p-1.5 shadow-[0_10px_22px_rgba(72,36,46,.19)] md:-left-12 md:top-11 md:w-28 md:p-2"
-            >
-              {[PHOTOS[1], PHOTOS[8]].map((photo) => (
-                <div
-                  key={photo.id}
-                  className="relative mb-1 aspect-[4/3] last:mb-0"
-                >
-                  <Image
-                    src={photo.src}
-                    alt=""
-                    fill
-                    sizes="(max-width: 767px) 72px, 112px"
-                    className="object-cover"
-                    style={{ objectPosition: photo.objectPosition }}
-                  />
-                </div>
-              ))}
+              <span
+                className="block size-9 bg-[#70552d] md:size-10"
+                style={{
+                  mask: "url('/seal-logo.svg') center / contain no-repeat",
+                }}
+              />
             </div>
 
             <p className="relative text-[10px] font-medium uppercase tracking-[0.28em] text-wine">
@@ -92,9 +72,9 @@ export default function RSVPChapter({ children }: RSVPChapterProps) {
             </p>
             <h2
               id="rsvp-title"
-              className="relative mt-4 font-serif text-7xl italic leading-[0.8] text-wine sm:text-8xl md:text-[7.75rem]"
+              className="relative mx-auto mt-4 max-w-2xl font-serif text-4xl italic leading-[0.95] text-wine sm:text-5xl md:text-6xl"
             >
-              RSVP
+              Répondez s&apos;il vous plaît
             </h2>
             <p className="relative mx-auto mt-8 max-w-sm font-serif text-base leading-7 text-wine md:text-lg">
               We would be honored to celebrate this chapter with you.
@@ -104,7 +84,7 @@ export default function RSVPChapter({ children }: RSVPChapterProps) {
               onClick={() => setIsRSVPOpen(true)}
               className="relative mt-8 rounded-full bg-wine px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
             >
-              Open response card
+              Share your response
             </button>
           </article>
         </motion.div>
@@ -114,7 +94,6 @@ export default function RSVPChapter({ children }: RSVPChapterProps) {
         isOpen={isRSVPOpen}
         onClose={() => setIsRSVPOpen(false)}
       />
-      {children}
     </section>
   );
 }

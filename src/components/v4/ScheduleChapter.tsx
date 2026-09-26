@@ -11,13 +11,13 @@ export default function ScheduleChapter() {
       <div className="mx-auto max-w-5xl">
         <header className="text-center">
           <p className="text-[10px] uppercase tracking-[0.32em] text-petal">
-            The celebration
+            The evening ahead
           </p>
           <h2
             id="schedule-title"
             className="mt-4 font-serif text-5xl italic leading-none text-cream md:text-7xl"
           >
-            The day unfolds
+            An Evening to Remember
           </h2>
         </header>
 
