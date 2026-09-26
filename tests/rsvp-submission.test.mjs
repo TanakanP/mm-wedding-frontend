@@ -126,6 +126,39 @@ test("handler validates request before writing, and reports storage failure", as
   assert.equal((await failure.json()).ok, false);
 });
 
+test("localhost request accepts the browser origin on the forwarded host", async () => {
+  let writes = 0;
+  const handler = createRsvpHandler({ append: async () => { writes++; } });
+  const request = new Request("http://localhost:3000/api/rsvp", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      origin: "http://127.0.0.1:3000",
+      host: "127.0.0.1:3000",
+    },
+    body: JSON.stringify(valid),
+  });
+  assert.equal((await handler(request)).status, 201);
+  assert.equal(writes, 1);
+});
+
+test("configured public origin still rejects a different host", async () => {
+  const saved = process.env.RSVP_ALLOWED_ORIGIN;
+  process.env.RSVP_ALLOWED_ORIGIN = "https://wedding.example";
+  try {
+    const handler = createRsvpHandler({ append: async () => assert.fail("must not write") });
+    const request = new Request("http://localhost:3000/api/rsvp", {
+      method: "POST",
+      headers: { "content-type": "application/json", origin: "http://127.0.0.1:3000", host: "127.0.0.1:3000" },
+      body: JSON.stringify(valid),
+    });
+    assert.equal((await handler(request)).status, 403);
+  } finally {
+    if (saved === undefined) delete process.env.RSVP_ALLOWED_ORIGIN;
+    else process.env.RSVP_ALLOWED_ORIGIN = saved;
+  }
+});
+
 test("oversized streamed requests stop reading after the limit", async () => {
   let pulls = 0;
   const stream = new ReadableStream({

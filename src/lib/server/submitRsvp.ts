@@ -16,6 +16,24 @@ function error(status: number, code: string): Response {
   return Response.json({ ok: false, code }, { status });
 }
 
+function hasAllowedOrigin(request: Request): boolean {
+  const origin = request.headers.get("origin");
+  if (!origin) return false;
+  const configured = process.env.RSVP_ALLOWED_ORIGIN?.trim();
+  if (configured) return origin === configured;
+
+  const url = new URL(request.url);
+  if (origin === url.origin) return true;
+  const host = request.headers.get("host");
+  if (host && origin === `${url.protocol}//${host}`) return true;
+
+  if (process.env.NODE_ENV !== "production" && ["localhost", "127.0.0.1"].includes(url.hostname)) {
+    return origin === `${url.protocol}//localhost:${url.port}`
+      || origin === `${url.protocol}//127.0.0.1:${url.port}`;
+  }
+  return false;
+}
+
 async function readBoundedBody(request: Request, maxBytes: number): Promise<string | null> {
   if (!request.body) return "";
   const reader = request.body.getReader();
@@ -37,9 +55,7 @@ async function readBoundedBody(request: Request, maxBytes: number): Promise<stri
 export function createRsvpHandler({ append, now = () => new Date().toISOString(), rateLimit }: Dependencies) {
   return async (request: Request): Promise<Response> => {
     if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return error(415, "unsupported_media_type");
-    const origin = request.headers.get("origin");
-    const expectedOrigin = process.env.RSVP_ALLOWED_ORIGIN || new URL(request.url).origin;
-    if (!origin || origin !== expectedOrigin) return error(403, "origin_not_allowed");
+    if (!hasAllowedOrigin(request)) return error(403, "origin_not_allowed");
     const declaredLength = Number(request.headers.get("content-length"));
     if (declaredLength > 16_384) return error(413, "payload_too_large");
     let raw: string | null;
