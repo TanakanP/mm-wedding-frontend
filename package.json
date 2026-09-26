@@ -5,6 +5,7 @@
   "scripts": {
     "photos:optimize": "node scripts/optimize-story-photos.mjs",
     "test": "node --test tests/*.test.mjs",
+    "test:rsvp": "node --test tests/rsvp-submission.test.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

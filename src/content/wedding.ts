@@ -26,7 +26,7 @@ export const WEDDING = {
   dateIso: "2026-12-05T00:00:00",
   dateLabel: "5 December 2026",
   dateLong: "Saturday, December 5, 2026",
-  timeLabel: "5:00 PM - Midnight",
+  timeLabel: "5:00 PM - 9:00 PM",
   venue: {
     name: "US Wedding & Event VENUE",
     address: "Khlong Khwai, Sam Khok, Pathum Thani",

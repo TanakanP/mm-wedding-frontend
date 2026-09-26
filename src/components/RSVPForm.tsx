@@ -3,35 +3,21 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { X } from "lucide-react";
 
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { lockDocumentScroll } from "@/lib/scroll";
 import { WEDDING } from "@/content/wedding";
+import { getRelationshipLabel, rsvpSchema, type RSVPFormValues } from "@/lib/rsvp";
+import { postRsvp } from "@/lib/rsvpClient";
 import PlantWishWall from "./PlantWishWall";
-
-const rsvpSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  side: z.enum(["groom", "bride"], { message: "Please select whose side you are from" }),
-  relation: z.string().min(1, "Please select your relationship"),
-  otherRelation: z.string().optional(),
-  attending: z.enum(["yes", "no"], { message: "Please select if you are attending" }),
-  guestCount: z.string().optional(),
-  drinksAlcohol: z.boolean().optional(),
-  message: z.string().optional(),
-});
-
-type RSVPFormValues = z.infer<typeof rsvpSchema>;
 
 interface RSVPFormProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const groomRelations = ["Family", "High School Friend", "University Friend", "Colleague", "Other"];
-const brideRelations = ["Family", "Childhood Friend", "University Friend", "Colleague", "Other"];
 const focusableSelector = [
   "a[href]",
   "button:not([disabled])",
@@ -47,7 +33,13 @@ function motionProps<T extends object>(reduceMotion: boolean, props: T) {
 
 export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submissionError, setSubmissionError] = useState("");
+  const [website, setWebsite] = useState("");
+  const [closedOutcome, setClosedOutcome] = useState<{ kind: "saved" | "failed"; data?: RSVPFormValues } | null>(null);
   const [submittedData, setSubmittedData] = useState<RSVPFormValues | null>(null);
+  const attemptRef = useRef<{ fingerprint: string; id: string } | null>(null);
+  const sessionRef = useRef(0);
+  const pendingRef = useRef(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
@@ -81,7 +73,6 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
 
   const side = watch("side");
   const attending = watch("attending");
-  const relation = watch("relation");
   const validationMessages = Object.values(errors)
     .map((error) => error?.message)
     .filter((message): message is string => typeof message === "string");
@@ -106,23 +97,59 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   }, [submittedData]);
 
   const onSubmit = async (data: RSVPFormValues) => {
-    // In a real app, send to API here
-    console.log(data);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    setSubmittedData(data);
-    setIsSubmitted(true);
+    if (pendingRef.current) return;
+    pendingRef.current = true;
+    setSubmissionError("");
+    const session = sessionRef.current;
+    const fingerprint = JSON.stringify(data);
+    if (attemptRef.current?.fingerprint !== fingerprint) {
+      attemptRef.current = { fingerprint, id: crypto.randomUUID() };
+    }
+    const submissionId = attemptRef.current.id;
+    try {
+      await postRsvp(data, submissionId, fetch, website);
+      if (session !== sessionRef.current) {
+        setClosedOutcome({ kind: "saved", data });
+        return;
+      }
+      setSubmittedData(data);
+      setIsSubmitted(true);
+    } catch {
+      if (session !== sessionRef.current) setClosedOutcome({ kind: "failed" });
+      else setSubmissionError("We couldn't confirm your RSVP was saved. Please try again. If you already retried, contact the couple to check for a duplicate.");
+    } finally {
+      pendingRef.current = false;
+    }
   };
 
   const handleClose = useCallback(() => {
+    sessionRef.current++;
     onClose();
-    // Optional: reset form after closing so it's fresh next time
-    setTimeout(() => {
-      setIsSubmitted(false);
-      setSubmittedData(null);
-      setShowerPetals([]);
-      reset();
-    }, 300);
+    if (pendingRef.current) {
+      setSubmissionError("Your RSVP is still processing. Reopen this form to check the result before trying again.");
+      return;
+    }
+    setIsSubmitted(false);
+    setSubmittedData(null);
+    setSubmissionError("");
+    setClosedOutcome(null);
+    setWebsite("");
+    setShowerPetals([]);
+    attemptRef.current = null;
+    reset();
   }, [onClose, reset]);
+
+  useEffect(() => {
+    if (!isOpen || !closedOutcome) return;
+    if (closedOutcome.kind === "saved" && closedOutcome.data) {
+      setSubmittedData(closedOutcome.data);
+      setIsSubmitted(true);
+      setSubmissionError("");
+    } else {
+      setSubmissionError("We couldn't confirm your RSVP was saved. Please try again. A previous attempt may have reached the sheet.");
+    }
+    setClosedOutcome(null);
+  }, [closedOutcome, isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -390,6 +417,11 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                 aria-busy={isSubmitting}
                 className="flex flex-col flex-1 overflow-hidden text-left"
               >
+                <div className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+                  <label htmlFor="rsvp-website">Leave this field empty</label>
+                  <input id="rsvp-website" name="website" type="text" tabIndex={-1} autoComplete="off"
+                    value={website} onChange={(event) => setWebsite(event.target.value)} />
+                </div>
                 <p className="sr-only" role="alert">
                   {validationMessages.length > 0
                     ? `Please correct the RSVP form. ${validationMessages.join(". ")}.`
@@ -445,7 +477,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                     {errors.side && <p id="rsvp-side-error" className="text-red-700 text-sm mt-1">{errors.side.message}</p>}
                   </fieldset>
 
-                  {/* 3. Relation Dropdown */}
+                  {/* 3. Relationship */}
                   <AnimatePresence>
                     {side && (
                       <motion.div 
@@ -456,43 +488,18 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                         })}
                         className="overflow-hidden shrink-0"
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-6">
-                          <div>
-                            <label htmlFor="rsvp-relation" className="block text-sm font-medium text-foreground mb-1">Relationship</label>
-                            <select
-                              id="rsvp-relation"
-                              {...register("relation")}
-                              aria-invalid={Boolean(errors.relation)}
-                              aria-describedby={errors.relation ? "rsvp-relation-error" : undefined}
-                              className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
-                            >
-                              <option value="">Select a relationship...</option>
-                              {(side === "groom" ? groomRelations : brideRelations).map((rel) => (
-                                <option key={rel} value={rel}>{rel}</option>
-                              ))}
-                            </select>
-                            {errors.relation && <p id="rsvp-relation-error" className="text-red-700 text-sm mt-1">{errors.relation.message}</p>}
-                          </div>
-
-                          <AnimatePresence>
-                            {relation === "Other" && (
-                              <motion.div
-                                {...motionProps(reduceMotion, {
-                                  initial: { opacity: 0 },
-                                  animate: { opacity: 1 },
-                                  exit: { opacity: 0 },
-                                })}
-                              >
-                                <label htmlFor="rsvp-other-relation" className="block text-sm font-medium text-foreground mb-1">Please specify</label>
-                                <input
-                                  id="rsvp-other-relation"
-                                  {...register("otherRelation")}
-                                  className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
-                                  placeholder="e.g., Friend of parent"
-                                />
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
+                        <div>
+                          <label htmlFor="rsvp-relation" className="block text-sm font-medium text-foreground mb-1">{getRelationshipLabel(side)}</label>
+                          <input
+                            id="rsvp-relation"
+                            type="text"
+                            {...register("relation")}
+                            aria-invalid={Boolean(errors.relation)}
+                            aria-describedby={errors.relation ? "rsvp-relation-error" : undefined}
+                            className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
+                            maxLength={200}
+                          />
+                          {errors.relation && <p id="rsvp-relation-error" className="text-red-700 text-sm mt-1">{errors.relation.message}</p>}
                         </div>
                       </motion.div>
                     )}
@@ -546,15 +553,19 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                       >
                         {/* Guest Count */}
                         <div>
-                          <label htmlFor="rsvp-guest-count" className="block text-sm font-medium text-foreground mb-1">How many follower(s)?</label>
+                          <label htmlFor="rsvp-guest-count" className="block text-sm font-medium text-foreground mb-1">How many additional guests?</label>
                           <input
                             id="rsvp-guest-count"
                             type="number"
-                            min="1"
+                            min="0"
+                            step="1"
                             {...register("guestCount")}
+                            aria-invalid={Boolean(errors.guestCount)}
+                            aria-describedby={errors.guestCount ? "rsvp-guest-count-error" : undefined}
                             className="w-24 px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
-                            placeholder="1"
+                            placeholder="0"
                           />
+                          {errors.guestCount && <p id="rsvp-guest-count-error" className="text-red-700 text-sm mt-1">{errors.guestCount.message}</p>}
                         </div>
 
                         {/* Alcohol Checkbox */}
@@ -593,10 +604,14 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                           <textarea
                             id="rsvp-message"
                             {...register("message")}
+                            aria-invalid={Boolean(errors.message)}
+                            aria-describedby={errors.message ? "rsvp-message-error" : undefined}
                             rows={4}
+                            maxLength={2000}
                             className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors resize-none bg-cream"
                             placeholder="Leave your wishes..."
                           />
+                          {errors.message && <p id="rsvp-message-error" className="text-red-700 text-sm mt-1">{errors.message.message}</p>}
                         </div>
                       </motion.div>
                     )}
@@ -605,6 +620,12 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
 
                 {/* Footer - Static */}
                 <div className="shrink-0 p-6 sm:px-8 md:px-12 md:py-8 border-t border-sage/20 bg-cream z-10">
+                  {submissionError && (
+                    <p role="alert" className="mb-3 text-sm text-red-700">
+                      {submissionError}
+                      {attemptRef.current && <span className="block mt-1">Reference: {attemptRef.current.id}</span>}
+                    </p>
+                  )}
                   <button
                     type="submit"
                     disabled={isSubmitting}
