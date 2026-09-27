@@ -51,14 +51,14 @@ export default function RetroVideoPlayer() {
       <div className="rounded-[1.15rem] bg-[#302c30] p-2.5 shadow-[inset_0_0_0_1px_rgba(255,250,243,0.12)]">
         <div
           className="relative aspect-[9/16] overflow-hidden rounded-[0.8rem] bg-[#171519] bg-cover bg-center"
-          style={{ backgroundImage: "url('/videos/garden-memory-poster.jpg')" }}
+          style={{ backgroundImage: "url('/videos/dress-code-film-poster.jpg')" }}
         >
           <video
             ref={videoRef}
             className={`h-full w-full object-contain transition-opacity duration-300 ${
               isVideoVisible ? "opacity-100" : "opacity-0"
             }`}
-            poster="/videos/garden-memory-poster.jpg"
+            poster="/videos/dress-code-film-poster.jpg"
             muted
             autoPlay
             loop
@@ -69,7 +69,7 @@ export default function RetroVideoPlayer() {
             onWaiting={() => setIsVideoVisible(false)}
             onStalled={() => setIsVideoVisible(false)}
           >
-            <source src="/videos/garden-memory.mp4" type="video/mp4" />
+            <source src="/videos/dress-code-film.mp4" type="video/mp4" />
           </video>
         </div>
       </div>

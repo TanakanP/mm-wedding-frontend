@@ -74,7 +74,7 @@ export default function RSVPChapter() {
               id="rsvp-title"
               className="relative mx-auto mt-4 max-w-2xl font-serif text-4xl italic leading-[0.95] text-wine sm:text-5xl md:text-6xl"
             >
-              Répondez s&apos;il vous plaît
+              RSVP
             </h2>
             <p className="relative mx-auto mt-8 max-w-sm font-serif text-base leading-7 text-wine md:text-lg">
               We would be honored to celebrate this chapter with you.

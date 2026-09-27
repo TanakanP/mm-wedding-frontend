@@ -167,7 +167,7 @@ export default function InvitationIntro({ onOpenChange }: { onOpenChange?: (open
       />
 
       <motion.div
-        className="absolute inset-x-0 top-[43%] md:top-[47%] z-10 flex flex-col items-center"
+        className="absolute inset-x-0 top-[43svh] md:top-[47svh] z-10 flex flex-col items-center"
         initial={false}
         animate={{ opacity: ready ? 1 : 0, y: ready ? 0 : 12 }}
       >
@@ -179,7 +179,16 @@ export default function InvitationIntro({ onOpenChange }: { onOpenChange?: (open
           A little invitation
         </motion.p>
 
-        <div className="relative h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]">
+        <motion.div
+          className="relative h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]"
+          initial={false}
+          animate={{ y: opening ? "var(--opened-envelope-offset)" : 0 }}
+          transition={{
+            duration: reduceMotion ? 0 : 1.05,
+            delay: reduceMotion ? 0 : opening ? 0.72 : 0,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+        >
           <motion.div
             className="absolute inset-0"
             initial={false}
@@ -275,14 +284,14 @@ export default function InvitationIntro({ onOpenChange }: { onOpenChange?: (open
               />
             </motion.button>
           </motion.div>
-        </div>
+        </motion.div>
 
         <motion.div
           className="mt-6 text-center"
           animate={{ opacity: opening ? 0 : 1 }}
           transition={{
             duration: reduceMotion ? 0 : 0.2,
-            delay: opening && !reduceMotion ? 1.77 : 0,
+            delay: 0,
           }}
         >
           <h2

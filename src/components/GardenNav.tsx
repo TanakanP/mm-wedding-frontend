@@ -40,7 +40,11 @@ export default function GardenNav() {
           className="shrink-0 rounded px-1 font-serif text-lg tracking-[0.5px] text-wine transition-colors hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-wine md:text-xl"
           aria-label="Scroll to top"
         >
-          M &amp; M
+          <span
+            aria-hidden="true"
+            className="block size-9 bg-current"
+            style={{ mask: "url('/seal-logo.svg') center / contain no-repeat" }}
+          />
         </button>
 
         <div className="relative">

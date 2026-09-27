@@ -20,9 +20,9 @@ const valid = {
   website: "",
 };
 
-test("relationship label follows side and free text is trimmed", () => {
-  assert.equal(getRelationshipLabel("groom"), "Relationship (SKR, CPE, TechX, etc.)");
-  assert.equal(getRelationshipLabel("bride"), "Relationship (SATIT KKU, BAA, EY, SIX, NEX, etc.)");
+test("relationship label is the same for both sides and free text is trimmed", () => {
+  assert.equal(getRelationshipLabel("groom"), "Relationship (School, University, Work, etc.)");
+  assert.equal(getRelationshipLabel("bride"), "Relationship (School, University, Work, etc.)");
   assert.equal(rsvpSchema.safeParse({ ...valid, relation: "   " }).success, false);
   assert.equal(rsvpSchema.parse(valid).relation, "=1+1");
 });
