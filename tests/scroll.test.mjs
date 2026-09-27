@@ -27,11 +27,14 @@ function installBrowser({
   rootOverflow = "",
   bodyOverflow = "",
   rootScrollBehavior = "",
+  scrollY = 0,
 } = {}) {
   let sectionOptions;
   let windowOptions;
   let scrollBehaviorDuringCall;
   const mediaQueries = [];
+  const scrollCalls = [];
+  let currentScrollY = scrollY;
 
   const section = {
     scrollIntoView(options) {
@@ -50,12 +53,16 @@ function installBrowser({
   };
 
   globalThis.window = {
+    scrollX: 0,
+    get scrollY() { return currentScrollY; },
     matchMedia(query) {
       mediaQueries.push(query);
       return { matches: reducedMotion };
     },
     scrollTo(options) {
       windowOptions = options;
+      scrollCalls.push(options);
+      currentScrollY = options.top;
       scrollBehaviorDuringCall =
         document.documentElement.style.scrollBehavior;
     },
@@ -66,6 +73,7 @@ function installBrowser({
     getSectionOptions: () => sectionOptions,
     getScrollBehaviorDuringCall: () => scrollBehaviorDuringCall,
     getWindowOptions: () => windowOptions,
+    getScrollCalls: () => scrollCalls,
   };
 }
 
@@ -198,4 +206,27 @@ test("document lock restores root and body inline overflow after every close", (
   secondUnlock();
   assert.equal(document.documentElement.style.overflow, "visible");
   assert.equal(document.body.style.overflow, "scroll");
+});
+
+test("mobile RSVP lock parks a long page at zero and restores its position", () => {
+  const browser = installBrowser({
+    scrollY: 8200,
+    rootOverflow: "clip",
+    bodyOverflow: "auto",
+    rootScrollBehavior: "smooth",
+  });
+
+  const unlock = scrolling.lockDocumentScrollAtTop();
+  assert.equal(window.scrollY, 0);
+  assert.equal(document.documentElement.style.overflow, "hidden");
+  assert.equal(document.body.style.overflow, "hidden");
+  assert.equal(document.documentElement.style.scrollBehavior, "smooth");
+  assert.deepEqual(browser.getScrollCalls()[0], { left: 0, top: 0, behavior: "auto" });
+
+  unlock();
+  assert.equal(window.scrollY, 8200);
+  assert.equal(document.documentElement.style.overflow, "clip");
+  assert.equal(document.body.style.overflow, "auto");
+  assert.equal(document.documentElement.style.scrollBehavior, "smooth");
+  assert.deepEqual(browser.getScrollCalls()[1], { left: 0, top: 8200, behavior: "auto" });
 });

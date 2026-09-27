@@ -21,10 +21,9 @@ test("V4 opening combines envelope, countdown, and vinyl in section one", () => 
 });
 
 test("invitation handoff shares the hero envelope viewport anchor", () => {
-  const viewportAnchor = /top-\[43%\]/;
-
-  assert.match(source, viewportAnchor);
-  assert.match(introSource, viewportAnchor);
+  assert.match(source, /top-\[calc\(43svh\+var\(--opened-envelope-offset\)\)\]/);
+  assert.match(introSource, /top-\[43svh\]/);
+  assert.match(introSource, /y: opening \? "var\(--opened-envelope-offset\)" : 0/);
   assert.doesNotMatch(introSource, /y:\s*70/);
 });
 

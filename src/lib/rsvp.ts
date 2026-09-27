@@ -32,9 +32,11 @@ export type NormalizedRSVP = {
 };
 
 export function getRelationshipLabel(side: "groom" | "bride"): string {
-  return side === "groom"
-    ? "Relationship (SKR, CPE, TechX, etc.)"
-    : "Relationship (SATIT KKU, BAA, EY, SIX, NEX, etc.)";
+  switch (side) {
+    case "groom":
+    case "bride":
+      return "Relationship (School, University, Work, etc.)";
+  }
 }
 
 export function normalizeRsvp(value: RSVPFormValues): NormalizedRSVP {

@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { X } from "lucide-react";
 
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
-import { lockDocumentScroll } from "@/lib/scroll";
+import { lockDocumentScroll, lockDocumentScrollAtTop } from "@/lib/scroll";
 import { WEDDING } from "@/content/wedding";
 import { getRelationshipLabel, rsvpSchema, type RSVPFormValues } from "@/lib/rsvp";
 import { postRsvp } from "@/lib/rsvpClient";
@@ -54,7 +54,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   useEffect(() => {
     if (!isOpen) return;
 
-    return lockDocumentScroll();
+    return window.matchMedia("(max-width: 767px)").matches
+      ? lockDocumentScrollAtTop()
+      : lockDocumentScroll();
   }, [isOpen]);
 
   const {

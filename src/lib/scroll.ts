@@ -81,3 +81,24 @@ export function lockDocumentScroll() {
     document.body.style.overflow = bodyOverflow;
   };
 }
+
+export function lockDocumentScrollAtTop() {
+  const scrollX = window.scrollX;
+  const scrollY = window.scrollY;
+  const root = document.documentElement;
+
+  const scrollWithoutAnimation = (left: number, top: number) => {
+    const previousBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    window.scrollTo({ left, top, behavior: "auto" });
+    root.style.scrollBehavior = previousBehavior;
+  };
+
+  scrollWithoutAnimation(0, 0);
+  const unlock = lockDocumentScroll();
+
+  return () => {
+    unlock();
+    scrollWithoutAnimation(scrollX, scrollY);
+  };
+}

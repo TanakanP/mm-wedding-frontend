@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: `${WEDDING.couple} Wedding | ${WEDDING.venue.name}`,
+  title: "Mimeen Wedding",
   description: `Join us on ${WEDDING.dateLabel} for our celebration at ${WEDDING.venue.name}.`,
 };
 
