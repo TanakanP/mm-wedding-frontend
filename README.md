@@ -16,6 +16,14 @@ To connect a Sheet:
 
 Run `npm run test:rsvp` for the RSVP validation and Sheets adapter tests. Those tests use a mock Google response and do not write to a real spreadsheet. A live smoke test requires the configured sheet and credentials.
 
+## Optional blessing details
+
+Guests who decline can scan the supplied payment QR. Reporting a transfer is optional: they enter a THB amount from 0.01 to 999,999.99 without leading zeros and the transfer date/time in Thailand time (UTC+7). The form records the details; it cannot verify a payment.
+
+Create a second tab named exactly `Blessing` in the **same spreadsheet** as RSVP. Set cells A1:F1 to `submission_id`, `name`, `amount_thb`, `transferred_at`, `recorded_at`, `blessing_id` in that order. Format column C as a THB number if desired; leave D and E as text because they contain ISO timestamps. The existing service account needs editor access to that spreadsheet. The server reads the original RSVP tab to verify the submission ID, saved name, and declined attendance, checks for a previous report, and appends one `RAW` Blessing row. A repeated report with the same blessing ID and data returns the existing confirmation; different details for the same RSVP are rejected. Sheets does not provide an atomic unique constraint across concurrent server instances, so organizers should review any duplicate IDs before reconciling payments.
+
+Test with a separate spreadsheet before connecting the production destination. The test suite (`node --test tests/blessing-submission.test.mjs`) uses mocked Sheets responses and never sends a payment or writes to Google.
+
 ## Getting Started
 
 First, run the development server:

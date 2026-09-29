@@ -180,7 +180,7 @@ export default function InvitationIntro({ onOpenChange }: { onOpenChange?: (open
         </motion.p>
 
         <motion.div
-          className="relative h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]"
+          className="relative h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [--opened-envelope-offset:calc(32svh-100%)] [perspective:1200px] md:h-[250px] md:w-[460px] md:[--opened-envelope-offset:calc(28svh-100%)]"
           initial={false}
           animate={{ y: opening ? "var(--opened-envelope-offset)" : 0 }}
           transition={{

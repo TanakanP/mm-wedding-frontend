@@ -1,5 +1,6 @@
 import { createSign } from "node:crypto";
 import type { NormalizedRSVP } from "../rsvp";
+import type { NormalizedBlessing } from "../blessing";
 
 type SheetCell = string | number | boolean;
 type Fetcher = typeof fetch;
@@ -75,4 +76,60 @@ export async function appendRsvpToConfiguredSheet(value: NormalizedRSVP, submiss
   if (!spreadsheetId || !tabName) throw new Error("Sheets destination is not configured");
   const accessToken = await getGoogleAccessToken();
   await appendRsvp(value, submissionId, submittedAt, { spreadsheetId, tabName, accessToken });
+}
+
+export function buildBlessingRow(value: NormalizedBlessing, recordedAt: string): SheetCell[] {
+  return [value.submissionId, value.name, value.amountThb, value.transferredAt, recordedAt, value.blessingId];
+}
+
+export async function appendBlessing(value: NormalizedBlessing, recordedAt: string, options: SheetsOptions): Promise<void> {
+  const { spreadsheetId, tabName, accessToken, fetcher = fetch } = options;
+  const range = `'${tabName.replaceAll("'", "''")}'!A:F`;
+  const url = new URL(`https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}:append`);
+  url.searchParams.set("valueInputOption", "RAW");
+  url.searchParams.set("insertDataOption", "INSERT_ROWS");
+  const response = await fetcher(url.toString(), {
+    method: "POST", headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+    body: JSON.stringify({ range, majorDimension: "ROWS", values: [buildBlessingRow(value, recordedAt)] }),
+    signal: AbortSignal.timeout(8_000), cache: "no-store",
+  });
+  if (!response.ok) throw new Error(`Blessing append failed (${response.status})`);
+  const result: unknown = await response.json();
+  if (!result || typeof result !== "object" || !("updates" in result) || !result.updates ||
+    typeof result.updates !== "object" || !("updatedRows" in result.updates) || result.updates.updatedRows !== 1) {
+    throw new Error("Sheets did not confirm one blessing row");
+  }
+}
+
+async function readRows(range: string, options: SheetsOptions): Promise<unknown[][]> {
+  const { spreadsheetId, accessToken, fetcher = fetch } = options;
+  const url = `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(spreadsheetId)}/values/${encodeURIComponent(range)}`;
+  const response = await fetcher(url, { headers: { Authorization: `Bearer ${accessToken}` },
+    signal: AbortSignal.timeout(8_000), cache: "no-store" });
+  if (!response.ok) throw new Error(`Sheets lookup failed (${response.status})`);
+  const data: unknown = await response.json();
+  if (!data || typeof data !== "object" || !("values" in data) || !Array.isArray(data.values)) return [];
+  return data.values as unknown[][];
+}
+
+export async function resolveRsvpFromSheet(submissionId: string, options: SheetsOptions): Promise<{ name: string; attending: "yes" | "no" } | null> {
+  const rows = await readRows(`'${options.tabName.replaceAll("'", "''")}'!A:K`, options);
+  const matches = rows.filter((row) => row[0] === submissionId);
+  if (matches.length === 0) return null;
+  const [first] = matches;
+  if (typeof first[2] !== "string" || (first[5] !== "yes" && first[5] !== "no")) return null;
+  if (matches.some((row) => row[2] !== first[2] || row[5] !== first[5])) return null;
+  return { name: first[2], attending: first[5] };
+}
+
+export async function findBlessingInSheet(blessingId: string, submissionId: string, options: SheetsOptions): Promise<NormalizedBlessing | null> {
+  const rows = await readRows("'Blessing'!A:F", options);
+  const matches = rows.filter((row) => row[5] === blessingId || row[0] === submissionId);
+  if (matches.length > 1) throw new Error("Duplicate blessing records need manual review");
+  if (matches.length === 0) return null;
+  const row = matches[0];
+  if (typeof row[0] !== "string" || typeof row[1] !== "string" ||
+    typeof row[3] !== "string" || !Number.isFinite(Number(row[2]))) throw new Error("Blessing row is malformed");
+  return { submissionId: row[0], name: row[1], amountThb: Number(row[2]),
+    transferredAt: row[3], blessingId: String(row[5]) };
 }

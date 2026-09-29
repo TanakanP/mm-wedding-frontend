@@ -50,7 +50,7 @@ export default function RSVPChapter() {
             aria-hidden="true"
             className="absolute inset-0 translate-x-3 translate-y-4 rotate-[2.5deg] bg-paper shadow-[0_25px_68px_rgba(72,36,46,.17)]"
           />
-          <article className="relative border border-dusty/35 bg-cream px-7 py-24 text-center shadow-[0_25px_68px_rgba(72,36,46,.19)] md:px-28 md:py-28">
+          <article className="relative border border-dusty/35 bg-cream px-7 py-20 text-center shadow-[0_25px_68px_rgba(72,36,46,.19)] md:px-20 md:py-24">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-4 border border-dusty/30"
@@ -72,17 +72,17 @@ export default function RSVPChapter() {
             </p>
             <h2
               id="rsvp-title"
-              className="relative mx-auto mt-4 max-w-2xl font-serif text-4xl italic leading-[0.95] text-wine sm:text-5xl md:text-6xl"
+              className="relative mx-auto mt-4 max-w-2xl font-serif text-6xl italic leading-[0.95] text-wine sm:text-7xl md:text-8xl"
             >
               RSVP
             </h2>
-            <p className="relative mx-auto mt-8 max-w-sm font-serif text-base leading-7 text-wine md:text-lg">
+            <p className="relative mx-auto mt-7 max-w-lg font-serif text-xl leading-relaxed text-wine md:mt-8 md:text-2xl">
               We would be honored to celebrate this chapter with you.
             </p>
             <button
               type="button"
               onClick={() => setIsRSVPOpen(true)}
-              className="relative mt-8 rounded-full bg-wine px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+              className="relative mt-9 rounded-full bg-wine px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
             >
               Share your response
             </button>

@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { X } from "lucide-react";
 
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
@@ -11,7 +11,13 @@ import { lockDocumentScroll, lockDocumentScrollAtTop } from "@/lib/scroll";
 import { WEDDING } from "@/content/wedding";
 import { getRelationshipLabel, rsvpSchema, type RSVPFormValues } from "@/lib/rsvp";
 import { postRsvp } from "@/lib/rsvpClient";
-import PlantWishWall from "./PlantWishWall";
+import { blessingSchema, thailandLocalToIso } from "@/lib/blessing";
+import { postBlessing } from "@/lib/blessingClient";
+import AcceptedResult from "./rsvp/AcceptedResult";
+import cardStyles from "./rsvp/InvitationCard.module.css";
+import DeclinedResult from "./rsvp/DeclinedResult";
+
+type ConfirmedRsvp = { submissionId: string; data: RSVPFormValues };
 
 interface RSVPFormProps {
   isOpen: boolean;
@@ -35,21 +41,24 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
   const [website, setWebsite] = useState("");
-  const [closedOutcome, setClosedOutcome] = useState<{ kind: "saved" | "failed"; data?: RSVPFormValues } | null>(null);
-  const [submittedData, setSubmittedData] = useState<RSVPFormValues | null>(null);
+  const [closedOutcome, setClosedOutcome] = useState<{ kind: "saved" | "failed"; rsvp?: ConfirmedRsvp } | null>(null);
+  const [confirmedRsvp, setConfirmedRsvp] = useState<ConfirmedRsvp | null>(null);
+  const submittedData = confirmedRsvp?.data ?? null;
   const attemptRef = useRef<{ fingerprint: string; id: string } | null>(null);
+  const blessingAttemptRef = useRef<{ fingerprint: string; id: string } | null>(null);
   const sessionRef = useRef(0);
   const pendingRef = useRef(false);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const blessingPendingRef = useRef(false);
+  const [blessingAmount, setBlessingAmount] = useState("");
+  const [blessingDate, setBlessingDate] = useState("");
+  const [blessingHour, setBlessingHour] = useState("");
+  const [blessingMinute, setBlessingMinute] = useState("");
+  const [blessingStatus, setBlessingStatus] = useState<"idle" | "pending" | "saved" | "error">("idle");
+  const [blessingError, setBlessingError] = useState("");
   const dialogRef = useRef<HTMLDivElement>(null);
   const openerRef = useRef<HTMLElement | null>(null);
   const submissionStatusRef = useRef<HTMLParagraphElement>(null);
   const reduceMotion = useHydrationSafeReducedMotion();
-
-  // Transient petal shower (outside the cardRef so it does not affect downloads)
-  const [showerPetals, setShowerPetals] = useState<
-    Array<{ id: number; x: number; delay: number; duration: number; rotate: number }>
-  >([]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -79,25 +88,6 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     .map((error) => error?.message)
     .filter((message): message is string => typeof message === "string");
 
-  // Trigger living petals on success mount for attending=yes (outside card)
-  useEffect(() => {
-    if (isSubmitted && submittedData?.attending === "yes") {
-      const t = setTimeout(() => {
-        triggerPetalShower(5);
-      }, 380);
-      return () => clearTimeout(t);
-    }
-  }, [isSubmitted, submittedData?.attending]);
-
-  // Stabilize userWish object reference so PlantWishWall effect (dep on [userWish])
-  // does not re-run on every parent re-render (e.g. showerPetals updates).
-  const userWishForWall = useMemo(() => {
-    if (submittedData && submittedData.attending === "yes" && submittedData.message && submittedData.message.trim()) {
-      return { name: submittedData.name, message: submittedData.message.trim() };
-    }
-    return undefined;
-  }, [submittedData]);
-
   const onSubmit = async (data: RSVPFormValues) => {
     if (pendingRef.current) return;
     pendingRef.current = true;
@@ -111,10 +101,10 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     try {
       await postRsvp(data, submissionId, fetch, website);
       if (session !== sessionRef.current) {
-        setClosedOutcome({ kind: "saved", data });
+        setClosedOutcome({ kind: "saved", rsvp: { submissionId, data } });
         return;
       }
-      setSubmittedData(data);
+      setConfirmedRsvp({ submissionId, data });
       setIsSubmitted(true);
     } catch {
       if (session !== sessionRef.current) setClosedOutcome({ kind: "failed" });
@@ -124,27 +114,61 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     }
   };
 
+  const submitBlessing = async () => {
+    if (!confirmedRsvp || blessingPendingRef.current || blessingStatus === "saved") return;
+    let transferredAt: string;
+    try { transferredAt = thailandLocalToIso(`${blessingDate}T${blessingHour}:${blessingMinute}`, new Date()); }
+    catch { setBlessingError("Choose a valid transfer date and time in Thailand time, no later than now."); return; }
+    const fingerprint = `${confirmedRsvp.submissionId}|${blessingAmount}|${transferredAt}`;
+    if (blessingAttemptRef.current?.fingerprint !== fingerprint) {
+      blessingAttemptRef.current = { fingerprint, id: crypto.randomUUID() };
+    }
+    const payload = { blessingId: blessingAttemptRef.current.id,
+      submissionId: confirmedRsvp.submissionId, name: confirmedRsvp.data.name,
+      amount: blessingAmount, transferredAt, website: "" };
+    if (!blessingSchema.safeParse(payload).success) {
+      setBlessingError("Enter an amount from 0.01 to 999,999.99 THB without leading zeros or a minus sign.");
+      return;
+    }
+    blessingPendingRef.current = true;
+    setBlessingStatus("pending");
+    setBlessingError("");
+    try {
+      await postBlessing(payload);
+      setBlessingStatus("saved");
+    } catch {
+      setBlessingStatus("error");
+      setBlessingError("We couldn't confirm that your blessing details were recorded. Please retry with the same reference, or contact the couple if you are unsure.");
+    } finally { blessingPendingRef.current = false; }
+  };
+
   const handleClose = useCallback(() => {
     sessionRef.current++;
     onClose();
-    if (pendingRef.current) {
-      setSubmissionError("Your RSVP is still processing. Reopen this form to check the result before trying again.");
+    if (pendingRef.current || blessingPendingRef.current) {
+      if (pendingRef.current) setSubmissionError("Your RSVP is still processing. Reopen this form to check the result before trying again.");
       return;
     }
     setIsSubmitted(false);
-    setSubmittedData(null);
+    setConfirmedRsvp(null);
     setSubmissionError("");
     setClosedOutcome(null);
     setWebsite("");
-    setShowerPetals([]);
+    setBlessingAmount("");
+    setBlessingDate("");
+    setBlessingHour("");
+    setBlessingMinute("");
+    setBlessingStatus("idle");
+    setBlessingError("");
+    blessingAttemptRef.current = null;
     attemptRef.current = null;
     reset();
   }, [onClose, reset]);
 
   useEffect(() => {
     if (!isOpen || !closedOutcome) return;
-    if (closedOutcome.kind === "saved" && closedOutcome.data) {
-      setSubmittedData(closedOutcome.data);
+    if (closedOutcome.kind === "saved" && closedOutcome.rsvp) {
+      setConfirmedRsvp(closedOutcome.rsvp);
       setIsSubmitted(true);
       setSubmissionError("");
     } else {
@@ -212,40 +236,13 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     if (!isSubmitted) return;
 
     const focusFrame = window.requestAnimationFrame(() => {
-      submissionStatusRef.current?.focus({ preventScroll: true });
+      dialogRef.current?.querySelector<HTMLElement>("#rsvp-result-title")?.focus({ preventScroll: true });
     });
 
     return () => window.cancelAnimationFrame(focusFrame);
   }, [isSubmitted]);
 
-  const triggerPetalShower = (count = 6) => {
-    const newPetals = Array.from({ length: count }, (_, i) => ({
-      id: Date.now() + i,
-      x: 18 + Math.random() * 64, // centered-ish over card area
-      delay: Math.random() * 0.25,
-      duration: 1.1 + Math.random() * 0.9,
-      rotate: (Math.random() - 0.5) * 70,
-    }));
-    setShowerPetals((prev) => [...prev, ...newPetals]);
-
-    // Auto-cleanup after animation (longer than longest duration)
-    setTimeout(() => {
-      setShowerPetals((prev) => prev.filter((p) => !newPetals.some((np) => np.id === p.id)));
-    }, 2600);
-  };
-
-  const downloadCard = async () => {
-    if (!cardRef.current) return;
-    // Gentle petal shower on Save Picture (Warm Gold action)
-    triggerPetalShower(9);
-    const html2canvas = (await import('html2canvas')).default;
-    const canvas = await html2canvas(cardRef.current, { scale: 2 });
-    const image = canvas.toDataURL("image/png");
-    const link = document.createElement("a");
-    link.href = image;
-    link.download = "MM_Wedding_Invitation.png";
-    link.click();
-  };
+  const isAccepted = isSubmitted && submittedData?.attending === "yes";
 
   return (
     <AnimatePresence>
@@ -264,7 +261,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
             ref={dialogRef}
             role="dialog"
             aria-modal="true"
-            aria-labelledby="rsvp-dialog-title"
+            aria-labelledby={isSubmitted ? "rsvp-result-title" : "rsvp-dialog-title"}
             aria-describedby="rsvp-dialog-description"
             tabIndex={-1}
             {...motionProps(reduceMotion, {
@@ -272,145 +269,47 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
               animate: { opacity: 1, scale: 1, y: 0 },
               exit: { opacity: 0, scale: 0.95, y: 20 },
             })}
-            className="relative flex h-full max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-none border-0 bg-cream shadow-[0_28px_80px_rgba(46,32,36,.35)] backdrop-blur-md md:h-auto md:max-h-[90vh] md:rounded-sm md:border md:border-wine/20"
+            className={isAccepted ? `${cardStyles.dialog} relative overflow-hidden bg-cream shadow-[0_28px_80px_rgba(46,32,36,.35)]` : "relative flex h-full max-h-full w-full max-w-2xl flex-col overflow-hidden rounded-none border-0 bg-cream shadow-[0_28px_80px_rgba(46,32,36,.35)] backdrop-blur-md md:h-auto md:max-h-[90vh] md:rounded-sm md:border md:border-wine/20"}
           >
-            {/* Header - Static */}
-            <div className="relative z-10 shrink-0 border-b border-wine/15 bg-cream px-6 pb-4 pt-8 sm:px-8 sm:pb-6 sm:pt-10 md:px-12">
-              <button 
-                onClick={handleClose}
-                className="absolute right-4 top-4 rounded-full bg-cream/70 p-2 text-wine/70 backdrop-blur-sm transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine md:bg-transparent md:backdrop-blur-none"
-                aria-label="Close RSVP dialog"
-              >
-                <X className="w-6 h-6" />
-              </button>
-              <h2 id="rsvp-dialog-title" className="mb-2 text-center font-serif text-4xl italic text-wine">The Invitation</h2>
-              <p className="text-center font-light text-wine/80">{WEDDING.venue.name}</p>
-              <p className="text-center font-light text-wine/80">{WEDDING.timeLabel} | {WEDDING.dateLabel}</p>
-              <p id="rsvp-dialog-description" className="sr-only">
-                Complete this form to respond to M and M&apos;s wedding invitation.
-              </p>
-              <p
-                ref={submissionStatusRef}
-                role="status"
-                aria-live="polite"
-                tabIndex={-1}
-                className="sr-only"
-              >
-                {isSubmitting
-                  ? "Submitting your RSVP."
-                  : isSubmitted && submittedData
-                    ? `Thank you, ${submittedData.name}. Your RSVP has been received.`
-                    : ""}
-              </p>
-            </div>
-
-            {/* Body & Footer */}
+            {!isAccepted && <button type="button" onClick={handleClose}
+              className="absolute right-4 top-4 z-30 rounded-full bg-cream/90 p-2 text-wine shadow-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-wine"
+              aria-label="Close RSVP dialog">
+              <X className="h-6 w-6" />
+            </button>}
+            {!isSubmitted && (
+              <div className="shrink-0 border-b border-wine/15 bg-cream px-6 pb-4 pt-8 sm:px-8 sm:pb-6 sm:pt-10 md:px-12">
+                <h2 id="rsvp-dialog-title" className="mb-2 text-center font-serif text-4xl italic text-wine">The Invitation</h2>
+                <p className="text-center font-light text-wine/80">{WEDDING.venue.name}</p>
+                <p className="text-center font-light text-wine/80">{WEDDING.timeLabel} | {WEDDING.dateLabel}</p>
+              </div>
+            )}
+            <p id="rsvp-dialog-description" className="sr-only">
+              {isSubmitted ? "Your RSVP result and next steps." : "Complete this form to respond to M and M's wedding invitation."}
+            </p>
+            <p ref={submissionStatusRef} role="status" aria-live="polite" tabIndex={-1} className="sr-only">
+              {isSubmitting ? "Submitting your RSVP." : isSubmitted && submittedData
+                ? `Thank you, ${submittedData.name}. Your RSVP has been received.` : ""}
+            </p>
             {isSubmitted && submittedData ? (
-              <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-12 text-center overflow-y-auto bg-cream">
+              <div className={isAccepted ? "h-full w-full" : "min-h-0 flex-1 overflow-y-auto bg-cream"}>
                 {submittedData.attending === "yes" ? (
-                  <>
-                    {/* Living card area (max-w-md centered) + transient petal shower (outside cardRef) */}
-                    <div className="relative w-full max-w-md flex flex-col items-center">
-                      <div 
-                        ref={cardRef}
-                        className="w-full bg-cream p-8 md:p-12 border border-sage/20 shadow-sm rounded-xl mb-6 relative overflow-hidden"
-                      >
-                        {/* Living growing flower (inside card so captured by download) */}
-                        <div className="flex justify-center -mt-2 mb-4">
-                          <motion.div
-                            {...motionProps(reduceMotion, {
-                              initial: { scale: 0.45, opacity: 0.65, rotate: -6 },
-                              animate: { scale: 1, opacity: 1, rotate: 0 },
-                              transition: { type: "spring", stiffness: 110, damping: 13, delay: 0.12 },
-                            })}
-                            className="relative w-14 h-14"
-                            aria-hidden="true"
-                          >
-                            {/* Stem */}
-                            <div className="absolute left-1/2 top-[52%] w-px h-6 bg-sage/60 -translate-x-1/2 z-0" />
-                            {/* Petals (reuse .petal primitive, gold center) */}
-                            {[0, 60, 120, 180, 240, 300].map((deg, i) => (
-                              <div
-                                key={i}
-                                className="petal absolute origin-[50%_125%]"
-                                style={{
-                                  left: "50%",
-                                  top: "44%",
-                                  transform: `rotate(${deg}deg) translateY(-8px)`,
-                                  width: "9px",
-                                  height: "9px",
-                                }}
-                              />
-                            ))}
-                            <div className="absolute left-1/2 top-[46%] -translate-x-1/2 -translate-y-1/2 w-[17px] h-[17px] rounded-full bg-accent-primary z-10" />
-                          </motion.div>
-                        </div>
-
-                        <div className="absolute top-0 left-0 w-full h-2 bg-accent-secondary"></div>
-                        <h3 className="font-serif text-3xl text-wine mb-6">M &amp; M</h3>
-                        <p className="text-sage font-light mb-2">Joyfully invite</p>
-                        <h4 className="font-serif text-2xl text-foreground mb-6">{submittedData.name}</h4>
-                        <div className="space-y-2 text-foreground/70 font-light text-sm">
-                          <p>To celebrate their wedding</p>
-                          <p className="font-medium text-foreground mt-4">{WEDDING.dateLabel}</p>
-                          <p>{WEDDING.timeLabel}</p>
-                          <p className="mt-4">{WEDDING.venue.name}</p>
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={downloadCard}
-                        className="bg-accent-primary hover:bg-foreground text-foreground hover:text-cream px-6 py-3 rounded-lg transition-colors font-medium w-full sm:w-auto focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-primary focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
-                      >
-                        Save Picture
-                      </button>
-                      <button
-                        onClick={handleClose}
-                        className="mt-4 text-sage hover:text-foreground underline transition-colors text-sm"
-                      >
-                        Close
-                      </button>
-
-                      {/* Petal shower layer (ephemeral, outside cardRef, does not affect html2canvas) */}
-                      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-                        {showerPetals.map((p) => (
-                          <motion.div
-                            key={p.id}
-                            className="petal"
-                            style={{ left: `${p.x}%`, top: "-4%" }}
-                            {...motionProps(reduceMotion, {
-                              initial: { y: 0, opacity: 0.85, rotate: 0 },
-                              animate: { y: "170%", opacity: 0, rotate: p.rotate },
-                              transition: { duration: p.duration, delay: p.delay, ease: "easeOut" },
-                            })}
-                          />
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Plant Your Wish Wall - growing garden of sample + user messages (below, wider) */}
-                    <div className="w-full max-w-xl px-2 mt-6">
-                      <PlantWishWall userWish={userWishForWall} />
-                    </div>
-                  </>
+                  <AcceptedResult key={submittedData.name} data={submittedData} onClose={handleClose} />
                 ) : (
-                  <div className="w-full max-w-md bg-cream p-8 md:p-12 border border-sage/20 shadow-sm rounded-xl flex flex-col items-center">
-                    <h3 className="font-serif text-2xl text-wine mb-4">Thank You, {submittedData.name}</h3>
-                    <p className="text-foreground/70 font-light mb-8">We appreciate your kind wishes from afar.</p>
-                    
-                    <div className="w-48 h-48 bg-background border-2 border-dashed border-sage/30 flex items-center justify-center rounded-lg mb-6">
-                      <p className="text-sage/70 text-sm font-light">QR Code Space</p>
-                    </div>
-                    
-                    <p className="text-sage font-light text-sm mb-8">For your blessings</p>
-                    
-                    <button
-                      onClick={handleClose}
-                      className="bg-sage/10 hover:bg-sage/20 text-foreground px-6 py-2 rounded-lg transition-colors w-full"
-                    >
-                      Close
-                    </button>
-                  </div>
+                  <DeclinedResult
+                    name={submittedData.name}
+                    amount={blessingAmount}
+                    onAmountChange={(value) => { setBlessingAmount(value); setBlessingError(""); }}
+                    transferDate={blessingDate}
+                    onTransferDateChange={(value) => { setBlessingDate(value); setBlessingError(""); }}
+                    transferHour={blessingHour}
+                    onTransferHourChange={(value) => { setBlessingHour(value); setBlessingError(""); }}
+                    transferMinute={blessingMinute}
+                    onTransferMinuteChange={(value) => { setBlessingMinute(value); setBlessingError(""); }}
+                    onSubmit={() => void submitBlessing()}
+                    status={blessingStatus}
+                    error={blessingError}
+                    reference={blessingAttemptRef.current?.id ?? ""}
+                  />
                 )}
               </div>
             ) : (

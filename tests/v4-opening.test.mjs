@@ -20,11 +20,13 @@ test("V4 opening combines envelope, countdown, and vinyl in section one", () => 
   assert.doesNotMatch(source, /cassette/i);
 });
 
-test("invitation handoff shares the hero envelope viewport anchor", () => {
-  assert.match(source, /top-\[calc\(43svh\+var\(--opened-envelope-offset\)\)\]/);
+test("opened envelope rests 25 percent above the viewport bottom", () => {
+  assert.match(source, /bottom-\[25%\]/);
   assert.match(introSource, /top-\[43svh\]/);
   assert.match(introSource, /y: opening \? "var\(--opened-envelope-offset\)" : 0/);
-  assert.doesNotMatch(introSource, /y:\s*70/);
+  assert.match(introSource, /\[--opened-envelope-offset:calc\(32svh-100%\)\]/);
+  assert.match(introSource, /md:\[--opened-envelope-offset:calc\(28svh-100%\)\]/);
+  assert.doesNotMatch(source, /opened-envelope-offset/);
 });
 
 test("intro support copy clears the rising photograph", () => {
