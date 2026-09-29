@@ -35,7 +35,7 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
 
   return (
     <section id="hero" className="garden-section overflow-hidden bg-wine">
-      <div className="relative min-h-[max(100svh,calc(43svh+125px+max(41.4vw,201.6px)+24px))] overflow-hidden bg-foreground text-cream md:min-h-[max(100svh,calc(47svh+474px))]">
+      <div className="relative min-h-[100svh] overflow-hidden bg-foreground text-cream">
         <Image
           src={OPENING_PHOTOS.background.src}
           alt={OPENING_PHOTOS.background.alt}
@@ -76,7 +76,7 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
           </p>
         </header>
 
-        <div className="absolute inset-x-0 top-[calc(43svh+var(--opened-envelope-offset))] md:top-[calc(47svh+var(--opened-envelope-offset))] z-10 mx-auto h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]">
+        <div className="absolute inset-x-0 bottom-[25%] z-10 mx-auto h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]">
           <div className="envelope-paper absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
           <motion.div
             className="absolute inset-x-[8%] top-[9%] z-[2] h-[82%] bg-cream p-2 pb-8 shadow-[0_14px_30px_rgba(60,30,38,0.24)] md:p-3 md:pb-10"

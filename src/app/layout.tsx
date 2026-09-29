@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Cormorant_Garamond, Inter, Noto_Serif_Thai, Playfair_Display } from "next/font/google";
 import { WEDDING } from "@/content/wedding";
 import "./globals.css";
 
@@ -11,6 +11,19 @@ const inter = Inter({
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+});
+
+const guestLatin = Cormorant_Garamond({
+  variable: "--font-guest-latin",
+  subsets: ["latin"],
+  weight: "500",
+  style: "italic",
+});
+
+const guestThai = Noto_Serif_Thai({
+  variable: "--font-guest-thai",
+  subsets: ["thai"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +39,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} antialiased bg-background text-foreground`}
+      className={`${inter.variable} ${playfair.variable} ${guestLatin.variable} ${guestThai.variable} antialiased bg-background text-foreground`}
     >
       <body className="font-sans">{children}</body>
     </html>

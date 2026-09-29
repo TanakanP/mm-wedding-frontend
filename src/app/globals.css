@@ -13,7 +13,6 @@
   --color-wine: #68414b;
   --color-violet: #756078;
   --nav-offset: 48px;
-  --opened-envelope-offset: 125px;
 }
 
 @theme inline {
@@ -158,7 +157,6 @@ body {
 @media (min-width: 768px) {
   :root {
     --nav-offset: 56px;
-    --opened-envelope-offset: 200px;
   }
 }
 

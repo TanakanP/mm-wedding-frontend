@@ -104,13 +104,13 @@ export const FRAMED_PHOTOS = {
 
 export const GALLERY_PHOTOS = [
   {
-    src: "/photos/display/gallery-1-closeup.jpeg",
-    alt: "Natthida smiling at Tanakan behind a soft foreground of flowers",
+    src: "/photos/display/gallery-1-embrace.png",
+    alt: "Natthida smiling at Tanakan as he lifts her among the trees",
     objectPosition: "50% 50%",
   },
   {
-    src: "/photos/display/gallery-2-walking.jpeg",
-    alt: "Natthida and Tanakan walking hand in hand through the garden",
+    src: "/photos/display/gallery-2-bench.png",
+    alt: "Natthida and Tanakan sitting together on a garden bench",
     objectPosition: "50% 50%",
   },
   {
@@ -119,8 +119,8 @@ export const GALLERY_PHOTOS = [
     objectPosition: "50% 50%",
   },
   {
-    src: "/photos/display/gallery-4-laugh.jpeg",
-    alt: "Natthida laughing with Tanakan in the garden",
+    src: "/photos/display/gallery-4-lakeside.jpg",
+    alt: "Tanakan looking toward Natthida beside the lake",
     objectPosition: "50% 50%",
   },
 ] as const;

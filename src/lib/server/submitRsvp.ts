@@ -16,7 +16,7 @@ function error(status: number, code: string): Response {
   return Response.json({ ok: false, code }, { status });
 }
 
-function hasAllowedOrigin(request: Request): boolean {
+export function hasAllowedOrigin(request: Request): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return false;
   const configured = process.env.RSVP_ALLOWED_ORIGIN?.trim();
@@ -34,7 +34,7 @@ function hasAllowedOrigin(request: Request): boolean {
   return false;
 }
 
-async function readBoundedBody(request: Request, maxBytes: number): Promise<string | null> {
+export async function readBoundedBody(request: Request, maxBytes: number): Promise<string | null> {
   if (!request.body) return "";
   const reader = request.body.getReader();
   const chunks: Uint8Array[] = [];
