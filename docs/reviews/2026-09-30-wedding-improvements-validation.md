@@ -112,3 +112,9 @@ Replaced gallery photos 1 and 2 with the supplied JPG attachments in order: benc
 Verification: 101/101 tests pass; TypeScript check and whitespace check pass. Browser confirmed both new URLs load successfully and visually confirmed both images in order. Screenshot: `assets/replaced-gallery-2026-10-01.png`.
 
 Video replacement remains pending: the supplied `EA8E30D7-7A67-4AF7-B187-C60D75A8A6C8.mov` clipboard path no longer exists. A focused search of the clipboard items, temporary files, project, and Downloads found no copy. Current film and poster remain unchanged; the new video must be reattached.
+
+### 2026-10-01 — Pending video replacement completed
+
+The user supplied a durable Downloads path for `EA8E30D7-7A67-4AF7-B187-C60D75A8A6C8.mov`. Converted the 20,078,525-byte, 1080×1742, SDR BT.709 HEVC/AAC source into `public/videos/wedding-film-v2.mp4`: H.264/AAC, 720×1162, 13.966667 seconds, 2,632,425 bytes, fast-start metadata. Preserved the source proportions and embedded borders rather than stretching it to 9:16. Matching poster: `wedding-film-v2-poster.jpg`, sampled at 1 second. Encode settings: scale `720:-2` with Lanczos; libx264 slow preset CRF 25, yuv420p, BT.709; AAC 128 kb/s; `+faststart`; remove source metadata. Updated both component URLs to avoid cached prior media. Existing ornate frame and playback behavior are unchanged.
+
+Verification: full video decodes without errors; 101/101 tests, TypeScript and whitespace checks pass. Browser confirms `wedding-film-v2.mp4` is playing (paused=false, currentTime=11.99, duration=13.97, no media error), and the decorative frame remains visible. Screenshot: `assets/replaced-video-2026-10-01.png`. This resolves the earlier unavailable-video blocker.

@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const FILM_SRC = "/videos/wedding-film.mp4";
-const POSTER_SRC = "/videos/wedding-film-poster.jpg";
+const FILM_SRC = "/videos/wedding-film-v2.mp4";
+const POSTER_SRC = "/videos/wedding-film-v2-poster.jpg";
 const FILM_LABEL = "A little film of Natthida and Tanakan by the lake";
 
 export default function RetroVideoPlayer() {
