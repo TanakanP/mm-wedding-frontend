@@ -58,3 +58,9 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### Prepare the wedding film
+
+Run `node scripts/prepare-wedding-film.mjs /absolute/path/to/source.mov` to create the portrait MP4 and matching poster in `public/videos/`. Use `--output /tmp/film-candidate --crf 23` (or `25`) to inspect a candidate before replacing assets. The default CRF is 25, with the slow H.264 preset, 720×1280 output, retained AAC audio, SDR BT.709 color, and fast-start metadata. The poster defaults to 1 second; override with `--poster-time`.
+
+HDR sources require FFmpeg with `zscale`/libzimg for linear-light tone mapping. The script detects HDR and fails clearly if that filter is unavailable; it also accepts an already converted SDR source without applying tone mapping twice. Compare orientation, skin tones, gradients, motion, and first/middle/last frames before selecting compression. The September 30 derivative was recompressed from the existing SDR film with FFmpeg 9.0.1 at CRF 25; see the validation report for sizes and limitations.

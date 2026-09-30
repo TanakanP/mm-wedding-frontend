@@ -1,3 +1,19 @@
+// photo-blurs:start
+const photoBlurs = {
+  "/photos/display/page/opening-background-expanded.webp": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAADwAwCdASoLABgAPu1kqU2ppaOiMAgBMB2JYwC06BwudG+DO7NnYO8AAP7dbvO3DItbC2B6vKvE3a/kehL9GXo0b36JJKvANtFjwcmSr/XXdjyrrw0OmJLV9/7UGuCAvf1tlJiqmOMMu0AA",
+  "/photos/display/page/opening-envelope.webp": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABwBACdASoQABgAPu1iqU2ppaQiMAgBMB2JQBOgMYib0dwBgeTZaWzSe4LiUAD+6R7eO10FL2bQEP3QuM83iuSRN1YPTwy1vK9NSwTY4chuesN7OJPjTEIJNPg3sxKzntmPWt2UDmV9gl4/YKlS5VdHHwmMnfWMhL/Ps8PXNKHK2jf5O2aGSxVlHwVa5kpVwiKkaF2PS6d8mgrEog7vQJEAwdwAAA==",
+  "/photos/display/page/framed-background-running.webp": "data:image/webp;base64,UklGRrIAAABXRUJQVlA4IKYAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQAB8kDEfYy45TpoY5x2qploAAP7x4NbDT88Weqaj4dC4cj/5CIQEUUoj/DoUg5qmx0a2E7y0FwwE86s6DZvq3vmRlrALXL92peSqi67X0kOQjv0yMpqdM7Tkjmn7nsRVOOJsWmgjy70A4boWdnJniunjwsOdWiZFE+bWHiRkmdA8f2DKAHtYCKwuAAAA",
+  "/photos/display/page/framed-center-piggyback.webp": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAACwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBWGUGeV2ATmIjDR9tvBlu958vAiAP7uNDEozawD6Wm6IbvEqlkElJPtCoi8G9xucXEDZ3TSLJKCEkFAtAlOGtoCr6dNizBAT86PM9Oxm7Z2JCha4NH2uS2LG1aZd0fLb5VMtBq5EGbeOoe0wKovooiO9Y0O86xerYepaoXf5Zp5LqZrBQQXhrEuY13J80kW47Nn6c/87r9gAAA=",
+  "/photos/display/page/gallery-1-bench.webp": "data:image/webp;base64,UklGRsgAAABXRUJQVlA4ILwAAACwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgMXrdrTMkRe96RUEt4iRzN2dwAP7sPu29bOAVha1i4eANA2baJ65uNAZ6V+O/pxBXCvxRmoqUiTcT1fsmlfSeRHkHp60Hpi3+7i4qnGzJtUgW6Hxepq/GKZeTnagJfrudI+wfoWrPsREnKUgFqQ+HdqV+AiUlny/u6DNXkcnqwec5A5M2tuLnieIod8y9nUCFqjWKRDpTMABFHFnBECWgAA==",
+  "/photos/display/page/gallery-2-embrace.webp": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAABwBACdASoPABgAPu1iqU2ppaOiMAgBMB2JQBOgMXmcpi5r8fRlGQVCEE8gyAD+7tfEYsRTkYac/Xitb1UFigdV4B/rzwtkcKh7na5rmBTb9wRM62UD41RqJ56T6X8DOHO+0pt4j/DjkcXLsdvdVm6C3vDT087Q4ueB4Dn5/8b3UvpUDbb8z/xUHk+WlU5Y63tuer6D/vaY7hkr7vetGrpemgAAAA==",
+  "/photos/display/page/gallery-3-rings.webp": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgMYsZW+abL5P3Qqi2UNzgAP7jT52IMOowKP9/RvRPcyFk8t7/YqvPTb1Z7PveuD/0p18UVy3vkwzSA/QxLZYYfrrYV/fiX22poPVXjBHQPNpYdCvTpy4ACXmC4r+2jtmse+4cIN3LdyqlHgMYGckTttqedmOjWlxCEOIAAA==",
+  "/photos/display/page/gallery-4-lakeside.webp": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCdB3gGyiMJPNmHyIsw8J3gAAD+6VCE2cyD0zNRd4tjp5+WPuQvExCu2hlbhrAB54bwMF4JIDPa1knR8QuGJaeNieHJnfr62Cf4t/mMXA28cTH0cgT4yGpu3u+eF37Ljkz9gEiia7Kh/4rAvZf1vNt/IONQNps7Bem0v/ORZzy/T2F+v323B97Z2RAgRbSPsX6+jYNkp5Np0nkAAA==",
+  "/photos/display/page/final-memory-running.webp": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaQAD5aH38gJERcROB6Z8vpgA/SmSt0aWKocAU0ncP5A3qLAv/27+HEwilorl03VITxcySfgGtl+DRyxIfG4RGwca1ewXYWt9k3fy44ofn7GwOYbG7DAMQmGVvTa57KMtxmEA77JB7qwdUAAAAA==",
+  "/photos/display/page/rsvp-background.webp": "data:image/webp;base64,UklGRsYAAABXRUJQVlA4ILoAAACQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JQBWEDgQW4l/nYmeWtJWgONJe40AA/s7iV46f0hD7Voj4UAxT1uANy+HclUPUqxsxHL7s1y1er28yfHIkfmsdRkRR6yzD+ACtuyzB3gnAoayQDbk34kxzwtHpTA+auk8de+U46v80Fj6MTOantqJp899mtjVvsvfzy+7wMN6Go7N+TwyUckEC+iDoMYhnJCIH5HPE9PBHbAIxxVpGP2qAAAA=",
+  "/photos/display/page/ornate-ivory.webp": "data:image/webp;base64,UklGRpIBAABXRUJQVlA4WAoAAAAQAAAAEAAAFwAAQUxQSPoAAAANgGpr22Ll/f9/Zg7u7g7Jo7t7gsgduGWHSrTOopKcRvLk7u7OPx82c24hIiYgK875ajZ4uyXpoPeNUdWEuByEWyaFAkHNtkSysEP9ertWpPLGdQsxKO5fSZiu1YXUdP4J8dxUlzhW7PKoA4R/P9WRUDyAwZCAYAECGUHnfmsBbh8wybFQgguYJVa+FqN+mgFWOcwzPDXjy4p6AWuVnnb10wyx/hc7WMli8WGKWOJ4qu+LGY7RGFzBrBTxTw5cF0ZS4PHEzl1KIxA7LcBbCif2Dz1eoXo+srATxq5fmNMk6F19twM+wHULfNQai+1EwFF9wv3AkcUuezwZVlA4IHIAAAAwBACdASoRABgAPu1iqU2ppaOiMAgBMB2JYgDH5CHf+J1Q5sASmjUK7AQA/u/RUqDDFOIUFqvSsz4lQQzo71FGIzZ01FwH+LYfrPRXq+f/2EsEPK3lxo3BPSnzQ+6LPzMkV3rzYABeNyU17H6qrMoAAAA="
+} as const;
+
+// photo-blurs:end
 export const V4_SECTION_IDS = [
   "hero",
   "families",
@@ -78,50 +94,63 @@ export const WEDDING = {
 
 export const OPENING_PHOTOS = {
   envelope: {
-    src: "/photos/display/opening-envelope.jpeg",
+    src: "/photos/display/page/opening-envelope.webp",
     alt: "Natthida and Tanakan showing their engagement rings together",
     objectPosition: "50% 40%",
+    blurDataURL: photoBlurs["/photos/display/page/opening-envelope.webp"],
   },
   background: {
-    src: "/photos/display/opening-background-expanded.png",
+    src: "/photos/display/page/opening-background-expanded.webp",
     alt: "Natthida and Tanakan sitting together beside a quiet lake",
     objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/opening-background-expanded.webp"],
   },
 } as const;
 
 export const FRAMED_PHOTOS = {
   background: {
-    src: "/photos/display/framed-background-running.jpeg",
+    src: "/photos/display/page/framed-background-running.webp",
     alt: "",
     objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/framed-background-running.webp"],
   },
   center: {
-    src: "/photos/display/framed-center-piggyback.jpeg",
+    src: "/photos/display/page/framed-center-piggyback.webp",
     alt: "Natthida smiling while riding on Tanakan's back",
     objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/framed-center-piggyback.webp"],
+  },
+  frame: {
+    src: "/photos/display/page/ornate-ivory.webp",
+    alt: "",
+    blurDataURL: photoBlurs["/photos/display/page/ornate-ivory.webp"],
   },
 } as const;
 
 export const GALLERY_PHOTOS = [
   {
-    src: "/photos/display/gallery-1-embrace.png",
-    alt: "Natthida smiling at Tanakan as he lifts her among the trees",
-    objectPosition: "50% 50%",
-  },
-  {
-    src: "/photos/display/gallery-2-bench.png",
+    src: "/photos/display/page/gallery-1-bench.webp",
     alt: "Natthida and Tanakan sitting together on a garden bench",
     objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/gallery-1-bench.webp"],
   },
   {
-    src: "/photos/display/gallery-3-rings.jpeg",
+    src: "/photos/display/page/gallery-2-embrace.webp",
+    alt: "Natthida smiling at Tanakan as he lifts her among the trees",
+    objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/gallery-2-embrace.webp"],
+  },
+  {
+    src: "/photos/display/page/gallery-3-rings.webp",
     alt: "Natthida and Tanakan holding up their wedding rings",
     objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/gallery-3-rings.webp"],
   },
   {
-    src: "/photos/display/gallery-4-lakeside.jpg",
+    src: "/photos/display/page/gallery-4-lakeside.webp",
     alt: "Tanakan looking toward Natthida beside the lake",
     objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/gallery-4-lakeside.webp"],
   },
 ] as const;
 
@@ -131,10 +160,10 @@ export const PHOTOS = {
   3: { id: 3, src: "/photos/display/3.jpeg", alt: "M and M together with a mountain landscape", objectPosition: "50% 45%" },
   4: { id: 4, src: "/photos/display/4.jpeg", alt: "M and M enjoying a playful lakeside moment", objectPosition: "50% 45%" },
   5: { id: 5, src: "/photos/display/5.jpeg", alt: "M and M posing together in playful costumes", objectPosition: "50% 45%" },
-  6: { id: 6, src: "/photos/display/6.jpeg", alt: "M and M standing together beside a misty garden path", objectPosition: "50% 45%" },
+  6: { id: 6, src: "/photos/display/page/rsvp-background.webp", alt: "M and M standing together beside a misty garden path", objectPosition: "50% 45%", blurDataURL: photoBlurs["/photos/display/page/rsvp-background.webp"] },
   7: { id: 7, src: "/photos/display/7.jpeg", alt: "M and M standing beneath warm autumn leaves", objectPosition: "50% 45%" },
   8: { id: 8, src: "/photos/display/8.jpeg", alt: "M and M sharing a candid moment together", objectPosition: "50% 45%" },
-  9: { id: 9, src: "/photos/display/final-memory-running.jpeg", alt: "Natthida and Tanakan running together through the garden", objectPosition: "50% 50%" },
+  9: { id: 9, src: "/photos/display/page/final-memory-running.webp", alt: "Natthida and Tanakan running together through the garden", objectPosition: "50% 50%", blurDataURL: photoBlurs["/photos/display/page/final-memory-running.webp"] },
   10: { id: 10, src: "/photos/display/10.jpeg", alt: "M and M together during a garden journey", objectPosition: "50% 45%" },
   11: { id: 11, src: "/photos/display/11.jpeg", alt: "Natthida and Tanakan running hand in hand through a flower garden", objectPosition: "50% 50%" },
   12: { id: 12, src: "/photos/display/12.jpeg", alt: "Natthida smiling while riding on Tanakan's back", objectPosition: "50% 42%" },

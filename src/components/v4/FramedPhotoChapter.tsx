@@ -5,17 +5,21 @@ import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMo
 import Image from "next/image";
 import { FRAMED_PHOTOS } from "@/content/wedding";
 
-const viewport = { once: true, amount: 0.3 } as const;
+const frameViewport = { once: true, amount: 0.35 } as const;
 
 function frameMotion(reduceMotion: boolean) {
   return reduceMotion
-    ? {}
+    ? {
+        initial: false as const,
+        animate: { opacity: 1, scale: 1 },
+        transition: { duration: 0 },
+      }
     : {
         initial: { opacity: 0, scale: 0.94 },
         whileInView: { opacity: 1, scale: 1 },
-        viewport,
+        viewport: frameViewport,
         transition: {
-          duration: 0.9,
+          duration: 0.95,
           ease: [0.22, 1, 0.36, 1] as const,
         },
       };
@@ -36,6 +40,10 @@ export default function FramedPhotoChapter() {
         alt=""
         fill
         sizes="100vw"
+        loading="eager"
+        fetchPriority="low"
+        placeholder="blur"
+        blurDataURL={FRAMED_PHOTOS.background.blurDataURL}
         className="-z-20 object-cover"
         style={{ objectPosition: FRAMED_PHOTOS.background.objectPosition }}
       />
@@ -50,15 +58,23 @@ export default function FramedPhotoChapter() {
             alt={photo.alt}
             fill
             sizes="(max-width: 639px) 47vw, (max-width: 767px) 41vw, 320px"
+            loading="eager"
+            fetchPriority="low"
+            placeholder="blur"
+            blurDataURL={photo.blurDataURL}
             className="object-cover"
             style={{ objectPosition: photo.objectPosition }}
           />
         </div>
         <Image
-          src="/photos/frames/ornate-ivory.png"
+          src={FRAMED_PHOTOS.frame.src}
           alt=""
           fill
           sizes="(max-width: 639px) 66vw, (max-width: 767px) 58.5vw, 450px"
+          loading="eager"
+          fetchPriority="low"
+          placeholder="blur"
+          blurDataURL={FRAMED_PHOTOS.frame.blurDataURL}
           className="pointer-events-none object-contain"
         />
       </motion.figure>

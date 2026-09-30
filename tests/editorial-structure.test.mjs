@@ -21,7 +21,7 @@ test("page renders the nine V4 chapters in approved order", async () => {
   const positions = components.map((name) => source.indexOf(`<${name}`));
   assert.ok(positions.every((position) => position >= 0));
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
-  assert.match(source, /<RSVPChapter>\s*<FAQSection \/>\s*<\/RSVPChapter>/s);
+  assert.match(source, /<RSVPChapter \/>/);
 });
 
 test("garden navigation keeps small interactive text high contrast", async () => {

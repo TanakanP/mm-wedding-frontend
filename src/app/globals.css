@@ -144,14 +144,37 @@ body {
     0 32px 72px rgba(46, 32, 36, 0.38);
 }
 
-.retro-player-shell {
-  border: 1px solid rgba(104, 65, 75, 0.22);
-  background:
-    linear-gradient(90deg, transparent 0 48%, rgba(104, 65, 75, 0.035) 49% 51%, transparent 52%),
-    linear-gradient(145deg, #f9f0e5, #d9c4aa);
+.film-frame {
+  padding: 11px;
+  border: 1px solid #e7c4cb;
+  border-radius: 1.15rem;
+  background: #fffaf3;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 28px 60px rgba(81, 49, 58, 0.25);
+    inset 0 0 0 1px #fffaf3,
+    inset 0 0 0 5px rgba(238, 212, 216, 0.95),
+    0 18px 42px rgba(104, 65, 75, 0.22);
+}
+
+.film-frame-viewport {
+  border-radius: 0.55rem;
+  box-shadow: inset 0 0 0 1px rgba(189, 165, 110, 0.7);
+}
+
+.film-frame-viewport::after {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(#bda56e, #bda56e) left top / 16px 1px no-repeat,
+    linear-gradient(#bda56e, #bda56e) left top / 1px 16px no-repeat,
+    linear-gradient(#bda56e, #bda56e) right top / 16px 1px no-repeat,
+    linear-gradient(#bda56e, #bda56e) right top / 1px 16px no-repeat,
+    linear-gradient(#bda56e, #bda56e) left bottom / 16px 1px no-repeat,
+    linear-gradient(#bda56e, #bda56e) left bottom / 1px 16px no-repeat,
+    linear-gradient(#bda56e, #bda56e) right bottom / 16px 1px no-repeat,
+    linear-gradient(#bda56e, #bda56e) right bottom / 1px 16px no-repeat;
 }
 
 @media (min-width: 768px) {

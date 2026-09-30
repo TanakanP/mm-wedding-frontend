@@ -340,6 +340,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                       aria-describedby={errors.name ? "rsvp-name-error" : undefined}
                       className="w-full sm:w-2/3 md:w-1/2 px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
                       placeholder="John & Jane Doe"
+                      maxLength={100}
                     />
                     {errors.name && <p id="rsvp-name-error" className="text-red-700 text-sm mt-1">{errors.name.message}</p>}
                   </div>
@@ -398,7 +399,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                             aria-invalid={Boolean(errors.relation)}
                             aria-describedby={errors.relation ? "rsvp-relation-error" : undefined}
                             className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
-                            maxLength={200}
+                            maxLength={100}
                           />
                           {errors.relation && <p id="rsvp-relation-error" className="text-red-700 text-sm mt-1">{errors.relation.message}</p>}
                         </div>
@@ -459,6 +460,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                             id="rsvp-guest-count"
                             type="number"
                             min="0"
+                            max="99"
                             step="1"
                             {...register("guestCount")}
                             aria-invalid={Boolean(errors.guestCount)}
@@ -508,7 +510,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                             aria-invalid={Boolean(errors.message)}
                             aria-describedby={errors.message ? "rsvp-message-error" : undefined}
                             rows={4}
-                            maxLength={2000}
+                            maxLength={500}
                             className="w-full px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors resize-none bg-cream"
                             placeholder="Leave your wishes..."
                           />

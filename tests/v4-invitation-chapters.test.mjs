@@ -1,9 +1,37 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
+import { componentHarness, nodes } from './helpers/componentHarness.mjs';
+import { FRAMED_PHOTOS } from '../src/content/wedding.ts';
 
 const read = (name) =>
   readFile(new URL(`../src/components/v4/${name}.tsx`, import.meta.url), "utf8").catch(() => "");
+
+test('framed portrait waits for 35 percent visibility and preserves eager loading and reduced motion', async () => {
+  for (const reduced of [false, true]) {
+    const h = await componentHarness(new URL('../src/components/v4/FramedPhotoChapter.tsx', import.meta.url), {
+      'next/image': { __esModule: true, default: 'Photo' },
+      '@/content/wedding': { FRAMED_PHOTOS },
+      '@/hooks/useHydrationSafeReducedMotion': { useHydrationSafeReducedMotion: () => reduced },
+    });
+    const tree = h.render();
+    const frame = nodes(tree, n => n.type === 'figure')[0];
+    if (reduced) {
+      assert.equal(frame.props.initial, false);
+      assert.equal(frame.props.animate.opacity, 1);
+      assert.equal(frame.props.transition.duration, 0);
+    } else {
+      assert.deepEqual(frame.props.viewport, { once: true, amount: 0.35 });
+      assert.equal(frame.props.transition.duration, 0.95);
+      assert.equal(frame.props.initial.opacity, 0);
+      assert.equal(frame.props.whileInView.opacity, 1);
+    }
+    for (const image of nodes(tree, n => n.type === 'Photo')) {
+      assert.equal(image.props.loading, 'eager');
+      assert.equal(image.props.fetchPriority, 'low');
+    }
+  }
+});
 
 test("sections two through four remain separately editable", async () => {
   const [family, frame, dress] = await Promise.all([
@@ -17,29 +45,17 @@ test("sections two through four remain separately editable", async () => {
   assert.match(dress, /dressCode\.colors\.map/);
 });
 
-test("supporting invitation copy uses solid wine for readable contrast", async () => {
-  const [family, dress] = await Promise.all([
-    read("FamilyChapter"),
-    read("DressCodeChapter"),
-  ]);
-
-  assert.doesNotMatch(family, /text-wine\/\d+/);
-  assert.doesNotMatch(dress, /text-wine\/\d+/);
+test("primary invitation and dress-code copy uses solid readable wine", async () => {
+  const [family, dress] = await Promise.all([read("FamilyChapter"), read("DressCodeChapter")]);
+  assert.match(family, /font-serif text-lg leading-relaxed text-wine md:text-xl/);
+  assert.match(dress, /font-serif text-lg leading-relaxed text-wine/);
 });
 
-test("the scalloped memory keeps the approved dominant portrait crop", async () => {
+test("framed portrait advertises its visible image and frame widths", async () => {
   const frame = await read("FramedPhotoChapter");
-  const rotations = [...frame.matchAll(/\brotate:\s*(-?\d+(?:\.\d+)?)/g)].map(
-    ([, value]) => Number(value)
-  );
-
-  assert.match(frame, /aspect-\[4\/5\]/);
-  assert.doesNotMatch(frame, /aspect-\[3\/2\]/);
-  assert.match(frame, /w-\[min\(88vw,600px\)\] sm:w-\[min\(82vw,600px\)\]/);
-  assert.match(
-    frame,
-    /sizes="\(max-width: 639px\) calc\(88vw - 24px\), \(max-width: 731px\) calc\(82vw - 32px\), \(max-width: 767px\) 568px, 560px"/
-  );
-  assert.ok(rotations.length >= 2);
-  assert.ok(rotations.every((rotation) => Math.abs(rotation) <= 2));
+  assert.match(frame, /aspect-\[834\/1200\]/);
+  assert.match(frame, /w-\[min\(66vw,450px\)\]/);
+  assert.match(frame, /sizes="\(max-width: 639px\) 47vw, \(max-width: 767px\) 41vw, 320px"/);
+  assert.match(frame, /sizes="\(max-width: 639px\) 66vw, \(max-width: 767px\) 58.5vw, 450px"/);
+  assert.match(frame, /FRAMED_PHOTOS.frame/);
 });
