@@ -20,13 +20,14 @@ test("V4 ends with a cinematic image and one RSVP section", () => {
   assert.match(finalImage, /PHOTOS\[9\]/);
   assert.match(rsvp, /id="rsvp"/);
   assert.match(rsvp, /RSVPForm/);
-  assert.match(rsvp, /children/);
+  assert.match(rsvp, /isOpen=\{isRSVPOpen\}/);
+  assert.match(rsvp, /onClose=\{\(\) => setIsRSVPOpen\(false\)\}/);
 });
 
 test("V4 RSVP action uses high-contrast invitation colors", () => {
   assert.match(
     rsvp,
-    /className="[^"]*bg-wine[^"]*text-cream[^"]*"[^>]*>\s*Open response card/s
+    /className="[^"]*bg-wine[^"]*text-cream[^"]*"[^>]*>\s*Share your response/s
   );
 });
 

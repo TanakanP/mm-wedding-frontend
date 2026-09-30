@@ -180,7 +180,7 @@ export default function InvitationIntro({ onOpenChange }: { onOpenChange?: (open
         </motion.p>
 
         <motion.div
-          className="relative h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [--opened-envelope-offset:calc(32svh-100%)] [perspective:1200px] md:h-[250px] md:w-[460px] md:[--opened-envelope-offset:calc(28svh-100%)]"
+          className="relative h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [--opened-envelope-offset:calc(37svh-100%)] [perspective:1200px] md:h-[250px] md:w-[460px] md:[--opened-envelope-offset:calc(33svh-100%)]"
           initial={false}
           animate={{ y: opening ? "var(--opened-envelope-offset)" : 0 }}
           transition={{
@@ -226,6 +226,8 @@ export default function InvitationIntro({ onOpenChange }: { onOpenChange?: (open
                   alt={OPENING_PHOTOS.envelope.alt}
                   fill
                   loading="eager"
+                  placeholder="blur"
+                  blurDataURL={OPENING_PHOTOS.envelope.blurDataURL}
                   sizes="(max-width: 768px) 74vw, 500px"
                   className="scale-[1.35] object-cover"
                   style={{ objectPosition: OPENING_PHOTOS.envelope.objectPosition }}

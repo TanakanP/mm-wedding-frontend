@@ -2,76 +2,149 @@
 
 import { useEffect, useRef, useState } from "react";
 
+const FILM_SRC = "/videos/wedding-film-v2.mp4";
+const POSTER_SRC = "/videos/wedding-film-v2-poster.jpg";
+const FILM_LABEL = "A little film of Natthida and Tanakan by the lake";
+
 export default function RetroVideoPlayer() {
+  const frameRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
+  const [needsGesture, setNeedsGesture] = useState(false);
+  const [playbackFailed, setPlaybackFailed] = useState(false);
+  const playRef = useRef<(() => Promise<void>) | null>(null);
+  const cancelRef = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    const frame = frameRef.current;
+    if (!frame) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) setShouldLoad(true);
+      },
+      { rootMargin: "240px 0px" },
+    );
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !shouldLoad) return;
 
-    const resumeVideo = () => {
-      if (document.visibilityState !== "visible") return;
-
-      if (video.readyState === HTMLMediaElement.HAVE_NOTHING) {
-        video.load();
+    let active = true;
+    let pending = false;
+    let attempt = 0;
+    const cancel = () => { attempt++; pending = false; };
+    cancelRef.current = cancel;
+    const resumeVideo = async () => {
+      if (!active || pending || document.visibilityState !== "visible") return;
+      pending = true;
+      const currentAttempt = ++attempt;
+      setPlaybackFailed(false);
+      try {
+        if (video.error || video.readyState === HTMLMediaElement.HAVE_NOTHING) video.load();
+        await video.play();
+        if (active && currentAttempt === attempt) {
+          setNeedsGesture(false);
+          setIsVideoVisible(true);
+        }
+      } catch {
+        if (active && currentAttempt === attempt) {
+          setNeedsGesture(true);
+          setIsVideoVisible(false);
+          setPlaybackFailed(true);
+        }
+      } finally {
+        if (currentAttempt === attempt) pending = false;
       }
-
-      void video
-        .play()
-        .then(() => setIsVideoVisible(true))
-        .catch(() => setIsVideoVisible(false));
     };
+    playRef.current = resumeVideo;
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
+        cancel();
         setIsVideoVisible(false);
         return;
       }
 
-      resumeVideo();
+      void resumeVideo();
     };
 
-    const handlePageHide = () => setIsVideoVisible(false);
+    const handlePageHide = () => { cancel(); setIsVideoVisible(false); };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("pageshow", resumeVideo);
     window.addEventListener("pagehide", handlePageHide);
-    resumeVideo();
+    void resumeVideo();
 
     return () => {
+      active = false;
+      cancel();
+      playRef.current = null;
+      cancelRef.current = null;
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("pageshow", resumeVideo);
       window.removeEventListener("pagehide", handlePageHide);
     };
-  }, []);
+  }, [shouldLoad]);
 
   return (
-    <figure className="retro-player-shell mx-auto w-full max-w-[320px] rounded-[1.5rem] p-3 shadow-[0_28px_60px_rgba(81,49,58,0.25)]">
-      <div className="rounded-[1.15rem] bg-[#302c30] p-2.5 shadow-[inset_0_0_0_1px_rgba(255,250,243,0.12)]">
-        <div
-          className="relative aspect-[9/16] overflow-hidden rounded-[0.8rem] bg-[#171519] bg-cover bg-center"
-          style={{ backgroundImage: "url('/videos/dress-code-film-poster.jpg')" }}
+    <figure
+      ref={frameRef}
+      className="film-frame mx-auto w-full max-w-[320px]"
+    >
+      <div
+        className="film-frame-viewport relative aspect-[9/16] overflow-hidden bg-paper bg-cover bg-center"
+        style={{ backgroundImage: `url('${POSTER_SRC}')` }}
+      >
+        <video
+          ref={videoRef}
+          className={`h-full w-full object-contain transition-opacity duration-300 ${
+            isVideoVisible ? "opacity-100" : "opacity-0"
+          }`}
+          poster={POSTER_SRC}
+          muted
+          autoPlay
+          loop
+          playsInline
+          preload="none"
+          aria-label={FILM_LABEL}
+          onPlaying={() => {
+            if (document.visibilityState !== "visible") return;
+            setNeedsGesture(false);
+            setPlaybackFailed(false);
+            setIsVideoVisible(true);
+          }}
+          onWaiting={() => setIsVideoVisible(false)}
+          onError={() => {
+            cancelRef.current?.();
+            setIsVideoVisible(false);
+            setNeedsGesture(true);
+            setPlaybackFailed(true);
+          }}
         >
-          <video
-            ref={videoRef}
-            className={`h-full w-full object-contain transition-opacity duration-300 ${
-              isVideoVisible ? "opacity-100" : "opacity-0"
-            }`}
-            poster="/videos/dress-code-film-poster.jpg"
-            muted
-            autoPlay
-            loop
-            playsInline
-            preload="metadata"
-            aria-label="A little film of Natthida and Tanakan by the lake"
-            onPlaying={() => setIsVideoVisible(true)}
-            onWaiting={() => setIsVideoVisible(false)}
-            onStalled={() => setIsVideoVisible(false)}
+          {shouldLoad && <source src={FILM_SRC} type="video/mp4" />}
+        </video>
+        {needsGesture && (
+          <button
+            type="button"
+            className="absolute inset-0 z-10 grid place-items-center bg-foreground/15 text-wine"
+            onClick={() => {
+              void playRef.current?.();
+            }}
+            aria-label={`Play ${FILM_LABEL}`}
           >
-            <source src="/videos/dress-code-film.mp4" type="video/mp4" />
-          </video>
-        </div>
+            <span className="rounded-full bg-cream px-4 py-2 font-serif text-sm italic shadow-[0_8px_20px_rgba(104,65,75,0.22)]">
+              Play film
+            </span>
+          </button>
+        )}
+        {playbackFailed && (
+          <p role="status" className="sr-only">The film couldn&apos;t play. Please try the Play film button again.</p>
+        )}
       </div>
     </figure>
   );

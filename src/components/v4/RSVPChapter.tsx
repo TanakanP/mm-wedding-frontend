@@ -24,6 +24,10 @@ export default function RSVPChapter() {
           alt=""
           fill
           sizes="100vw"
+          loading="eager"
+          fetchPriority="low"
+          placeholder="blur"
+          blurDataURL={PHOTOS[6].blurDataURL}
           className="object-cover opacity-[.14] saturate-[.7]"
           style={{ objectPosition: PHOTOS[6].objectPosition }}
         />

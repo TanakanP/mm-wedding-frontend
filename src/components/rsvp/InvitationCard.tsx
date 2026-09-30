@@ -8,12 +8,12 @@ const InvitationCard = forwardRef<HTMLDivElement, { guestName: string }>(functio
   const isThai = /[\u0E00-\u0E7F]/.test(guestName);
 
   return (
-    <div ref={ref} className={styles.card} style={{ aspectRatio: "1500 / 2114", containerType: "inline-size" }}>
+    <div ref={ref} className={styles.card} style={{ aspectRatio: "1056 / 1489", containerType: "inline-size" }}>
       {/* Use the original same-origin artwork for consistent full-resolution PNG exports. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className={styles.artwork} src="/invitations/romantic-keepsake-thank-you.png"
-        alt={`${WEDDING.invitation.brideName} & ${WEDDING.invitation.groomName} · ${WEDDING.dateLabel}. With love, for you. We can’t wait to celebrate with you. A romantic invitation with a blush bow, delicate flowers, and a scalloped border.`}
-        width={1500} height={2114} />
+      <img className={styles.artwork} src="/invitations/romantic-keepsake-v2.png"
+        alt={`${WEDDING.invitation.brideName} & ${WEDDING.invitation.groomName} · ${WEDDING.dateLabel}. With love, for you. We can’t wait to celebrate with you. A romantic invitation with a blush bow, sweet peas, and a scalloped border.`}
+        width={1056} height={1489} />
       <div className={styles.personalization}>
         <p className={styles.guest} lang={isThai ? "th" : "en"} style={{ fontSize: nameSize }}>{guestName}</p>
       </div>

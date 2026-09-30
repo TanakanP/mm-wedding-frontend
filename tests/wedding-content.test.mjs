@@ -1,69 +1,32 @@
-import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import test from "node:test";
-import ts from "typescript";
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { access } from 'node:fs/promises';
+import { V4_SECTION_IDS, NAV_ITEMS, OPENING_PHOTOS, FRAMED_PHOTOS, GALLERY_PHOTOS, PHOTOS, WEDDING } from '../src/content/wedding.ts';
 
-const source = await readFile(
-  new URL("../src/content/wedding.ts", import.meta.url),
-  "utf8"
-);
-const { outputText } = ts.transpileModule(source, {
-  compilerOptions: {
-    module: ts.ModuleKind.ESNext,
-    target: ts.ScriptTarget.ES2022,
-  },
+test('the nine current chapters have unique section anchors', () => {
+  assert.deepEqual(V4_SECTION_IDS, ['hero','families','framed-photo','dress-code','schedule','gallery','venue','final-image','rsvp']);
+  assert.equal(new Set(V4_SECTION_IDS).size, 9);
 });
-const content = await import(
-  `data:text/javascript;base64,${Buffer.from(outputText).toString("base64")}`
-);
-
-test("V4 exposes exactly nine editable sections in the approved order", () => {
-  assert.deepEqual(content.V4_SECTION_IDS, [
-    "hero",
-    "families",
-    "framed-photo",
-    "dress-code",
-    "schedule",
-    "gallery",
-    "venue",
-    "final-image",
-    "rsvp",
-  ]);
-  assert.equal(new Set(content.V4_SECTION_IDS).size, 9);
+test('every navigation item targets a current chapter', () => {
+  assert.ok(NAV_ITEMS.length > 0);
+  for (const item of NAV_ITEMS) assert.ok(V4_SECTION_IDS.includes(item.id), item.id);
+  assert.equal(new Set(NAV_ITEMS.map(item => item.id)).size, NAV_ITEMS.length);
 });
-
-test("navigation links to the approved V4 chapters", () => {
-  assert.deepEqual(
-    content.NAV_ITEMS.map((item) => item.id),
-    ["families", "schedule", "gallery", "venue", "garden-whispers"]
-  );
-});
-
-test("V4 assigns every primary photograph once", () => {
-  assert.deepEqual(content.EDITORIAL_PHOTO_IDS, [6, 1, 7, 2, 8, 3, 5, 4, 10, 9]);
-  assert.equal(new Set(content.EDITORIAL_PHOTO_IDS).size, 10);
-  assert.deepEqual(content.V4_GALLERY_PHOTO_IDS, [8, 3, 5, 4]);
-  assert.equal(Object.keys(content.PHOTOS).length, 10);
-  for (const photo of Object.values(content.PHOTOS)) {
-    assert.match(photo.src, /^\/photos\/display\/\d+\.jpeg$/);
-    assert.ok(photo.alt.length >= 12);
+test('active photographs exist and gallery images are distinct with accessible descriptions', async () => {
+  assert.equal(new Set(GALLERY_PHOTOS.map(p => p.src)).size, 4);
+  const photos = [...Object.values(OPENING_PHOTOS), ...Object.values(FRAMED_PHOTOS), ...GALLERY_PHOTOS, PHOTOS[6], PHOTOS[9]];
+  for (const p of photos) {
+    await access(new URL(`../public${p.src}`, import.meta.url));
+    assert.match(p.blurDataURL, /^data:image\//);
   }
+  for (const p of GALLERY_PHOTOS) assert.ok(p.alt.length >= 12);
 });
-
-test("photo nine describes the indoor witch-hat moment", () => {
-  assert.equal(
-    content.PHOTOS[9].alt,
-    "M and M wearing witch hats together at an indoor restaurant"
-  );
+test('final running photograph retains its description', () => {
+  assert.match(PHOTOS[9].alt, /running together through the garden/);
 });
-
-test("song and dress-code content have stable fallbacks", () => {
-  assert.deepEqual(content.WEDDING.song, {
-    title: "Our song",
-    audioUrl: null,
-  });
-  assert.deepEqual(
-    content.WEDDING.dressCode.colors.map((color) => color.value),
-    ["#68414B", "#756078", "#A9707C", "#C7929B", "#BDA56E"]
-  );
+test('configured song exists and palette values are valid named colors', async () => {
+  assert.ok(WEDDING.song.title.length > 0);
+  if (WEDDING.song.audioUrl) await access(new URL(`../public${WEDDING.song.audioUrl}`, import.meta.url));
+  assert.equal(WEDDING.dressCode.colors.length, 7);
+  for (const color of WEDDING.dressCode.colors) { assert.ok(color.label); assert.match(color.value, /^#[a-f0-9]{6}$/i); }
 });

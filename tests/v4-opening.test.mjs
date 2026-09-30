@@ -16,16 +16,17 @@ test("V4 opening combines envelope, countdown, and vinyl in section one", () => 
   assert.match(source, /Countdown/);
   assert.match(source, /audioUrl/);
   assert.match(source, /aria-pressed/);
-  assert.match(source, /Our song coming soon/);
+  assert.match(source, /audioUrl\s*\? `\$\{isPlaying \? "Pause" : "Play"\}/);
+  assert.match(source, /<audio/);
   assert.doesNotMatch(source, /cassette/i);
 });
 
-test("opened envelope rests 25 percent above the viewport bottom", () => {
-  assert.match(source, /bottom-\[25%\]/);
+test("opened envelope rests 20 percent above the viewport bottom", () => {
+  assert.match(source, /bottom-\[20%\]/);
   assert.match(introSource, /top-\[43svh\]/);
   assert.match(introSource, /y: opening \? "var\(--opened-envelope-offset\)" : 0/);
-  assert.match(introSource, /\[--opened-envelope-offset:calc\(32svh-100%\)\]/);
-  assert.match(introSource, /md:\[--opened-envelope-offset:calc\(28svh-100%\)\]/);
+  assert.match(introSource, /\[--opened-envelope-offset:calc\(37svh-100%\)\]/);
+  assert.match(introSource, /md:\[--opened-envelope-offset:calc\(33svh-100%\)\]/);
   assert.doesNotMatch(source, /opened-envelope-offset/);
 });
 

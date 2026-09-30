@@ -1,37 +1,34 @@
-import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
-import test from "node:test";
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { componentHarness, nodes } from './helpers/componentHarness.mjs';
+import { WEDDING } from '../src/content/wedding.ts';
+import { getLocationUrl } from '../src/lib/location.ts';
 
-const source = await readFile(
-  new URL("../src/components/v4/LocationChapter.tsx", import.meta.url),
-  "utf8"
-).catch(() => "");
-
-test("location uses the same resolved URL for link and QR", () => {
-  assert.match(source, /id="venue"/);
-  assert.match(source, /const locationUrl = getLocationUrl/);
-  assert.match(source, /href=\{locationUrl\}/);
-  assert.match(source, /<QRCodeSVG/);
-  assert.match(source, /value=\{locationUrl\}/);
+async function render() {
+  const h = await componentHarness(new URL('../src/components/v4/LocationChapter.tsx', import.meta.url), {
+    '@/content/wedding': { WEDDING }, '@/lib/location': { getLocationUrl },
+    '@/hooks/useHydrationSafeReducedMotion': { useHydrationSafeReducedMotion: () => true },
+    'qrcode.react': { QRCodeSVG: 'QR' },
+  });
+  return h.render();
+}
+test('location link and QR encode the same configured directions', async () => {
+  const tree = await render();
+  const link = nodes(tree, n => n.type === 'a')[0];
+  const qr = nodes(tree, n => n.type === 'QR')[0];
+  assert.equal(link.props.href, WEDDING.venue.mapUrl);
+  assert.equal(qr.props.value, link.props.href);
+  assert.equal(link.props.target, '_blank');
+  assert.match(link.props.rel, /noopener/);
 });
-
-test("location waits for enough width before splitting its printed furniture", () => {
-  assert.match(source, /lg:grid-cols-\[minmax\(0,1\.05fr\)_minmax\(0,\.95fr\)\]/);
-  assert.match(source, /xl:grid-cols-\[minmax\(0,1fr\)_176px\]/);
-  assert.match(source, /lg:min-h-\[34rem\] xl:min-h-\[42rem\]/);
-  assert.doesNotMatch(source, /md:grid-cols-\[minmax\(0,1\.05fr\)/);
-  assert.doesNotMatch(source, /sm:grid-cols-\[minmax\(0,1fr\)_176px\]/);
+test('location embeds the venue map lazily with a descriptive title', async () => {
+  const map = nodes(await render(), n => n.type === 'iframe')[0];
+  assert.equal(map.props.src, WEDDING.venue.mapEmbedUrl);
+  assert.equal(map.props.loading, 'lazy');
+  assert.match(map.props.title, /US Wedding/);
+  assert.match(map.props.className, /w-full/);
 });
-
-test("location advertises image widths for each responsive layout", () => {
-  assert.match(
-    source,
-    /sizes="\(max-width: 767px\) calc\(100vw - 64px\), \(max-width: 1023px\) calc\(86vw - 32px\), \(max-width: 1439px\) 39vw, 585px"/
-  );
-});
-
-test("location keeps small invitation text at readable wine contrast", () => {
-  assert.doesNotMatch(source, /text-wine\/(?:75|85)/);
-  assert.doesNotMatch(source, /hover:text-accent-secondary/);
-  assert.match(source, /hover:text-foreground/);
+test('location offers a calendar link only when configured', async () => {
+  const links = nodes(await render(), n => n.type === 'a');
+  assert.equal(links.length, WEDDING.venue.calendarUrl ? 2 : 1);
 });

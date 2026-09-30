@@ -33,9 +33,38 @@ test("personalized card uses original generated artwork and a live guest inscrip
   assert.match(html, /Natthida/);
   assert.match(html, /Tanakan/);
   assert.match(html, /5 December 2026/);
-  assert.match(html, /romantic-keepsake-thank-you\.png/);
+  assert.match(html, /romantic-keepsake-v2\.png/);
+  assert.match(html, /width="1056"/);
+  assert.match(html, /height="1489"/);
+  assert.match(html, /1056 \/ 1489/);
   assert.match(html, /We can’t wait to celebrate with you/);
-  assert.doesNotMatch(html, /evening-front\.jpg|Dinner|Photography|US Wedding/);
+  assert.doesNotMatch(html, /romantic-keepsake-thank-you\.png|evening-front\.jpg|Dinner|Photography|US Wedding/);
+});
+
+test("guest names of every expected shape stay in the inscription", async () => {
+  const InvitationCard = await loadComponent("../src/components/rsvp/InvitationCard.tsx");
+  const samples = [
+    ["Pim", "en"],
+    ["คุณมิน และครอบครัว", "th"],
+    ["Minnie คุณมิน", "th"],
+    ["ก".repeat(100), "th"],
+    ["W".repeat(100), "en"],
+  ];
+  for (const [guestName, lang] of samples) {
+    const html = renderToStaticMarkup(React.createElement(InvitationCard, { guestName }));
+    assert.match(html, new RegExp(guestName));
+    assert.match(html, new RegExp(`lang="${lang}"`));
+  }
+});
+
+test("invitation export uses the artwork pixel size", async () => {
+  const source = await readFile(new URL("../src/lib/invitationExport.ts", import.meta.url), "utf8");
+  const css = await readFile(new URL("../src/components/rsvp/InvitationCard.module.css", import.meta.url), "utf8");
+  assert.match(source, /const CARD_WIDTH = 1056/);
+  assert.match(source, /const CARD_HEIGHT = 1489/);
+  assert.match(css, /top: 61%/);
+  assert.doesNotMatch(source, /1500|2114/);
+  assert.doesNotMatch(css, /1500|2114/);
 });
 
 test("accepted result contains one top toolbar and no obsolete actions", async () => {

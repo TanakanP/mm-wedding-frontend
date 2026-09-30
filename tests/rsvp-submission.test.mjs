@@ -20,11 +20,35 @@ const valid = {
   website: "",
 };
 
+const relationshipLabel = "Relationship (Family, School, University, Work, etc.)";
+
 test("relationship label is the same for both sides and free text is trimmed", () => {
-  assert.equal(getRelationshipLabel("groom"), "Relationship (School, University, Work, etc.)");
-  assert.equal(getRelationshipLabel("bride"), "Relationship (School, University, Work, etc.)");
+  assert.equal(getRelationshipLabel("groom"), relationshipLabel);
+  assert.equal(getRelationshipLabel("bride"), relationshipLabel);
   assert.equal(rsvpSchema.safeParse({ ...valid, relation: "   " }).success, false);
   assert.equal(rsvpSchema.parse(valid).relation, "=1+1");
+});
+
+test("name, relationship, note, and additional guests stay inside the RSVP limits", () => {
+  const name100 = "ก".repeat(100);
+  const relation100 = ` ${"a".repeat(100)} `;
+  const message500 = ` ${"b".repeat(500)} `;
+  assert.equal(rsvpSchema.safeParse({ ...valid, name: "Ab" }).success, true);
+  assert.equal(rsvpSchema.safeParse({ ...valid, name: name100, relation: relation100, message: message500, guestCount: "99" }).success, true);
+  assert.equal(rsvpSchema.parse({ ...valid, name: `  ${name100}  `, relation: relation100, message: message500 }).message, "b".repeat(500));
+  for (const guestCount of ["", "0", "99"]) {
+    assert.equal(rsvpSchema.safeParse({ ...valid, guestCount }).success, true, guestCount);
+  }
+  assert.equal(rsvpSchema.safeParse({ ...valid, name: "a" }).success, false);
+  assert.equal(rsvpSchema.safeParse({ ...valid, name: "a".repeat(101) }).success, false);
+  assert.equal(rsvpSchema.safeParse({ ...valid, relation: "r".repeat(101) }).success, false);
+  assert.equal(rsvpSchema.safeParse({ ...valid, message: "m".repeat(501) }).success, false);
+  for (const guestCount of ["100", "-1", "1.5", "1e2"]) {
+    assert.equal(rsvpSchema.safeParse({ ...valid, guestCount }).success, false, guestCount);
+  }
+  const declined = normalizeRsvp(rsvpSchema.parse({ ...valid, attending: "no", guestCount: "100" }));
+  assert.equal(declined.additionalGuests, 0);
+  assert.equal(declined.totalAttendees, 0);
 });
 
 test("normalization counts additional guests and removes stale declining values", () => {
@@ -113,10 +137,28 @@ test("handler validates request before writing, and reports storage failure", as
   assert.equal((await handler(request(valid, { "content-type": "text/plain" }))).status, 415);
   assert.equal((await handler(request("x".repeat(17_000)))).status, 413);
   assert.equal(writes, 0);
+  for (const bad of [
+    { ...valid, name: "n".repeat(101) },
+    { ...valid, relation: "r".repeat(101) },
+    { ...valid, message: "m".repeat(501) },
+    { ...valid, guestCount: "100" },
+    { ...valid, guestCount: "-1" },
+    { ...valid, guestCount: "1.5" },
+    { ...valid, guestCount: "1e2" },
+  ]) {
+    assert.equal((await handler(request(bad))).status, 400);
+  }
+  assert.equal(writes, 0);
   const success = await handler(request(valid));
   assert.equal(success.status, 201);
   assert.deepEqual(await success.json(), { ok: true, submissionId: valid.submissionId });
   assert.equal(writes, 1);
+  const saved = [];
+  const bounded = createRsvpHandler({ append: async (value) => { saved.push(value); } });
+  assert.equal((await bounded(request({ ...valid, attending: "no", guestCount: "100" }))).status, 201);
+  assert.equal(saved[0].additionalGuests, 0);
+  assert.equal(saved[0].totalAttendees, 0);
+  assert.equal(saved[0].drinksAlcohol, false);
   const blocked = createRsvpHandler({ append: async () => { writes++; }, rateLimit: async () => false });
   assert.equal((await blocked(request(valid))).status, 429);
   assert.equal(writes, 1);

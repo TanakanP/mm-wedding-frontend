@@ -41,6 +41,8 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
           alt={OPENING_PHOTOS.background.alt}
           fill
           preload
+          placeholder="blur"
+          blurDataURL={OPENING_PHOTOS.background.blurDataURL}
           sizes="100vw"
           className="object-cover opacity-35 saturate-[.65] contrast-[.92]"
           style={{ objectPosition: OPENING_PHOTOS.background.objectPosition }}
@@ -76,7 +78,7 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
           </p>
         </header>
 
-        <div className="absolute inset-x-0 bottom-[25%] z-10 mx-auto h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]">
+        <div className="absolute inset-x-0 bottom-[20%] z-10 mx-auto h-[41.4vw] min-h-[201.6px] max-h-[301.5px] w-[min(79.2vw,549px)] [perspective:1200px] md:h-[250px] md:w-[460px]">
           <div className="envelope-paper absolute inset-0 bg-petal shadow-[0_31px_64px_rgba(55,23,32,0.34)]" />
           <motion.div
             className="absolute inset-x-[8%] top-[9%] z-[2] h-[82%] bg-cream p-2 pb-8 shadow-[0_14px_30px_rgba(60,30,38,0.24)] md:p-3 md:pb-10"
@@ -101,6 +103,8 @@ export default function OpeningChapter({ invitationOpened = false }: { invitatio
                 alt={OPENING_PHOTOS.envelope.alt}
                 fill
                 loading="eager"
+                placeholder="blur"
+                blurDataURL={OPENING_PHOTOS.envelope.blurDataURL}
                 sizes="(max-width: 768px) 74vw, 500px"
                 className="scale-[1.35] object-cover"
                 style={{ objectPosition: OPENING_PHOTOS.envelope.objectPosition }}

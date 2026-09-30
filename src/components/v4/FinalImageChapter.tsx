@@ -34,6 +34,10 @@ export default function FinalImageChapter() {
           alt={photo.alt}
           fill
           sizes="100vw"
+          loading="eager"
+          fetchPriority="low"
+          placeholder="blur"
+          blurDataURL={photo.blurDataURL}
           className="object-cover opacity-65 saturate-[0.65] contrast-[1.25]"
           style={{ objectPosition: photo.objectPosition }}
         />
