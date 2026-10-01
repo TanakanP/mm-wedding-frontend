@@ -70,7 +70,7 @@ export default function LocationChapter() {
               height="300"
               className="block h-[300px] w-full border-0 md:h-[380px]"
               allowFullScreen
-              loading="lazy"
+              loading="eager"
               referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>

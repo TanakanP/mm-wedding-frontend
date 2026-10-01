@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import GardenNav from "@/components/GardenNav";
 import InvitationIntro from "@/components/InvitationIntro";
 import DressCodeChapter from "@/components/v4/DressCodeChapter";
 import FamilyChapter from "@/components/v4/FamilyChapter";
@@ -32,7 +31,6 @@ export default function Home() {
     <SectionsProvider>
       <InvitationIntro onOpenChange={setInvitationOpened} />
       <div id="wedding-page">
-        <GardenNav />
         <main className="overflow-x-clip bg-cream">
           <OpeningChapter invitationOpened={invitationOpened} />
           <FamilyChapter />

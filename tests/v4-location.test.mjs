@@ -21,10 +21,10 @@ test('location link and QR encode the same configured directions', async () => {
   assert.equal(link.props.target, '_blank');
   assert.match(link.props.rel, /noopener/);
 });
-test('location embeds the venue map lazily with a descriptive title', async () => {
+test('location loads the venue map eagerly with a descriptive title', async () => {
   const map = nodes(await render(), n => n.type === 'iframe')[0];
   assert.equal(map.props.src, WEDDING.venue.mapEmbedUrl);
-  assert.equal(map.props.loading, 'lazy');
+  assert.equal(map.props.loading, 'eager');
   assert.match(map.props.title, /US Wedding/);
   assert.match(map.props.className, /w-full/);
 });
