@@ -49,3 +49,24 @@ test("V4 FAQ small copy and footer controls use readable wine ink", () => {
     /className="[^"]*text-\[10px\] text-wine"[^>]*>\s*©/s
   );
 });
+
+test('RSVP opener and close handler pause and resume the film with modal state', async () => {
+  const { componentHarness, nodes } = await import('./helpers/componentHarness.mjs');
+  const chapter = await componentHarness(new URL('../src/components/v4/RSVPChapter.tsx', import.meta.url), {
+    '@/components/RSVPForm': { __esModule: true, default: 'Form' },
+    '@/components/v4/RSVPFilmBackground': { __esModule: true, default: 'Film' },
+    '@/hooks/useHydrationSafeReducedMotion': { useHydrationSafeReducedMotion: () => false },
+    'next/image': { __esModule: true, default: 'Photo' },
+    '@/content/wedding': { PHOTOS: {6:{src:'/placeholder.webp'}} },
+  });
+  let tree = chapter.render();
+  const background = nodes(tree, n => n.type === 'Film')[0];
+  assert.ok(background, 'film background must replace the single photograph');
+  assert.equal(background.props.modalOpen, false);
+  nodes(tree, n => n.type === 'button')[0].props.onClick();
+  tree = chapter.render();
+  assert.equal(nodes(tree, n => n.type === 'Film')[0].props.modalOpen, true);
+  assert.equal(nodes(tree, n => n.type === 'Form')[0].props.isOpen, true);
+  nodes(tree, n => n.type === 'Form')[0].props.onClose();
+  assert.equal(nodes(chapter.render(), n => n.type === 'Film')[0].props.modalOpen, false);
+});

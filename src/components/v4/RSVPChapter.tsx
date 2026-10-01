@@ -2,11 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
-import Image from "next/image";
 import { useState } from "react";
 
 import RSVPForm from "@/components/RSVPForm";
-import { PHOTOS } from "@/content/wedding";
+import RSVPFilmBackground from "@/components/v4/RSVPFilmBackground";
 
 export default function RSVPChapter() {
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
@@ -19,22 +18,7 @@ export default function RSVPChapter() {
       className="garden-section overflow-hidden bg-[linear-gradient(145deg,#f1dadd,#c8929b)] text-wine"
     >
       <div className="relative grid min-h-[53rem] place-items-center overflow-hidden px-5 py-28 md:px-[7vw] md:py-36">
-        <Image
-          src={PHOTOS[6].src}
-          alt=""
-          fill
-          sizes="100vw"
-          loading="eager"
-          fetchPriority="low"
-          placeholder="blur"
-          blurDataURL={PHOTOS[6].blurDataURL}
-          className="object-cover opacity-[.14] saturate-[.7]"
-          style={{ objectPosition: PHOTOS[6].objectPosition }}
-        />
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-petal/30 via-transparent to-dusty/20"
-        />
+        <RSVPFilmBackground modalOpen={isRSVPOpen} />
 
         <motion.div
           initial={

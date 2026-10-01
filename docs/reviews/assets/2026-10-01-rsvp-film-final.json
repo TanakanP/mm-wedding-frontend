@@ -1,0 +1,152 @@
+[
+  {
+    "width": 390,
+    "run": 1,
+    "initial": {
+      "lcp": 984,
+      "cls": 0.00018405608538811128,
+      "bytes": 1010568,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 7002,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 390,
+    "run": 2,
+    "initial": {
+      "lcp": 892,
+      "cls": 0.00018405608538811128,
+      "bytes": 1010568,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 7002,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 390,
+    "run": 3,
+    "initial": {
+      "lcp": 892,
+      "cls": 0.00018405608538811128,
+      "bytes": 1010568,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 7002,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 390,
+    "run": 4,
+    "initial": {
+      "lcp": 904,
+      "cls": 0.00018405608538811128,
+      "bytes": 1010568,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 7002,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 390,
+    "run": 5,
+    "initial": {
+      "lcp": 908,
+      "cls": 0.00018405608538811128,
+      "bytes": 1010568,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 7002,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 1440,
+    "run": 1,
+    "initial": {
+      "lcp": 916,
+      "cls": 0.00010959536286865569,
+      "bytes": 1831262,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 13304,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 1440,
+    "run": 2,
+    "initial": {
+      "lcp": 940,
+      "cls": 0.00010959536286865569,
+      "bytes": 1831262,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 13304,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 1440,
+    "run": 3,
+    "initial": {
+      "lcp": 908,
+      "cls": 0.00010959536286865569,
+      "bytes": 1831262,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 13304,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 1440,
+    "run": 4,
+    "initial": {
+      "lcp": 908,
+      "cls": 0.00010959536286865569,
+      "bytes": 1831262,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 13304,
+      "requests": 1,
+      "overflow": false
+    }
+  },
+  {
+    "width": 1440,
+    "run": 5,
+    "initial": {
+      "lcp": 908,
+      "cls": 0.00010959536286865569,
+      "bytes": 1831262,
+      "rsvp": 0
+    },
+    "film": {
+      "bytes": 13304,
+      "requests": 1,
+      "overflow": false
+    }
+  }
+]
