@@ -129,16 +129,16 @@ export const FRAMED_PHOTOS = {
 
 export const GALLERY_PHOTOS = [
   {
-    src: "/photos/display/page/gallery-1-bench.webp",
-    alt: "Natthida and Tanakan sitting together on a garden bench",
-    objectPosition: "50% 50%",
-    blurDataURL: photoBlurs["/photos/display/page/gallery-1-bench.webp"],
-  },
-  {
     src: "/photos/display/page/gallery-2-embrace.webp",
     alt: "Natthida smiling at Tanakan as he lifts her among the trees",
     objectPosition: "50% 50%",
     blurDataURL: photoBlurs["/photos/display/page/gallery-2-embrace.webp"],
+  },
+  {
+    src: "/photos/display/page/gallery-1-bench.webp",
+    alt: "Natthida and Tanakan sitting together on a garden bench",
+    objectPosition: "50% 50%",
+    blurDataURL: photoBlurs["/photos/display/page/gallery-1-bench.webp"],
   },
   {
     src: "/photos/display/page/gallery-3-rings.webp",
@@ -172,3 +172,11 @@ export const PHOTOS = {
 export const EDITORIAL_PHOTO_IDS = [6, 1, 7, 2, 8, 3, 5, 4, 10, 9] as const;
 
 export const V4_GALLERY_PHOTO_IDS = [8, 3, 5, 4] as const;
+
+// Temporary library: all 60 editable slots share one prepared photograph.
+// Replace slot records with unique prepared assets when the photos are selected.
+import preparedFilmPhotos from './rsvpFilmPhotos.json' with { type: 'json' };
+export const RSVP_FILM_PHOTOS = Array.from({ length: 60 }, (_, index) => ({
+  ...preparedFilmPhotos[index % preparedFilmPhotos.length],
+  id: `rsvp-film-${String(index + 1).padStart(2, '0')}`,
+}));

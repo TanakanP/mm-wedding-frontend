@@ -1,0 +1,86 @@
+[
+  {
+    "width": 320,
+    "height": 568,
+    "dpr": 1,
+    "zoom": 1,
+    "state": {
+      "overflow": false,
+      "rows": 8,
+      "bytes": 4178,
+      "requests": 1
+    },
+    "buttonToNextPaintMs": 60.30000001192093,
+    "keyboard": true
+  },
+  {
+    "width": 390,
+    "height": 844,
+    "dpr": 3,
+    "zoom": 1,
+    "state": {
+      "overflow": false,
+      "rows": 8,
+      "bytes": 13304,
+      "requests": 1
+    },
+    "buttonToNextPaintMs": 51.39999997615814,
+    "keyboard": true
+  },
+  {
+    "width": 768,
+    "height": 1024,
+    "dpr": 2,
+    "zoom": 1,
+    "state": {
+      "overflow": false,
+      "rows": 7,
+      "bytes": 13304,
+      "requests": 1
+    },
+    "buttonToNextPaintMs": 49.90000003576279,
+    "keyboard": true
+  },
+  {
+    "width": 2560,
+    "height": 1440,
+    "dpr": 2,
+    "zoom": 1,
+    "state": {
+      "overflow": false,
+      "rows": 7,
+      "bytes": 13304,
+      "requests": 1
+    },
+    "buttonToNextPaintMs": 59.799999952316284,
+    "keyboard": true
+  },
+  {
+    "width": 844,
+    "height": 390,
+    "dpr": 2,
+    "zoom": 1,
+    "state": {
+      "overflow": false,
+      "rows": 7,
+      "bytes": 13304,
+      "requests": 1
+    },
+    "buttonToNextPaintMs": 43.19999998807907,
+    "keyboard": true
+  },
+  {
+    "width": 1440,
+    "height": 900,
+    "dpr": 2,
+    "zoom": 2,
+    "state": {
+      "overflow": false,
+      "rows": 11,
+      "bytes": 13304,
+      "requests": 1
+    },
+    "buttonToNextPaintMs": 53,
+    "keyboard": true
+  }
+]

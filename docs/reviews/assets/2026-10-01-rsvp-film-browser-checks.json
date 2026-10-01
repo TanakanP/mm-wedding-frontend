@@ -1,0 +1,109 @@
+[
+  {
+    "width": 320,
+    "geometry": {
+      "width": 320,
+      "height": 848,
+      "rows": 8,
+      "clearance": 48.028820961959696,
+      "overflow": false,
+      "loaded": 128,
+      "unique": 1
+    },
+    "animation": true,
+    "pause": true,
+    "modalPause": true,
+    "focusReturned": true,
+    "errors": []
+  },
+  {
+    "width": 390,
+    "geometry": {
+      "width": 390,
+      "height": 848,
+      "rows": 8,
+      "clearance": 48.076787280990516,
+      "overflow": false,
+      "loaded": 128,
+      "unique": 1
+    },
+    "animation": true,
+    "pause": true,
+    "modalPause": true,
+    "focusReturned": true,
+    "errors": []
+  },
+  {
+    "width": 768,
+    "geometry": {
+      "width": 768,
+      "height": 848,
+      "rows": 7,
+      "clearance": 48.28370371211673,
+      "overflow": false,
+      "loaded": 112,
+      "unique": 1
+    },
+    "animation": true,
+    "pause": true,
+    "modalPause": true,
+    "focusReturned": true,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "geometry": {
+      "width": 1440,
+      "height": 848,
+      "rows": 6,
+      "clearance": 48.12433030273883,
+      "overflow": false,
+      "loaded": 96,
+      "unique": 1
+    },
+    "animation": true,
+    "pause": true,
+    "modalPause": true,
+    "focusReturned": true,
+    "errors": []
+  },
+  {
+    "width": 2560,
+    "geometry": {
+      "width": 2560,
+      "height": 848,
+      "rows": 7,
+      "clearance": 48.19204128710885,
+      "overflow": false,
+      "loaded": 224,
+      "unique": 1
+    },
+    "animation": true,
+    "pause": true,
+    "modalPause": true,
+    "focusReturned": true,
+    "errors": []
+  },
+  {
+    "mode": "reduced",
+    "state": {
+      "rows": 8,
+      "paused": "true",
+      "animation": "none",
+      "placeholders": 128,
+      "controls": 0,
+      "full": 128
+    }
+  },
+  {
+    "mode": "failed",
+    "state": {
+      "rows": 8,
+      "paused": "false",
+      "animation": "rsvp-film-drift",
+      "placeholders": 128,
+      "controls": 1,
+      "full": 0
+    }
+  }
+]
