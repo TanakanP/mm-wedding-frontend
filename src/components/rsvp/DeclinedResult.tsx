@@ -67,7 +67,7 @@ export default function DeclinedResult({ name, amount, onAmountChange, transferD
           </div>
           <div>
             <label htmlFor="blessing-date" className="block text-sm font-medium text-foreground">Transfer date · Thailand time (UTC+7)</label>
-            <input id="blessing-date" type="date" value={transferDate} max={today || undefined}
+            <input id="blessing-date" type="date" value={transferDate} max={today || thailandNowLocal().slice(0, 10)}
               onChange={(event) => {
                 const value = event.target.value;
                 onTransferDateChange(value);
