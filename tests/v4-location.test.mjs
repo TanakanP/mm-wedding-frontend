@@ -30,5 +30,5 @@ test('location loads the venue map eagerly with a descriptive title', async () =
 });
 test('location offers a calendar link only when configured', async () => {
   const links = nodes(await render(), n => n.type === 'a');
-  assert.equal(links.length, WEDDING.venue.calendarUrl ? 2 : 1);
+  assert.equal(links.length, WEDDING.venue.calendarUrl ? 3 : 2);
 });

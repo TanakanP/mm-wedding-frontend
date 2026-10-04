@@ -68,35 +68,45 @@ export default function LocationChapter() {
               title="Map to US Wedding & Event VENUE"
               width="400"
               height="300"
-              className="block h-[300px] w-full border-0 md:h-[380px]"
+              className="block h-[300px] w-full border-0 md:h-full md:min-h-[380px]"
               allowFullScreen
               loading="eager"
               referrerPolicy="strict-origin-when-cross-origin"
             />
           </div>
 
-          <div className="flex flex-col items-center justify-center border-t border-wine/15 px-4 py-7 md:border-l md:border-t-0 md:px-6 md:py-4">
-            <QRCodeSVG
-              value={locationUrl}
-              size={144}
-              marginSize={2}
-              bgColor="#FFFAF3"
-              fgColor="#51313A"
-              title={`Directions to ${WEDDING.venue.name}`}
-            />
-            <div className="mt-5 flex flex-col items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em]">
-              <a
-                href={locationUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="border-b border-wine pb-1 text-wine transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
-              >
-                OPEN LOCATION
-              </a>
+          <div className="flex flex-col justify-center border-t border-wine/15 px-3 py-7 md:border-l md:border-t-0 md:px-6 md:py-5">
+            <div className="grid grid-cols-2 gap-5 md:grid-cols-1 md:gap-7">
+              {[
+                { url: locationUrl, label: "OPEN LOCATION", title: `Directions to ${WEDDING.venue.name}` },
+                { url: WEDDING.venue.guideUrl, label: "OPEN GUIDE", title: `Wedding guide for ${WEDDING.venue.name}` },
+              ].map(({ url, label, title }) => (
+                <div key={url} className="flex min-w-0 flex-col items-center gap-3">
+                  <QRCodeSVG
+                    value={url}
+                    size={144}
+                    marginSize={4}
+                    bgColor="#FFFAF3"
+                    fgColor="#51313A"
+                    title={title}
+                    className="h-auto w-full max-w-[144px]"
+                  />
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="border-b border-wine pb-1 text-center text-[10px] font-medium uppercase tracking-[0.2em] text-wine transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+                  >
+                    {label}
+                  </a>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col items-center gap-3 text-[10px] font-medium uppercase tracking-[0.2em]">
               {WEDDING.venue.calendarUrl && (
                 <a
                   href={WEDDING.venue.calendarUrl}
-                  className="border-b border-wine/40 pb-1 text-wine transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+                  className="mt-5 border-b border-wine/40 pb-1 text-wine transition-colors hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
                 >
                   Add to calendar
                 </a>

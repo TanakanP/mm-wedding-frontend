@@ -47,6 +47,7 @@ export const WEDDING = {
     name: "US Wedding & Event VENUE",
     address: "Khlong Khwai, Sam Khok, Pathum Thani",
     mapUrl: "https://maps.app.goo.gl/WSErDmemgpuem54U9",
+    guideUrl: "https://drive.google.com/file/d/1zrJ-M6OtbqjpaJ0pC3y3RWbwykBoM_VN/view?usp=drivesdk",
     mapEmbedUrl:
       "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3869.606763303097!2d100.47448461109575!3d14.100375589069891!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e27d8e5801262b%3A0xbd0cf5d1c8df6f8a!2sUs%20Wedding%20%26%20Event%20VENUE!5e0!3m2!1sth!2sth!4v1789834939731!5m2!1sth!2sth",
     calendarUrl: null as string | null,
