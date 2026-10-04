@@ -484,7 +484,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                             <span className="text-foreground font-medium">I will be drinking alcohol</span>
                           </label>
                           <p id="rsvp-drinks-alcohol-help" className="text-xs text-sage mt-1.5 italic">
-                            * Our alcohol will be only beers and liquors
+                            * Our alcohol will be only beers
                           </p>
                         </div>
                       </motion.div>

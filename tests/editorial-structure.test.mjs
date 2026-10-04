@@ -10,8 +10,8 @@ test("page renders the nine V4 chapters in approved order", async () => {
   const components = [
     "OpeningChapter",
     "FamilyChapter",
-    "FramedPhotoChapter",
     "DressCodeChapter",
+    "FilmStripChapter",
     "ScheduleChapter",
     "GalleryChapter",
     "LocationChapter",

@@ -1,0 +1,81 @@
+{
+  "identical": true,
+  "differingChannels": 0,
+  "maxDifference": 0,
+  "before": [
+    {
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "time": 0,
+      "duration": 160000,
+      "phase": 0
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -1960, 0)",
+      "time": 0,
+      "duration": 140000,
+      "phase": 0.875
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -560, 0)",
+      "time": 0,
+      "duration": 149333.33333333334,
+      "phase": 0.25
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -1400, 0)",
+      "time": 0,
+      "duration": 160000,
+      "phase": 0.625
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -1120, 0)",
+      "time": 0,
+      "duration": 140000,
+      "phase": 0.5
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -840, 0)",
+      "time": 0,
+      "duration": 149333.33333333334,
+      "phase": 0.375
+    }
+  ],
+  "after": [
+    {
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "time": 160000,
+      "duration": 160000,
+      "phase": 0
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -1960, 0)",
+      "time": 140000,
+      "duration": 140000,
+      "phase": 0.875
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -560, 0)",
+      "time": 149333.33333333334,
+      "duration": 149333.33333333334,
+      "phase": 0.25
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -1400, 0)",
+      "time": 160000,
+      "duration": 160000,
+      "phase": 0.625
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -1120, 0)",
+      "time": 140000,
+      "duration": 140000,
+      "phase": 0.5
+    },
+    {
+      "transform": "matrix(1, 0, 0, 1, -840, 0)",
+      "time": 149333.33333333334,
+      "duration": 149333.33333333334,
+      "phase": 0.375
+    }
+  ]
+}

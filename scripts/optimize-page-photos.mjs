@@ -17,7 +17,7 @@ const jobs = [
   ["public/photos/display/gallery-3-rings.jpeg", "gallery-3-rings"],
   ["public/photos/display/gallery-4-lakeside.jpg", "gallery-4-lakeside"],
   ["public/photos/display/final-memory-running.jpeg", "final-memory-running"],
-  ["public/photos/6.jpeg", "rsvp-background"],
+  ["public/photos/display/rsvp-background.jpg", "rsvp-background"],
   ["public/photos/frames/ornate-ivory.png", "ornate-ivory"],
 ];
 

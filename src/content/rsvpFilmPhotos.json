@@ -1,8 +1,44 @@
 [
   {
-    "src": "/photos/display/rsvp-film/placeholder.webp",
-    "alt": "Natthida and Tanakan showing their wedding rings together in the garden",
+    "scene": "veil",
+    "src": "/photos/display/rsvp-film/strip-081.webp",
+    "alt": "Tanakan adjusting Natthida’s wedding veil",
     "objectPosition": "50% 50%",
-    "blurDataURL": "data:image/webp;base64,UklGRo4AAABXRUJQVlA4IIIAAAAQBACdASoYAA4APwFqrE6rJiQiMAgBYCAJQBOgMX6b4d6mu5O8XtOVMAD+7pC+L0rbIz1K7QmxW0OwghIYsrcUx8uMpgBkV6TQ2bk9FfstY4Iq/Q7tC4my9+j9doiUFXRFGZH8AU1OKSNP1rK1nKvBS/n5l7hs6P7erbBhgl7p8bAA"
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAwBACdASoYAA4APwForE6rJiQiMAgBYCAJaQAD5OFtzqPOL5y1sg+2WdgA/un9oHe+QCnHKCjKCXLaYzf/omPrVRjud8+BInjJALHgofULf1qqTpac235EowrIRW0Ffc3IkhxxYZw8gnic/YsK8b+nK9jwcdD25BdtYiPdObOvwyCj+279X0PsTKNQmoc1XoAAAA=="
+  },
+  {
+    "scene": "ring",
+    "src": "/photos/display/rsvp-film/strip-082.webp",
+    "alt": "Natthida’s wedding ring and hands over Tanakan’s shoulder",
+    "objectPosition": "50% 50%",
+    "blurDataURL": "data:image/webp;base64,UklGRpYAAABXRUJQVlA4IIoAAACwAwCdASoYAA4APwFqrE6rJiQiMAgBYCAJaQAASD+A7DkoV6zQwAD+ozRurzmaqV8FGquGK4TEZDz5Jl2L2bfUXZ/zGwLzTGFAt7dXgDvLwgekVyEH72wnREm9/ovv4D25XEW8Cg+ym2xEZC3P6Zbg/poUBzAubsik5j0DTjZwdveuDoaccPu4AAA="
+  },
+  {
+    "scene": "running",
+    "src": "/photos/display/rsvp-film/strip-114.webp",
+    "alt": "Natthida and Tanakan running together with wedding flowers",
+    "objectPosition": "50% 50%",
+    "blurDataURL": "data:image/webp;base64,UklGRpgAAABXRUJQVlA4IIwAAABQBACdASoYAA4APwFqrE8rJiQiMAgBYCAJaQATwAEz95aEFRfEQdif2REAAP7bn1vIPYf5gBe/mpQ9LgOIY2Is89WB2DOHm+CZVGq0hEJCrrz3Xgz/lgMopw+DKGVldt3Iod6TB4zzXo5lSeH1TlDGpnYRlKZ+6Qg/KjQHMsQT4ds2w4NA6vK5YAAAAA=="
+  },
+  {
+    "scene": "embrace",
+    "src": "/photos/display/rsvp-film/strip-194.webp",
+    "alt": "Tanakan carrying Natthida in the garden",
+    "objectPosition": "50% 50%",
+    "blurDataURL": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoYAA4APwForE6rJiQiMAgBYCAJaQAD5bnpVVI78pEITF5XEAD+2Wew5nOwUx5DGOvyJ4TFKmjJJoH9l9kgdiArT2rVJ3DZfeuzRrTOG5Q7BeY1sgbU3eBJJ/AueOTeNK1v2PpsMWHGJOPzhSLJz9WUW3F6LiW08E0qMbfEG1+eomL2ujY77SlnVAAAAA=="
+  },
+  {
+    "scene": "lakeside",
+    "src": "/photos/display/rsvp-film/strip-254.webp",
+    "alt": "Natthida and Tanakan facing each other beside the lake",
+    "objectPosition": "50% 50%",
+    "blurDataURL": "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoYAA4APwFqrE6rJiQiMAgBYCAJaQAAYeAK6UjW+eje1NsBAAD+6Tgn7tgKqYFou3A9zpjQE303W7Z/vcnC7mCX8g1/hraOJnwAJ+xaRYQpCUs7oyv4+thqCPwAAA=="
+  },
+  {
+    "scene": "grove",
+    "src": "/photos/display/rsvp-film/strip-033.webp",
+    "alt": "Natthida and Tanakan walking hand in hand beneath the trees",
+    "objectPosition": "50% 50%",
+    "blurDataURL": "data:image/webp;base64,UklGRogAAABXRUJQVlA4IHwAAADwAwCdASoYAA4APwForE6rJiQiMAgBYCAJaQAAQfNT8shStrXH8cAAAP7jw2DeAsJN9p2dJtnAiycY5IDO9iBbA9JE6+2uVGdJwkR0395kC4zv0M/wXeHlIc6CtYu86csP1ziWbLfq0Vy1Zvuhe+lP1zHTiWeQppuFa4AA"
   }
 ]

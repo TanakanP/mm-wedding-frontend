@@ -44,7 +44,7 @@ export default function FinalImageChapter() {
       </motion.div>
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/30 to-foreground/85"
+        className="absolute inset-0 bg-gradient-to-b from-foreground/10 via-foreground/30 to-foreground"
       />
       <div className="absolute inset-x-5 bottom-[8%] z-10 text-cream md:inset-x-[7vw] md:bottom-[9%]">
         <h2 className="font-serif text-5xl italic leading-none drop-shadow-[0_2px_16px_rgba(46,32,36,.7)] md:text-7xl">

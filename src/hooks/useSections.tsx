@@ -18,7 +18,7 @@ import { SECTION_IDS, type SectionId } from "@/content/wedding";
 const SECTION_LABELS: Record<SectionId, string> = {
   hero: "Opening invitation",
   families: "Together with our families",
-  "framed-photo": "Framed memory",
+  "framed-photo": "Wedding memories on film",
   "dress-code": "Dress code",
   schedule: "Schedule",
   gallery: "Photo gallery",

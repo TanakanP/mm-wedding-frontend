@@ -5,7 +5,7 @@ import InvitationIntro from "@/components/InvitationIntro";
 import DressCodeChapter from "@/components/v4/DressCodeChapter";
 import FamilyChapter from "@/components/v4/FamilyChapter";
 import FinalImageChapter from "@/components/v4/FinalImageChapter";
-import FramedPhotoChapter from "@/components/v4/FramedPhotoChapter";
+import FilmStripChapter from "@/components/v4/FilmStripChapter";
 import GalleryChapter from "@/components/v4/GalleryChapter";
 import LocationChapter from "@/components/v4/LocationChapter";
 import OpeningChapter from "@/components/v4/OpeningChapter";
@@ -34,8 +34,8 @@ export default function Home() {
         <main className="overflow-x-clip bg-cream">
           <OpeningChapter invitationOpened={invitationOpened} />
           <FamilyChapter />
-          <FramedPhotoChapter />
           <DressCodeChapter />
+          <FilmStripChapter />
           <ScheduleChapter />
           <GalleryChapter />
           <LocationChapter />

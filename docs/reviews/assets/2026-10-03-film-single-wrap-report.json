@@ -1,0 +1,21 @@
+{
+  "identical": true,
+  "differingChannels": 0,
+  "maxDifference": 0,
+  "before": [
+    {
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "time": 0,
+      "duration": 540190.4761904762,
+      "phase": 0
+    }
+  ],
+  "after": [
+    {
+      "transform": "matrix(1, 0, 0, 1, 0, 0)",
+      "time": 540190.4761904762,
+      "duration": 540190.4761904762,
+      "phase": 0
+    }
+  ]
+}

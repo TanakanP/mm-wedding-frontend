@@ -2,24 +2,45 @@
 
 import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import RSVPForm from "@/components/RSVPForm";
-import RSVPFilmBackground from "@/components/v4/RSVPFilmBackground";
+import PetalsCanvas from "@/components/hero/PetalsCanvas";
 
 export default function RSVPChapter() {
   const [isRSVPOpen, setIsRSVPOpen] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
   const reduceMotion = useHydrationSafeReducedMotion();
+  const animationPlayState = isInView && isPageVisible && !isRSVPOpen && !reduceMotion ? "running" : "paused";
+
+  useEffect(() => {
+    const onVisibilityChange = () => setIsPageVisible(!document.hidden);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => document.removeEventListener("visibilitychange", onVisibilityChange);
+  }, []);
 
   return (
     <section
       id="rsvp"
       aria-labelledby="rsvp-title"
-      className="garden-section overflow-hidden bg-[linear-gradient(145deg,#f1dadd,#c8929b)] text-wine"
+      className="garden-section rsvp-section bg-paper text-wine"
     >
-      <div className="relative grid min-h-[53rem] place-items-center overflow-hidden px-5 py-28 md:px-[7vw] md:py-36">
-        <RSVPFilmBackground modalOpen={isRSVPOpen} />
-
+      <motion.div
+        className="garden-texture relative grid min-h-[53rem] place-items-center overflow-hidden px-5 py-28 md:px-[7vw] md:py-36"
+        onViewportEnter={() => { setIsInView(true); setIsPageVisible(!document.hidden); }}
+        onViewportLeave={() => setIsInView(false)}
+        viewport={{ amount: 0.1 }}
+      >
+        <motion.div
+          aria-hidden="true"
+          className="rsvp-paper-light pointer-events-none absolute inset-0"
+          initial={reduceMotion ? false : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true, amount: 0.1 }}
+          transition={{ duration: reduceMotion ? 0 : 3, ease: "easeOut" }}
+        />
+        <PetalsCanvas variant="confetti" splitDepth paused={isRSVPOpen} />
         <motion.div
           initial={
             reduceMotion
@@ -32,51 +53,66 @@ export default function RSVPChapter() {
             duration: reduceMotion ? 0 : 0.72,
             ease: [0.22, 1, 0.36, 1],
           }}
-          className="relative z-10 w-full max-w-[46.875rem]"
+          className="relative z-10 w-[92%] max-w-[38rem] sm:w-full"
         >
           <div
             aria-hidden="true"
-            className="absolute inset-0 translate-x-3 translate-y-4 rotate-[2.5deg] bg-paper shadow-[0_25px_68px_rgba(72,36,46,.17)]"
+            className="rsvp-card-glow"
+            style={{ animationPlayState }}
           />
-          <article className="relative border border-dusty/35 bg-cream px-7 py-20 text-center shadow-[0_25px_68px_rgba(72,36,46,.19)] md:px-20 md:py-24">
+          <div
+            className="rsvp-card-float"
+            style={{ animationPlayState }}
+          >
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-4 border border-dusty/30"
+              className="absolute inset-0 translate-x-3 translate-y-4 rotate-[2.5deg] bg-paper shadow-[0_15px_38px_rgba(72,36,46,.08)]"
             />
-            <div
-              aria-hidden="true"
-              className="envelope-seal absolute left-1/2 top-0 z-20 grid size-16 -translate-x-1/2 -translate-y-1/2 place-items-center md:size-[4.5rem]"
-            >
-              <span
-                className="block size-9 bg-[#70552d] md:size-10"
-                style={{
-                  mask: "url('/seal-logo.svg') center / contain no-repeat",
-                }}
+            <article className="relative border border-dusty/35 bg-cream px-6 py-14 text-center shadow-[0_14px_36px_rgba(72,36,46,.1)] md:px-12 md:py-16">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-4 border border-dusty/30"
               />
-            </div>
+              <div
+                aria-hidden="true"
+                className="envelope-seal absolute left-1/2 top-0 z-20 grid size-14 -translate-x-1/2 -translate-y-1/2 place-items-center md:size-16"
+              >
+                <span
+                  className="block size-8 bg-[#70552d] md:size-9"
+                  style={{
+                    mask: "url('/seal-logo.svg') center / contain no-repeat",
+                  }}
+                />
+              </div>
 
-            <p className="relative text-[10px] font-medium uppercase tracking-[0.28em] text-wine">
-              Kindly respond
-            </p>
-            <h2
-              id="rsvp-title"
-              className="relative mx-auto mt-4 max-w-2xl font-serif text-6xl italic leading-[0.95] text-wine sm:text-7xl md:text-8xl"
-            >
-              RSVP
-            </h2>
-            <p className="relative mx-auto mt-7 max-w-lg font-serif text-xl leading-relaxed text-wine md:mt-8 md:text-2xl">
-              We would be honored to celebrate this chapter with you.
-            </p>
-            <button
-              type="button"
-              onClick={() => setIsRSVPOpen(true)}
-              className="relative mt-9 rounded-full bg-wine px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
-            >
-              Share your response
-            </button>
-          </article>
+              <p className="relative text-[10px] font-medium uppercase tracking-[0.28em] text-wine">
+                Kindly respond
+              </p>
+              <h2
+                id="rsvp-title"
+                className="relative mx-auto mt-4 max-w-2xl font-serif text-5xl italic leading-[0.95] text-wine sm:text-6xl md:text-7xl"
+              >
+                RSVP
+              </h2>
+              <p className="relative mx-auto mt-6 max-w-lg font-serif text-lg leading-relaxed text-wine md:mt-7 md:text-xl">
+                We would be honored to celebrate this chapter with you.
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsRSVPOpen(true)}
+                className="relative mt-9 rounded-full bg-wine px-7 py-3.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-cream transition-colors hover:bg-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-wine"
+              >
+                Share your response
+              </button>
+            </article>
+          </div>
         </motion.div>
-      </div>
+      </motion.div>
+
+      <div
+        aria-hidden="true"
+        className="rsvp-section-transition pointer-events-none absolute inset-x-0"
+      />
 
       <RSVPForm
         isOpen={isRSVPOpen}

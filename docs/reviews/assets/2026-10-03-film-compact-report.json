@@ -1,0 +1,54 @@
+[
+  {
+    "width": 390,
+    "state": {
+      "clearance": 48.042068060283555,
+      "height": 257,
+      "rowHeight": 128.5,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  },
+  {
+    "width": 768,
+    "state": {
+      "clearance": 48.04647866826855,
+      "height": 489,
+      "rowHeight": 163,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "state": {
+      "clearance": 48.056177555471436,
+      "height": 591,
+      "rowHeight": 196.75,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  },
+  {
+    "width": 2560,
+    "state": {
+      "clearance": 48.12388853984157,
+      "height": 591,
+      "rowHeight": 196.75,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  }
+]

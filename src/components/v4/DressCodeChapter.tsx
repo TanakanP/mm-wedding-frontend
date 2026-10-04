@@ -3,7 +3,6 @@
 import { motion } from "framer-motion";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
 import { WEDDING } from "@/content/wedding";
-import RetroVideoPlayer from "@/components/v4/RetroVideoPlayer";
 
 const viewport = { once: true, amount: 0.25 } as const;
 
@@ -66,10 +65,10 @@ export default function DressCodeChapter() {
       aria-labelledby="dress-code-title"
       className="garden-section garden-texture bg-petal px-5 py-20 md:px-[7vw] md:py-28"
     >
-      <div className="mx-auto grid max-w-7xl items-center gap-14 lg:min-h-[72svh] lg:grid-cols-[minmax(0,1.2fr)_minmax(280px,.8fr)] lg:gap-[clamp(48px,7vw,96px)]">
+      <div className="mx-auto max-w-4xl">
         <motion.div
           {...chapterMotion(reduceMotion, -32)}
-          className="border border-wine/20 bg-cream px-6 py-10 text-center shadow-[0_22px_60px_rgba(104,65,75,0.1)] md:px-10 md:py-14 lg:text-left"
+          className="border border-wine/20 bg-cream px-6 py-10 text-center shadow-[0_22px_60px_rgba(104,65,75,0.1)] md:px-10 md:py-14"
         >
           <p className="text-[10px] uppercase tracking-[0.3em] text-wine">
             Dress code
@@ -85,7 +84,7 @@ export default function DressCodeChapter() {
           </p>
 
           <ul
-            className="mx-auto mt-8 flex max-w-[42rem] flex-wrap justify-center gap-x-4 gap-y-6 lg:mx-0 lg:justify-start"
+            className="mx-auto mt-8 flex max-w-[42rem] flex-wrap justify-center gap-x-4 gap-y-6"
             aria-label="Suggested dress-code colors"
           >
             {WEDDING.dressCode.colors.map((color, index) => (
@@ -105,12 +104,6 @@ export default function DressCodeChapter() {
           </ul>
         </motion.div>
 
-        <motion.div
-          {...chapterMotion(reduceMotion, 32)}
-          className="mx-auto w-full max-w-[360px]"
-        >
-          <RetroVideoPlayer />
-        </motion.div>
       </div>
     </section>
   );

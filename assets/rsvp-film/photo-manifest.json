@@ -1,0 +1,62 @@
+[
+  {
+    "name": "strip-081",
+    "sourceFile": "I found you -81.jpg",
+    "cropTop": 0.49,
+    "grayscale": true,
+    "scene": "veil",
+    "alt": "Tanakan adjusting Natthida’s wedding veil",
+    "displayWidth": 1280,
+    "quality": 70
+  },
+  {
+    "name": "strip-082",
+    "sourceFile": "I found you -82.jpg",
+    "cropTop": 0.58,
+    "grayscale": true,
+    "scene": "ring",
+    "alt": "Natthida’s wedding ring and hands over Tanakan’s shoulder",
+    "displayWidth": 1280,
+    "quality": 70
+  },
+  {
+    "name": "strip-114",
+    "sourceFile": "I found you -114.jpg",
+    "cropTop": 0.5,
+    "grayscale": true,
+    "scene": "running",
+    "alt": "Natthida and Tanakan running together with wedding flowers",
+    "displayWidth": 1280,
+    "quality": 70
+  },
+  {
+    "name": "strip-194",
+    "sourceFile": "I found you -194.jpg",
+    "cropTop": 0.58,
+    "grayscale": true,
+    "scene": "embrace",
+    "alt": "Tanakan carrying Natthida in the garden",
+    "displayWidth": 1280,
+    "quality": 70
+  },
+  {
+    "name": "strip-254",
+    "sourceFile": "I found you -254.jpg",
+    "cropTop": 0.42,
+    "grayscale": true,
+    "scene": "lakeside",
+    "alt": "Natthida and Tanakan facing each other beside the lake",
+    "displayWidth": 1280,
+    "quality": 70
+  },
+  {
+    "name": "strip-033",
+    "sourceFile": "I found you -33.jpg",
+    "cropTop": 0.7,
+    "grayscale": true,
+    "scene": "grove",
+    "alt": "Natthida and Tanakan walking hand in hand beneath the trees",
+    "displayWidth": 1280,
+    "quality": 70
+  }
+]

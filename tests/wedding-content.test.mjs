@@ -4,7 +4,7 @@ import { access } from 'node:fs/promises';
 import { V4_SECTION_IDS, NAV_ITEMS, OPENING_PHOTOS, FRAMED_PHOTOS, GALLERY_PHOTOS, PHOTOS, WEDDING } from '../src/content/wedding.ts';
 
 test('the nine current chapters have unique section anchors', () => {
-  assert.deepEqual(V4_SECTION_IDS, ['hero','families','framed-photo','dress-code','schedule','gallery','venue','final-image','rsvp']);
+  assert.deepEqual(V4_SECTION_IDS, ['hero','families','dress-code','framed-photo','schedule','gallery','venue','final-image','rsvp']);
   assert.equal(new Set(V4_SECTION_IDS).size, 9);
 });
 test('every navigation item targets a current chapter', () => {

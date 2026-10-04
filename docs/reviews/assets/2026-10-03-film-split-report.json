@@ -1,0 +1,59 @@
+[
+  {
+    "width": 390,
+    "state": {
+      "verticalClearance": 8.023498169994296,
+      "background": "linear-gradient(rgb(238, 212, 216) 0px, rgb(238, 212, 216) 50%, rgb(104, 65, 75) 50%, rgb(104, 65, 75) 100%)",
+      "dressColor": "rgb(238, 212, 216)",
+      "scheduleColor": "rgb(104, 65, 75)",
+      "rows": 1,
+      "angle": -0.05235989690784523,
+      "height": 428,
+      "planeHeight": 386,
+      "rowHeight": 386,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "state": {
+      "verticalClearance": 8.019009972959807,
+      "background": "linear-gradient(rgb(238, 212, 216) 0px, rgb(238, 212, 216) 50%, rgb(104, 65, 75) 50%, rgb(104, 65, 75) 100%)",
+      "dressColor": "rgb(238, 212, 216)",
+      "scheduleColor": "rgb(104, 65, 75)",
+      "rows": 1,
+      "angle": -0.10471928345286761,
+      "height": 770,
+      "planeHeight": 591,
+      "rowHeight": 591,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  },
+  {
+    "width": 2560,
+    "state": {
+      "verticalClearance": 8.296917212087635,
+      "background": "linear-gradient(rgb(238, 212, 216) 0px, rgb(238, 212, 216) 50%, rgb(104, 65, 75) 50%, rgb(104, 65, 75) 100%)",
+      "dressColor": "rgb(238, 212, 216)",
+      "scheduleColor": "rgb(104, 65, 75)",
+      "rows": 1,
+      "angle": -0.10471928345286761,
+      "height": 887,
+      "planeHeight": 591,
+      "rowHeight": 591,
+      "previous": "dress-code",
+      "next": "schedule",
+      "overflow": false,
+      "rsvpWhite": "rgb(255, 255, 255)"
+    },
+    "errors": []
+  }
+]

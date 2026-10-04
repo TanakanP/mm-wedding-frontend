@@ -9,7 +9,7 @@ const photoBlurs = {
   "/photos/display/page/gallery-3-rings.webp": "data:image/webp;base64,UklGRqQAAABXRUJQVlA4IJgAAABQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOgMYsZW+abL5P3Qqi2UNzgAP7jT52IMOowKP9/RvRPcyFk8t7/YqvPTb1Z7PveuD/0p18UVy3vkwzSA/QxLZYYfrrYV/fiX22poPVXjBHQPNpYdCvTpy4ACXmC4r+2jtmse+4cIN3LdyqlHgMYGckTttqedmOjWlxCEOIAAA==",
   "/photos/display/page/gallery-4-lakeside.webp": "data:image/webp;base64,UklGRsIAAABXRUJQVlA4ILYAAABwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JYwCdB3gGyiMJPNmHyIsw8J3gAAD+6VCE2cyD0zNRd4tjp5+WPuQvExCu2hlbhrAB54bwMF4JIDPa1knR8QuGJaeNieHJnfr62Cf4t/mMXA28cTH0cgT4yGpu3u+eF37Ljkz9gEiia7Kh/4rAvZf1vNt/IONQNps7Bem0v/ORZzy/T2F+v323B97Z2RAgRbSPsX6+jYNkp5Np0nkAAA==",
   "/photos/display/page/final-memory-running.webp": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAAAwBACdASoQABgAPu1iqU2ppaOiMAgBMB2JaQAD5aH38gJERcROB6Z8vpgA/SmSt0aWKocAU0ncP5A3qLAv/27+HEwilorl03VITxcySfgGtl+DRyxIfG4RGwca1ewXYWt9k3fy44ofn7GwOYbG7DAMQmGVvTa57KMtxmEA77JB7qwdUAAAAA==",
-  "/photos/display/page/rsvp-background.webp": "data:image/webp;base64,UklGRsYAAABXRUJQVlA4ILoAAACQBACdASoYABAAPu1iqU2ppaOiMAgBMB2JQBWEDgQW4l/nYmeWtJWgONJe40AA/s7iV46f0hD7Voj4UAxT1uANy+HclUPUqxsxHL7s1y1er28yfHIkfmsdRkRR6yzD+ACtuyzB3gnAoayQDbk34kxzwtHpTA+auk8de+U46v80Fj6MTOantqJp899mtjVvsvfzy+7wMN6Go7N+TwyUckEC+iDoMYhnJCIH5HPE9PBHbAIxxVpGP2qAAAA=",
+  "/photos/display/page/rsvp-background.webp": "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAAAQBACdASoQABgAPu1iqU2ppaOiMAgBMB2JQBOmUABwUJ4+4X3FLuausAD+7yDTbhFaTKrymi0RoOx9Q1mTHTlYhH05P3fYtV9oBgiuf007YgBhaOI0CdAsUbDRnS7XSO935I7Qtn6VwVOKJGluhlPQQk4WTrexEd6TccrNxIRvbbYCokp+RzgA",
   "/photos/display/page/ornate-ivory.webp": "data:image/webp;base64,UklGRpIBAABXRUJQVlA4WAoAAAAQAAAAEAAAFwAAQUxQSPoAAAANgGpr22Ll/f9/Zg7u7g7Jo7t7gsgduGWHSrTOopKcRvLk7u7OPx82c24hIiYgK875ajZ4uyXpoPeNUdWEuByEWyaFAkHNtkSysEP9ertWpPLGdQsxKO5fSZiu1YXUdP4J8dxUlzhW7PKoA4R/P9WRUDyAwZCAYAECGUHnfmsBbh8wybFQgguYJVa+FqN+mgFWOcwzPDXjy4p6AWuVnnb10wyx/hc7WMli8WGKWOJ4qu+LGY7RGFzBrBTxTw5cF0ZS4PHEzl1KIxA7LcBbCif2Dz1eoXo+srATxq5fmNMk6F19twM+wHULfNQai+1EwFF9wv3AkcUuezwZVlA4IHIAAAAwBACdASoRABgAPu1iqU2ppaOiMAgBMB2JYgDH5CHf+J1Q5sASmjUK7AQA/u/RUqDDFOIUFqvSsz4lQQzo71FGIzZ01FwH+LYfrPRXq+f/2EsEPK3lxo3BPSnzQ+6LPzMkV3rzYABeNyU17H6qrMoAAAA="
 } as const;
 
@@ -17,8 +17,8 @@ const photoBlurs = {
 export const V4_SECTION_IDS = [
   "hero",
   "families",
-  "framed-photo",
   "dress-code",
+  "framed-photo",
   "schedule",
   "gallery",
   "venue",
@@ -160,7 +160,7 @@ export const PHOTOS = {
   3: { id: 3, src: "/photos/display/3.jpeg", alt: "M and M together with a mountain landscape", objectPosition: "50% 45%" },
   4: { id: 4, src: "/photos/display/4.jpeg", alt: "M and M enjoying a playful lakeside moment", objectPosition: "50% 45%" },
   5: { id: 5, src: "/photos/display/5.jpeg", alt: "M and M posing together in playful costumes", objectPosition: "50% 45%" },
-  6: { id: 6, src: "/photos/display/page/rsvp-background.webp", alt: "M and M standing together beside a misty garden path", objectPosition: "50% 45%", blurDataURL: photoBlurs["/photos/display/page/rsvp-background.webp"] },
+  6: { id: 6, src: "/photos/display/page/rsvp-background.webp", alt: "Natthida and Tanakan holding hands on stone garden steps", objectPosition: "50% 62%", blurDataURL: photoBlurs["/photos/display/page/rsvp-background.webp"] },
   7: { id: 7, src: "/photos/display/7.jpeg", alt: "M and M standing beneath warm autumn leaves", objectPosition: "50% 45%" },
   8: { id: 8, src: "/photos/display/8.jpeg", alt: "M and M sharing a candid moment together", objectPosition: "50% 45%" },
   9: { id: 9, src: "/photos/display/page/final-memory-running.webp", alt: "Natthida and Tanakan running together through the garden", objectPosition: "50% 50%", blurDataURL: photoBlurs["/photos/display/page/final-memory-running.webp"] },
@@ -173,10 +173,10 @@ export const EDITORIAL_PHOTO_IDS = [6, 1, 7, 2, 8, 3, 5, 4, 10, 9] as const;
 
 export const V4_GALLERY_PHOTO_IDS = [8, 3, 5, 4] as const;
 
-// Temporary library: all 60 editable slots share one prepared photograph.
-// Replace slot records with unique prepared assets when the photos are selected.
+// Six optimized grayscale photographs, mixed independently across each strip.
+// Identical group copies preserve seamless loops without extra image downloads.
 import preparedFilmPhotos from './rsvpFilmPhotos.json' with { type: 'json' };
-export const RSVP_FILM_PHOTOS = Array.from({ length: 60 }, (_, index) => ({
-  ...preparedFilmPhotos[index % preparedFilmPhotos.length],
+export const RSVP_FILM_PHOTOS = preparedFilmPhotos.map((photo, index) => ({
+  ...photo,
   id: `rsvp-film-${String(index + 1).padStart(2, '0')}`,
 }));

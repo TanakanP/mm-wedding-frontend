@@ -1,0 +1,72 @@
+[
+  {
+    "width": 320,
+    "state": {
+      "clearance": 48.028820961959696,
+      "overflow": false,
+      "filmOpacity": "1",
+      "overlayOpacity": "0",
+      "rail": "16px",
+      "ratio": 1.7777777777777777,
+      "rows": 8,
+      "photoCount": 128
+    },
+    "errors": []
+  },
+  {
+    "width": 390,
+    "state": {
+      "clearance": 48.076787280990516,
+      "overflow": false,
+      "filmOpacity": "1",
+      "overlayOpacity": "0",
+      "rail": "16px",
+      "ratio": 1.7777777777777777,
+      "rows": 8,
+      "photoCount": 128
+    },
+    "errors": []
+  },
+  {
+    "width": 768,
+    "state": {
+      "clearance": 48.28370371211673,
+      "overflow": false,
+      "filmOpacity": "1",
+      "overlayOpacity": "0",
+      "rail": "22px",
+      "ratio": 1.7777777777777777,
+      "rows": 7,
+      "photoCount": 112
+    },
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "state": {
+      "clearance": 48.12433030273883,
+      "overflow": false,
+      "filmOpacity": "1",
+      "overlayOpacity": "0",
+      "rail": "22px",
+      "ratio": 1.7777777777777777,
+      "rows": 6,
+      "photoCount": 96
+    },
+    "errors": []
+  },
+  {
+    "width": 2560,
+    "state": {
+      "clearance": 48.19204128710885,
+      "overflow": false,
+      "filmOpacity": "1",
+      "overlayOpacity": "0",
+      "rail": "22px",
+      "ratio": 1.7777777777777777,
+      "rows": 7,
+      "photoCount": 224
+    },
+    "errors": []
+  }
+]

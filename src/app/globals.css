@@ -56,6 +56,63 @@ body {
   background-size: 20px 20px;
 }
 
+/* Diffused light on blush paper; only opacity changes during its entrance. */
+.rsvp-paper-light {
+  background:
+    radial-gradient(ellipse at 12% 12%, rgba(255, 250, 243, 0.85), transparent 58%),
+    radial-gradient(ellipse at 90% 88%, rgba(189, 165, 110, 0.16), transparent 55%),
+    radial-gradient(ellipse at 85% 15%, rgba(199, 146, 155, 0.13), transparent 50%);
+}
+
+/* Match the photograph's bottom edge before dissolving into the RSVP paper. */
+.rsvp-section {
+  position: relative;
+}
+
+.rsvp-section-transition {
+  top: -1px;
+  height: calc(clamp(16rem, 28vw, 24rem) + 1px);
+  background: linear-gradient(
+    to bottom,
+    var(--foreground),
+    color-mix(in srgb, var(--foreground) 62%, transparent) 30%,
+    color-mix(in srgb, var(--foreground) 16%, transparent) 70%,
+    transparent
+  );
+}
+
+.rsvp-card-glow {
+  position: absolute;
+  inset: -24%;
+  pointer-events: none;
+  opacity: 0.18;
+  background:
+    radial-gradient(ellipse closest-side at 50% 50%, #ffffff, rgba(255, 252, 234, 0.97) 38%, rgba(255, 235, 187, 0.65) 66%, transparent 100%),
+    radial-gradient(ellipse closest-side at 28% 48%, rgba(255, 249, 212, 0.95), transparent 100%),
+    radial-gradient(ellipse closest-side at 72% 52%, rgba(255, 231, 244, 0.95), transparent 100%);
+  animation: rsvp-card-glow 3s ease-in-out infinite;
+}
+
+@keyframes rsvp-card-glow {
+  0%, 70%, 100% { opacity: 0.12; transform: scale(0.96); }
+  35% { opacity: 0.4; transform: scale(1.035); }
+}
+
+.rsvp-card-float {
+  position: relative;
+  animation: rsvp-card-float 6s ease-in-out infinite;
+}
+
+@keyframes rsvp-card-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsvp-card-float,
+  .rsvp-card-glow { animation: none; }
+}
+
 /* Stationery surfaces: static grain and soft light across the folded paper. */
 .envelope-paper {
   background-image: linear-gradient(135deg, rgba(255, 250, 243, 0.28), transparent 48%, rgba(104, 65, 75, 0.12));
@@ -367,109 +424,147 @@ body {
   border: 0;
 }
 
-/* RSVP film: background coverage and rails are independent of the video frame. */
-.rsvp-film-background {
+/* Standalone wedding strips, independent of the former video frame. */
+.wedding-film-section {
+  position: relative;
+  background: linear-gradient(to bottom, var(--color-petal) 0 50%, var(--color-wine) 50% 100%);
+}
+.wedding-film-section::before {
+  content: "";
   position: absolute;
-  inset: 0;
+  z-index: 2;
+  inset: -1px 0 auto;
+  height: 2px;
+  background: var(--color-petal);
   pointer-events: none;
 }
-.rsvp-film-decoration {
+.wedding-film-section::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 -1px;
+  height: 2px;
+  background: var(--color-wine);
+  pointer-events: none;
+}
+.wedding-film-strips {
+  --wedding-film-stock: #151b16;
+  --wedding-film-brass: #bba16d;
+  position: relative;
+  height: calc(386px + 5.24vw + 22px);
+  width: 100%;
+  pointer-events: none;
+}
+.wedding-film-decoration {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: var(--color-petal);
+  background: transparent;
 }
-.rsvp-film-plane {
-  --rsvp-film-pitch: 180px;
-  --rsvp-film-rail: 12px;
-  --rsvp-film-row-height: 120.5px;
-  --rsvp-film-group: 1440px;
-  --rsvp-film-angle: -3deg;
+.wedding-film-plane {
+  --wedding-film-pitch: 180px;
+  --wedding-film-rail: 16px;
+  --wedding-film-row-height: 128.5px;
+  --wedding-film-group: 1440px;
+  --wedding-film-angle: -3deg;
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) rotate(var(--rsvp-film-angle));
+  transform: translate(-50%, -50%) rotate(var(--wedding-film-angle));
   display: flex;
   flex-direction: column;
-  opacity: 0.78;
+  opacity: 1;
 }
-.rsvp-film-unmeasured {
+.wedding-film-unmeasured {
   inset: -50%;
   width: 200%;
   height: 200%;
-  transform: rotate(var(--rsvp-film-angle));
+  transform: rotate(var(--wedding-film-angle));
 }
-.rsvp-film-row {
-  flex: 0 0 var(--rsvp-film-row-height);
-  height: var(--rsvp-film-row-height);
+.wedding-film-row {
+  flex: 0 0 var(--wedding-film-row-height);
+  height: var(--wedding-film-row-height);
   padding-bottom: 2px;
   overflow: hidden;
+  background: #080c09;
 }
-.rsvp-film-unmeasured .rsvp-film-row {
+.wedding-film-unmeasured .wedding-film-row {
   flex: 1;
   min-height: 0;
   height: auto;
 }
-.rsvp-film-track {
+.wedding-film-track {
   display: flex;
-  width: calc(var(--rsvp-film-group) * 2);
+  width: calc(var(--wedding-film-group) * 2);
   height: 100%;
-  animation: rsvp-film-drift linear infinite;
+  animation: wedding-film-drift linear infinite;
 }
-.rsvp-film-group {
+.wedding-film-group {
   display: flex;
-  flex: 0 0 var(--rsvp-film-group);
-  width: var(--rsvp-film-group);
+  flex: 0 0 var(--wedding-film-group);
+  width: var(--wedding-film-group);
   height: 100%;
 }
-.rsvp-film-frame {
+.wedding-film-frame {
   position: relative;
-  flex: 0 0 var(--rsvp-film-pitch);
-  width: var(--rsvp-film-pitch);
+  flex: 0 0 var(--wedding-film-pitch);
+  width: var(--wedding-film-pitch);
   height: 100%;
   box-sizing: border-box;
-  padding: var(--rsvp-film-rail) 12px var(--rsvp-film-rail) 0;
-  background: var(--color-cream);
+  padding: var(--wedding-film-rail) 12px var(--wedding-film-rail) 0;
+  background-color: var(--wedding-film-stock);
+  background-image:
+    linear-gradient(180deg, rgb(187 161 109 / 6%), transparent 38%, rgb(0 0 0 / 28%)),
+    repeating-linear-gradient(90deg, rgb(187 161 109 / 2%) 0 1px, transparent 1px 3px);
+  box-shadow: inset 0 1px rgb(187 161 109 / 20%), inset 0 -1px rgb(0 0 0 / 65%);
 }
-.rsvp-film-frame::before,
-.rsvp-film-frame::after {
+.wedding-film-frame::before,
+.wedding-film-frame::after {
   content: "";
   position: absolute;
   left: 0;
   right: 0;
-  height: var(--rsvp-film-rail);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='10'%3E%3Crect x='6' y='1' width='9' height='8' rx='2' fill='%23eed4d8'/%3E%3C/svg%3E");
-  background-size: 22px 10px;
+  height: var(--wedding-film-rail);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='8'%3E%3Crect x='6' y='1' width='9' height='6' rx='1.2' fill='%23d9c7a4'/%3E%3C/svg%3E");
+  background-size: 22px 8px;
   background-repeat: repeat-x;
   background-position: left center;
 }
-.rsvp-film-frame::before { top: 0; }
-.rsvp-film-frame::after { bottom: 0; }
-.rsvp-film-aperture {
+.wedding-film-frame::before { top: 0; }
+.wedding-film-frame::after {
+  content: "M + M  /  " attr(data-frame-number);
+  bottom: 0;
+  padding: 1px 0 0 8px;
+  background-position: left bottom 1px;
+  color: var(--wedding-film-brass);
+  font-family: ui-monospace, monospace;
+  font-size: 6px;
+  line-height: 7px;
+  letter-spacing: 0.12em;
+}
+.wedding-film-aperture {
   position: relative;
   height: 100%;
   overflow: hidden;
-  background: var(--color-paper);
-  outline: 1px solid rgb(104 65 75 / 10%);
+  background: var(--wedding-film-stock);
+  border-radius: 2px;
+  outline: 1px solid rgb(187 161 109 / 35%);
 }
-.rsvp-film-placeholder,
-.rsvp-film-photo {
+.wedding-film-placeholder,
+.wedding-film-photo {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.rsvp-film-wash {
-  position: absolute;
-  inset: 0;
-  background: var(--color-petal);
-  opacity: 0.18;
+@media (min-width: 768px) {
+  .wedding-film-strips { height: calc(clamp(489px, calc(33.75vw + 117.75px), 591px) + 10.46vw + 30px); }
 }
-@keyframes rsvp-film-drift {
+@keyframes wedding-film-drift {
   from { transform: translateX(0); }
-  to { transform: translateX(calc(-1 * var(--rsvp-film-group))); }
+  to { transform: translateX(calc(-1 * var(--wedding-film-group))); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .rsvp-film-track { animation: none !important; }
+  .wedding-film-track { animation: none !important; }
 }

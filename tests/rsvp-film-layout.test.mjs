@@ -34,3 +34,43 @@ test('large libraries do not increase active sources or visible frame geometry',
   assert.equal(film.selectRSVPFilmPhotos(photos.slice(0,8),390,0,false).length,8);
   assert.deepEqual(film.selectRSVPFilmPhotos([],390,0,false),[]);
 });
+
+
+test('mixed row assignment stays deterministic and handles short or empty libraries', () => {
+ assert.equal(typeof film.getRSVPFilmRow,'function');
+ assert.deepEqual(film.getRSVPFilmRow([],0,8),[]);
+ assert.deepEqual(film.getRSVPFilmRow(['only'],0,8),Array(8).fill('only'));
+ for(const count of [2,6,16,32])for(const row of [0,1,2,5,8,11])for(const slots of [8,16,24]){
+  const photos=Array.from({length:count},(_,i)=>i);
+  const before=[...photos], sequence=film.getRSVPFilmRow(photos,row,slots);
+  assert.equal(sequence.length,slots);
+  assert.deepEqual(photos,before);
+  assert.deepEqual(sequence,film.getRSVPFilmRow(photos,row,slots));
+  assert.ok(sequence.every(p=>photos.includes(p)));
+  sequence.forEach((photo,index)=>assert.notEqual(photo,sequence[(index+1)%slots]));
+  if(count===6)assert.equal(new Set(sequence).size,6);
+ }
+});
+
+
+test('one large tilted strip fits fully within the taller section', () => {
+ for(const width of [320,390,768,1440,2560]){
+  const l=film.getFilmStripLayout(width),original=film.getRSVPFilmLayout(width,1);
+  assert.equal(l.rowCount,1);
+  assert.equal(l.angleDeg,width<768?-3:-6);
+  assert.equal(l.planeHeight,Math.ceil(original.rowPitch*3));
+  assert.equal(l.rowPitch,l.planeHeight);
+  const radians=Math.abs(l.angleDeg)*Math.PI/180;
+  const rotatedHeight=l.planeHeight*Math.cos(radians)+l.planeWidth*Math.sin(radians);
+  assert.ok(l.stageHeight-rotatedHeight>=16);
+  assert.ok(l.stageHeight-rotatedHeight<17);
+  assert.ok(l.planeWidth>=width);
+  const angle=l.angleDeg*Math.PI/180;
+  for(const x of [-width/2,width/2])for(const y of [-l.planeHeight/2,l.planeHeight/2]){
+   assert.ok(l.planeWidth/2-Math.abs(x*Math.cos(angle)+y*Math.sin(angle))>=47);
+  }
+  assert.ok(l.groupWidth>=l.planeWidth);
+  assert.ok(Math.abs((l.framePitch-12)/(l.rowPitch-2*l.railHeight-2)-16/9)<0.001);
+ }
+ for(const width of [0,-1,NaN,Infinity])assert.equal(film.getFilmStripLayout(width),null);
+});

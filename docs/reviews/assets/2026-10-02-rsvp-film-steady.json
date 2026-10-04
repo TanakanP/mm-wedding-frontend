@@ -1,0 +1,111 @@
+{
+  "wrapIdentical": false,
+  "initial": {
+    "metrics": [
+      {
+        "name": "Nodes",
+        "value": 2328
+      },
+      {
+        "name": "LayoutCount",
+        "value": 0
+      },
+      {
+        "name": "RecalcStyleCount",
+        "value": 0
+      },
+      {
+        "name": "TaskDuration",
+        "value": 0.00001
+      },
+      {
+        "name": "JSHeapUsedSize",
+        "value": 10617568
+      }
+    ],
+    "resources": 27
+  },
+  "samples": [
+    {
+      "metrics": [
+        {
+          "name": "Nodes",
+          "value": 1321
+        },
+        {
+          "name": "LayoutCount",
+          "value": 60
+        },
+        {
+          "name": "RecalcStyleCount",
+          "value": 3601
+        },
+        {
+          "name": "TaskDuration",
+          "value": 5.394933
+        },
+        {
+          "name": "JSHeapUsedSize",
+          "value": 7782636
+        }
+      ],
+      "resources": 27
+    },
+    {
+      "metrics": [
+        {
+          "name": "Nodes",
+          "value": 1321
+        },
+        {
+          "name": "LayoutCount",
+          "value": 120
+        },
+        {
+          "name": "RecalcStyleCount",
+          "value": 7201
+        },
+        {
+          "name": "TaskDuration",
+          "value": 10.500818
+        },
+        {
+          "name": "JSHeapUsedSize",
+          "value": 8187144
+        }
+      ],
+      "resources": 27
+    },
+    {
+      "metrics": [
+        {
+          "name": "Nodes",
+          "value": 1321
+        },
+        {
+          "name": "LayoutCount",
+          "value": 180
+        },
+        {
+          "name": "RecalcStyleCount",
+          "value": 10802
+        },
+        {
+          "name": "TaskDuration",
+          "value": 15.467976
+        },
+        {
+          "name": "JSHeapUsedSize",
+          "value": 7664600
+        }
+      ],
+      "resources": 27
+    }
+  ],
+  "steady": {
+    "frames": 1801,
+    "slow": 0,
+    "maxGap": 16.80000000000291,
+    "longTasks": []
+  }
+}

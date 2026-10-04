@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import { componentHarness, nodes } from './helpers/componentHarness.mjs';
 import * as layout from '../src/lib/rsvpFilmLayout.ts';
-const file=new URL('../src/components/v4/RSVPFilmBackground.tsx',import.meta.url);
+const file=new URL('../src/components/v4/WeddingFilmStrips.tsx',import.meta.url);
 const photos=Array.from({length:60},(_,i)=>({id:`p${i}`,src:`/${i}.webp`,blurDataURL:'data:image/webp;base64,AAAA',objectPosition:'50% 50%'}));
 async function setup({reduced=false,saveData=false,width=390,observer=true,resizeObserver=true,photoCount=60}={}) {
  const names=['window','document','navigator','IntersectionObserver','ResizeObserver','setTimeout','clearTimeout'];
@@ -19,12 +19,12 @@ async function setup({reduced=false,saveData=false,width=390,observer=true,resiz
  let h;
  try{h=await componentHarness(file,{'next/image':{__esModule:true,default:'Photo'},'@/content/wedding':{RSVP_FILM_PHOTOS:photos.slice(0,photoCount)},'@/lib/rsvpFilmLayout':layout,'@/hooks/useHydrationSafeReducedMotion':{useHydrationSafeReducedMotion:()=>reduced}})}catch(e){restore();throw e}
  function restore(){for(const n of names){if(saved[n])Object.defineProperty(globalThis,n,saved[n]);else delete globalThis[n]}}
- let modalOpen=false;
- const render=()=>h.render({modalOpen});
+ let paused=false;
+ const render=()=>h.render({paused});
  function tick(){let tree=render();h.flushEffects();for(const [id,t] of [...timers])if(t.ms===0){timers.delete(id);t.f()}tree=render();h.flushEffects();return tree}
  let tree=render();nodes(tree,n=>n.props?.ref)[0].props.ref.current=el;h.flushEffects();
  const resize=observers.find(o=>!o.options);if(resize)resize.f([{contentRect:{width,height:1000}}]);tick();
- return {h,events,observers,timers,render,tick,setViewport(top,bottom){rect={...rect,top,bottom}},setReduced(v){reduced=v},setModal(v){modalOpen=v},enter(){for(const o of observers.filter(o=>o.options))o.f([{isIntersecting:true}]);return tick()},leave(){for(const o of observers.filter(o=>o.options))o.f([{isIntersecting:false}]);return tick()},resize(w,hgt){rect={...rect,width:w,height:hgt};if(resize)resize.f([{contentRect:{width:w,height:hgt}}]);else events.get('resize')();return tick()},cleanup(){h.cleanup();assert.ok(disconnected>=1);restore()}};
+ return {h,events,observers,timers,render,tick,setViewport(top,bottom){rect={...rect,top,bottom}},setReduced(v){reduced=v},setModal(v){paused=v},enter(){for(const o of observers.filter(o=>o.options))o.f([{isIntersecting:true}]);return tick()},leave(){for(const o of observers.filter(o=>o.options))o.f([{isIntersecting:false}]);return tick()},resize(w,hgt){rect={...rect,width:w,height:hgt};if(resize)resize.f([{contentRect:{width:w,height:hgt}}]);else events.get('resize')();return tick()},cleanup(){h.cleanup();assert.ok(disconnected>=1);restore()}};
 }
 const images=t=>nodes(t,n=>n.type==='Photo');
 const plane=t=>nodes(t,n=>n.props?.['data-film-plane'])[0];
@@ -41,7 +41,7 @@ test('photo admission waits for the section and batches four distinct sources ev
  }finally{s.cleanup()}
 });
 
-test('automatic pause follows modal, viewport and document transitions without a manual control',async()=>{
+test('automatic pause follows external pause, viewport and document transitions without a manual control',async()=>{
  const s=await setup();try{
   let t=s.enter();assert.equal(plane(t).props['data-paused'],false);
   assert.equal(nodes(t,n=>n.type==='button').length,0);
@@ -59,15 +59,16 @@ test('automatic pause follows modal, viewport and document transitions without a
 
 test('reduced motion and Save-Data show the full static composition without a motion control',async()=>{
  for(const opts of [{reduced:true},{saveData:true}]){
-  const s=await setup(opts);try{const t=s.enter();assert.equal(plane(t).props['data-paused'],true);assert.equal(nodes(t,n=>n.type==='button').length,0);assert.ok(nodes(t,n=>n.props?.['data-film-row']).length>=6)}finally{s.cleanup()}
+  const s=await setup(opts);try{const t=s.enter();assert.equal(plane(t).props['data-paused'],true);assert.equal(nodes(t,n=>n.type==='button').length,0);assert.ok(nodes(t,n=>n.props?.['data-film-row']).length===layout.getFilmStripLayout(390).rowCount)}finally{s.cleanup()}
  }
  const s=await setup();try{s.enter();s.setReduced(true);assert.equal(plane(s.tick()).props['data-paused'],true)}finally{s.cleanup()}
 });
 
-test('resize adds coverage rows, invalid measurements retain geometry, and duplicates copy their group',async()=>{
+test('resize preserves compact section height and updates film coverage',async()=>{
  const s=await setup();try{
   let t=s.enter(), before=nodes(t,n=>n.props?.['data-film-row']).length;
-  t=s.resize(390,1800);assert.ok(nodes(t,n=>n.props?.['data-film-row']).length>before);
+  t=s.resize(390,1800);assert.equal(nodes(t,n=>n.props?.['data-film-row']).length,before);
+  t=s.resize(1440,1800);assert.equal(nodes(t,n=>n.props?.['data-film-row']).length,layout.getFilmStripLayout(1440).rowCount);
   const count=nodes(t,n=>n.props?.['data-film-row']).length;
   assert.equal(nodes(s.resize(0,0),n=>n.props?.['data-film-row']).length,count);
   for(const row of nodes(t,n=>n.props?.['data-film-row'])){
@@ -111,9 +112,10 @@ test('missing observers use viewport and window-resize fallbacks and remove list
  }finally{scroll.cleanup();assert.equal(scroll.events.size,0)}
  const resize=await setup({resizeObserver:false});try{
   assert.equal(resize.observers.filter(o=>!o.options).length,0);
-  resize.enter();const before=nodes(resize.render(),n=>n.props?.['data-film-row']).length;
-  const after=resize.resize(390,1800);
-  assert.ok(nodes(after,n=>n.props?.['data-film-row']).length>before);
+  resize.enter();const before=plane(resize.render()).props.style.height;
+  const after=resize.resize(1440,1800);
+  assert.equal(nodes(after,n=>n.props?.['data-film-row']).length,1);
+  assert.ok(plane(after).props.style.height>before);
  }finally{resize.cleanup();assert.equal(resize.events.size,0)}
 });
 
@@ -126,12 +128,36 @@ test('8-, 48- and 60-photo fixtures keep frame counts fixed and obey active-sour
     for(let batch=0;batch<10;batch++){for(const image of images(tree))image.props.onLoad();tree=s.tick();tree=s.tick()}
     const distinct=new Set(images(tree).map(n=>n.props.src));
     assert.ok(distinct.size<=Math.min(photoCount,width<768?16:32));
-    counts.push(nodes(tree,n=>n.props?.className==='rsvp-film-frame').length);
-    const decorative=nodes(tree,n=>n.props?.className==='rsvp-film-decoration')[0];
+    counts.push(nodes(tree,n=>n.props?.className==='wedding-film-frame').length);
+    const decorative=nodes(tree,n=>n.props?.className==='wedding-film-decoration')[0];
     assert.equal(decorative.props['aria-hidden'],'true');
     assert.equal(nodes(decorative,n=>n.type==='button'||n.type==='a'||n.props?.tabIndex>=0).length,0);
    }finally{s.cleanup()}
   }
   assert.equal(new Set(counts).size,1);
+ }
+});
+
+
+test('each strip mixes all six photos, avoids adjacent repeats, and duplicates its seamless group', async () => {
+ for (const width of [390,1440]) {
+  const s=await setup({width,photoCount:6});try {
+   const tree=s.enter();
+   const rows=nodes(tree,n=>n.props?.['data-film-row']);
+   assert.equal(rows.length,layout.getFilmStripLayout(width).rowCount);
+   const sequences=rows.map(row=>{
+    const groups=nodes(row,n=>n.props?.['data-film-group']);
+    const sources=nodes(groups[0],n=>n.props?.['data-photo-src']).map(n=>n.props['data-photo-src']);
+    assert.equal(new Set(sources).size,6);
+    sources.forEach((src,index)=>assert.notEqual(src,sources[(index+1)%sources.length],'adjacent frames differ, including at the seam'));
+    assert.deepEqual(sources,nodes(groups[1],n=>n.props?.['data-photo-src']).map(n=>n.props['data-photo-src']));
+    return sources;
+   });
+   assert.ok(new Set(sequences.map(s=>s.join(','))).size===rows.length,'strips have varied orders');
+   assert.deepEqual(sequences, nodes(s.tick(),n=>n.props?.['data-film-row']).map(row=>nodes(nodes(row,n=>n.props?.['data-film-group'])[0],n=>n.props?.['data-photo-src']).map(n=>n.props['data-photo-src'])),'rerenders retain photo order');
+   let ready=tree;
+   for(let batch=0;batch<3;batch++){for(const image of images(ready))image.props.onLoad();ready=s.tick();ready=s.tick()}
+   assert.equal(new Set(images(ready).map(n=>n.props.src)).size,6);
+  }finally{s.cleanup()}
  }
 });

@@ -1,0 +1,30 @@
+[
+  {
+    "width": 390,
+    "initialRequests": 0,
+    "state": {
+      "unique": 16,
+      "frames": 128,
+      "requests": 16,
+      "bytes": 140364,
+      "overflow": false,
+      "paused": "false"
+    },
+    "buttonToNextPaintMs": 49.19999998807907,
+    "errors": []
+  },
+  {
+    "width": 1440,
+    "initialRequests": 0,
+    "state": {
+      "unique": 27,
+      "frames": 96,
+      "requests": 27,
+      "bytes": 474934,
+      "overflow": false,
+      "paused": "false"
+    },
+    "buttonToNextPaintMs": 55.89999997615814,
+    "errors": []
+  }
+]

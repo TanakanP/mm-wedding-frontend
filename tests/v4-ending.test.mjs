@@ -50,23 +50,64 @@ test("V4 FAQ small copy and footer controls use readable wine ink", () => {
   );
 });
 
-test('RSVP opener and close handler pause and resume the film with modal state', async () => {
+test('paper RSVP keeps its working form without a photo or film background', async () => {
   const { componentHarness, nodes } = await import('./helpers/componentHarness.mjs');
   const chapter = await componentHarness(new URL('../src/components/v4/RSVPChapter.tsx', import.meta.url), {
     '@/components/RSVPForm': { __esModule: true, default: 'Form' },
+    '@/components/hero/PetalsCanvas': { __esModule: true, default: 'Confetti' },
     '@/components/v4/RSVPFilmBackground': { __esModule: true, default: 'Film' },
     '@/hooks/useHydrationSafeReducedMotion': { useHydrationSafeReducedMotion: () => false },
-    'next/image': { __esModule: true, default: 'Photo' },
-    '@/content/wedding': { PHOTOS: {6:{src:'/placeholder.webp'}} },
   });
-  let tree = chapter.render();
-  const background = nodes(tree, n => n.type === 'Film')[0];
-  assert.ok(background, 'film background must replace the single photograph');
-  assert.equal(background.props.modalOpen, false);
-  nodes(tree, n => n.type === 'button')[0].props.onClick();
-  tree = chapter.render();
-  assert.equal(nodes(tree, n => n.type === 'Film')[0].props.modalOpen, true);
-  assert.equal(nodes(tree, n => n.type === 'Form')[0].props.isOpen, true);
-  nodes(tree, n => n.type === 'Form')[0].props.onClose();
-  assert.equal(nodes(chapter.render(), n => n.type === 'Film')[0].props.modalOpen, false);
+  let tree=chapter.render();
+  assert.equal(nodes(tree,n=>n.type==='Film').length,0);
+  assert.equal(nodes(tree,n=>n.type==='img').length,0);
+  assert.doesNotMatch(rsvp, /next\/image|PHOTOS/);
+  nodes(tree,n=>n.type==='button')[0].props.onClick();
+  tree=chapter.render();
+  assert.equal(nodes(tree,n=>n.type==='Form')[0].props.isOpen,true);
+  nodes(tree,n=>n.type==='Form')[0].props.onClose();
+  assert.equal(nodes(chapter.render(),n=>n.type==='Form')[0].props.isOpen,false);
+});
+
+test('the RSVP float and glow pause offscreen, in hidden tabs, and while responding', async () => {
+  const { componentHarness, nodes } = await import('./helpers/componentHarness.mjs');
+  const saved = Object.getOwnPropertyDescriptor(globalThis, 'document');
+  const events = new Map();
+  Object.defineProperty(globalThis, 'document', { configurable: true, value: {
+    hidden: false, addEventListener: (name, fn) => events.set(name, fn),
+    removeEventListener: name => events.delete(name),
+  } });
+  const chapter = await componentHarness(new URL('../src/components/v4/RSVPChapter.tsx', import.meta.url), {
+    '@/components/RSVPForm': { __esModule: true, default: 'Form' },
+    '@/components/hero/PetalsCanvas': { __esModule: true, default: 'Confetti' },
+    '@/hooks/useHydrationSafeReducedMotion': { useHydrationSafeReducedMotion: () => false },
+  });
+  const floating = () => nodes(chapter.render(), n => n.props?.className === 'rsvp-card-float')[0];
+  const glow = () => nodes(chapter.render(), n => n.props?.className === 'rsvp-card-glow')[0];
+  const assertPlayback = state => {
+    assert.equal(floating().props.style.animationPlayState, state);
+    assert.equal(glow().props.style.animationPlayState, state);
+  };
+  try {
+    chapter.render(); chapter.flushEffects();
+    assert.ok(floating(), 'card must have a floating surface');
+    assert.ok(glow(), 'card must have a glowing light');
+    assertPlayback('paused');
+    const viewport = nodes(chapter.render(), n => n.props?.onViewportEnter)[0];
+    viewport.props.onViewportEnter();
+    assertPlayback('running');
+    document.hidden = true; events.get('visibilitychange')();
+    assertPlayback('paused');
+    document.hidden = false; events.get('visibilitychange')();
+    assertPlayback('running');
+    nodes(chapter.render(), n => n.type === 'button')[0].props.onClick();
+    assertPlayback('paused');
+    nodes(chapter.render(), n => n.type === 'Form')[0].props.onClose();
+    assertPlayback('running');
+    viewport.props.onViewportLeave();
+    assertPlayback('paused');
+  } finally {
+    chapter.cleanup();
+    if (saved) Object.defineProperty(globalThis, 'document', saved); else delete globalThis.document;
+  }
 });

@@ -36,7 +36,7 @@ test('framed portrait waits for 35 percent visibility and preserves eager loadin
 test("sections two through four remain separately editable", async () => {
   const [family, frame, dress] = await Promise.all([
     read("FamilyChapter"),
-    read("FramedPhotoChapter"),
+    read("FilmStripChapter"),
     read("DressCodeChapter"),
   ]);
   assert.match(family, /id="families"/);

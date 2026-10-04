@@ -4,22 +4,20 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { RSVP_FILM_PHOTOS } from "@/content/wedding";
 import { useHydrationSafeReducedMotion } from "@/hooks/useHydrationSafeReducedMotion";
-import { getRSVPFilmLayout, selectRSVPFilmPhotos, type RSVPFilmLayout } from "@/lib/rsvpFilmLayout";
+import { getFilmStripLayout, getRSVPFilmRow, selectRSVPFilmPhotos, type FilmStripLayout } from "@/lib/rsvpFilmLayout";
 
 type LoadStatus = "loading" | "ready" | "failed";
 type FilmStyle = CSSProperties & Record<`--${string}`, string | number>;
 
-export default function RSVPFilmBackground({ modalOpen }: { modalOpen: boolean }) {
+export default function WeddingFilmStrips({ paused: externallyPaused = false }: { paused?: boolean }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const aliveRef = useRef(false);
-  const seededRef = useRef(false);
   const nearRef = useRef(false);
   const batchStartRef = useRef(0);
   const stalledRef = useRef(false);
   const attemptRef = useRef(0);
-  const [layout, setLayout] = useState<RSVPFilmLayout | null>(null);
+  const [layout, setLayout] = useState<FilmStripLayout | null>(null);
   const [width, setWidth] = useState(0);
-  const [start, setStart] = useState(0);
   const [near, setNear] = useState(false);
   const [visible, setVisible] = useState(false);
   const [pageVisible, setPageVisible] = useState(true);
@@ -36,14 +34,10 @@ export default function RSVPFilmBackground({ modalOpen }: { modalOpen: boolean }
     aliveRef.current = true;
     const measure = () => {
       const rect = section.getBoundingClientRect();
-      const next = getRSVPFilmLayout(rect.width, rect.height);
+      const next = getFilmStripLayout(rect.width);
       if (!next) return;
       setLayout(previous => previous && previous.planeWidth === next.planeWidth && previous.planeHeight === next.planeHeight && previous.framePitch === next.framePitch ? previous : next);
       setWidth(rect.width);
-      if (!seededRef.current) {
-        seededRef.current = true;
-        setStart(Math.floor(Math.random() * RSVP_FILM_PHOTOS.length));
-      }
     };
     const updateNear = (value: boolean) => {
       if (value && !nearRef.current && stalledRef.current) {
@@ -102,15 +96,16 @@ export default function RSVPFilmBackground({ modalOpen }: { modalOpen: boolean }
     };
   }, []);
 
-  const active = selectRSVPFilmPhotos(RSVP_FILM_PHOTOS, width, start, saveData);
-  const rows = Array.from({ length: layout?.rowCount ?? 12 }, (_, row) =>
-    Array.from({ length: (layout?.sequenceRepeats ?? 1) * 8 }, (_, slot) => active[(row * 11 + slot) % active.length])
+  const active = selectRSVPFilmPhotos(RSVP_FILM_PHOTOS, width, 0, saveData);
+  // Mix each row independently, keeping both loop groups identical.
+  const rows = Array.from({ length: layout?.rowCount ?? 1 }, (_, row) =>
+    getRSVPFilmRow(active, row, (layout?.sequenceRepeats ?? 1) * 8)
   );
   const sources = [...new Set(rows.flat().filter(Boolean).map(photo => photo.src))];
   const sourceKey = sources.join("\n");
   const pending = sources.filter(src => loads[src] === "loading");
   const pendingKey = pending.join("\n");
-  const canLoad = near && pageVisible && !modalOpen && layout !== null;
+  const canLoad = near && pageVisible && !externallyPaused && layout !== null;
 
   useEffect(() => {
     if (!canLoad || stalled) return;
@@ -136,40 +131,40 @@ export default function RSVPFilmBackground({ modalOpen }: { modalOpen: boolean }
     if (!aliveRef.current || generation !== attemptRef.current) return;
     setLoads(previous => previous[src] === status ? previous : { ...previous, [src]: status });
   };
-  const paused = modalOpen || reduceMotion || saveData || !visible || !pageVisible || !layout;
+  const paused = externallyPaused || reduceMotion || saveData || !visible || !pageVisible || !layout;
   const owners = new Map<string, string>();
   rows.forEach((photos, row) => photos.forEach((photo, slot) => {
     if (photo && !owners.has(photo.src)) owners.set(photo.src, `${row}-${slot}`);
   }));
   const style: FilmStyle = layout ? {
     width: layout.planeWidth, height: layout.planeHeight,
-    "--rsvp-film-angle": `${layout.angleDeg}deg`,
-    "--rsvp-film-pitch": `${layout.framePitch}px`,
-    "--rsvp-film-rail": `${layout.railHeight}px`,
-    "--rsvp-film-row-height": `${layout.rowPitch}px`,
-    "--rsvp-film-group": `${layout.groupWidth}px`,
+    "--wedding-film-angle": `${layout.angleDeg}deg`,
+    "--wedding-film-pitch": `${layout.framePitch}px`,
+    "--wedding-film-rail": `${layout.railHeight}px`,
+    "--wedding-film-row-height": `${layout.rowPitch}px`,
+    "--wedding-film-group": `${layout.groupWidth}px`,
   } : {};
 
   return (
-    <div ref={rootRef} className="rsvp-film-background">
-      <div aria-hidden="true" className="rsvp-film-decoration">
-        <div data-film-plane="true" data-paused={Boolean(paused)} className={`rsvp-film-plane${layout ? "" : " rsvp-film-unmeasured"}`} style={style}>
+    <div ref={rootRef} className="wedding-film-strips" style={layout ? { height: layout.stageHeight } : undefined}>
+      <div aria-hidden="true" className="wedding-film-decoration">
+        <div data-film-plane="true" data-paused={Boolean(paused)} className={`wedding-film-plane${layout ? "" : " wedding-film-unmeasured"}`} style={style}>
           {rows.map((photos, row) => {
             const speed = width < 768 ? [10, 12, 11][row % 3] : [14, 16, 15][row % 3];
             const duration = (layout?.groupWidth ?? 1440) / speed;
             return (
-              <div key={row} data-film-row={row + 1} className="rsvp-film-row">
-                <div className="rsvp-film-track" style={{ animationDuration: `${duration}s`, animationDelay: `${-(row % 8) * duration / 8}s`, animationDirection: row % 2 ? "reverse" : "normal", animationPlayState: paused ? "paused" : "running" }}>
+              <div key={row} data-film-row={row + 1} className="wedding-film-row">
+                <div className="wedding-film-track" style={{ animationDuration: `${duration}s`, animationDelay: `${-(row % 8) * duration / 8}s`, animationDirection: row % 2 ? "reverse" : "normal", animationPlayState: paused ? "paused" : "running" }}>
                   {[0, 1].map(copy => (
-                    <div key={copy} data-film-group={copy + 1} className="rsvp-film-group">
+                    <div key={copy} data-film-group={copy + 1} className="wedding-film-group">
                       {photos.map((photo, slot) => photo && (
-                        <div key={slot} data-photo-src={photo.src} className="rsvp-film-frame">
-                          <div className="rsvp-film-aperture">
+                        <div key={slot} data-photo-src={photo.src} data-frame-number={photo.id.split("-").at(-1)} className="wedding-film-frame">
+                          <div className="wedding-film-aperture">
                             {/* Inline decorative fallback needs no network request. */}
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={photo.blurDataURL} alt="" className="rsvp-film-placeholder" />
+                            <img src={photo.blurDataURL} alt="" className="wedding-film-placeholder" />
                             {(loads[photo.src] === "ready" || (loads[photo.src] === "loading" && copy === 0 && owners.get(photo.src) === `${row}-${slot}`)) && (
-                              <Image key={attempt} src={photo.src} alt="" fill sizes={`${(layout?.framePitch ?? 180) - 12}px`} loading="eager" fetchPriority="low" className="rsvp-film-photo" onLoad={() => settle(photo.src, "ready", attempt)} onError={() => settle(photo.src, "failed", attempt)} />
+                              <Image key={attempt} src={photo.src} alt="" fill sizes={`${(layout?.framePitch ?? 180) - 12}px`} loading="eager" fetchPriority="low" className="wedding-film-photo" onLoad={() => settle(photo.src, "ready", attempt)} onError={() => settle(photo.src, "failed", attempt)} />
                             )}
                           </div>
                         </div>
@@ -181,7 +176,6 @@ export default function RSVPFilmBackground({ modalOpen }: { modalOpen: boolean }
             );
           })}
         </div>
-        <div className="rsvp-film-wash" />
       </div>
 
     </div>
