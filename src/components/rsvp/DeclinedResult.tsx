@@ -67,14 +67,17 @@ export default function DeclinedResult({ name, amount, onAmountChange, transferD
           </div>
           <div>
             <label htmlFor="blessing-date" className="block text-sm font-medium text-foreground">Transfer date · Thailand time (UTC+7)</label>
-            <input id="blessing-date" type="date" value={transferDate} max={today || thailandNowLocal().slice(0, 10)}
-              onChange={(event) => {
-                const value = event.target.value;
-                onTransferDateChange(value);
-                if (value === today && transferHour > currentHour) { onTransferHourChange(""); onTransferMinuteChange(""); }
-                else if (value === today && transferHour === currentHour && transferMinute > currentMinute) onTransferMinuteChange("");
-              }} disabled={frozen}
-              className="mt-1 w-full rounded-sm border border-sage/50 bg-white px-4 py-3 text-base text-foreground focus-visible:outline-2 focus-visible:outline-wine" />
+            {/* iOS date controls can add padding outside their declared width. */}
+            <div className="mt-1 w-full min-w-0 rounded-sm border border-sage/50 bg-white px-4 py-3 focus-within:outline-2 focus-within:outline-wine">
+              <input id="blessing-date" type="date" value={transferDate} max={today || thailandNowLocal().slice(0, 10)}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  onTransferDateChange(value);
+                  if (value === today && transferHour > currentHour) { onTransferHourChange(""); onTransferMinuteChange(""); }
+                  else if (value === today && transferHour === currentHour && transferMinute > currentMinute) onTransferMinuteChange("");
+                }} disabled={frozen}
+                className="block h-6 w-full min-w-0 max-w-full appearance-none border-0 bg-transparent p-0 text-left text-base leading-6 text-foreground focus:outline-none [&::-webkit-date-and-time-value]:text-left" />
+            </div>
           </div>
           <div>
             <p className="block text-sm font-medium text-foreground">Transfer time · 24-hour format (Thailand)</p>
