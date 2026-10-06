@@ -41,6 +41,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionError, setSubmissionError] = useState("");
   const [website, setWebsite] = useState("");
+  const [bringingGuests, setBringingGuests] = useState<"yes" | "no" | null>(null);
   const [closedOutcome, setClosedOutcome] = useState<{ kind: "saved" | "failed"; rsvp?: ConfirmedRsvp } | null>(null);
   const [confirmedRsvp, setConfirmedRsvp] = useState<ConfirmedRsvp | null>(null);
   const submittedData = confirmedRsvp?.data ?? null;
@@ -74,6 +75,8 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     watch,
     formState: { errors, isSubmitting },
     reset,
+    setValue,
+    clearErrors,
   } = useForm<RSVPFormValues>({
     resolver: zodResolver(rsvpSchema),
     defaultValues: {
@@ -84,12 +87,13 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
 
   const side = watch("side");
   const attending = watch("attending");
+  const awaitingGuestChoice = attending === "yes" && bringingGuests === null;
   const validationMessages = Object.values(errors)
     .map((error) => error?.message)
     .filter((message): message is string => typeof message === "string");
 
   const onSubmit = async (data: RSVPFormValues) => {
-    if (pendingRef.current) return;
+    if (pendingRef.current || awaitingGuestChoice) return;
     pendingRef.current = true;
     setSubmissionError("");
     const session = sessionRef.current;
@@ -154,6 +158,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
     setSubmissionError("");
     setClosedOutcome(null);
     setWebsite("");
+    setBringingGuests(null);
     setBlessingAmount("");
     setBlessingDate("");
     setBlessingHour("");
@@ -420,7 +425,13 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                           id="rsvp-attending-yes"
                           type="radio"
                           value="yes"
-                          {...register("attending")}
+                          {...register("attending", {
+                            onChange: () => {
+                              setBringingGuests(null);
+                              setValue("guestCount", "0");
+                              clearErrors("guestCount");
+                            },
+                          })}
                           aria-describedby={errors.attending ? "rsvp-attending-error" : undefined}
                           className="accent-accent-secondary"
                         />
@@ -431,7 +442,13 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                           id="rsvp-attending-no"
                           type="radio"
                           value="no"
-                          {...register("attending")}
+                          {...register("attending", {
+                            onChange: () => {
+                              setBringingGuests(null);
+                              setValue("guestCount", "0");
+                              clearErrors("guestCount");
+                            },
+                          })}
                           aria-describedby={errors.attending ? "rsvp-attending-error" : undefined}
                           className="accent-accent-secondary"
                         />
@@ -441,9 +458,36 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                     {errors.attending && <p id="rsvp-attending-error" className="text-red-700 text-sm mt-1">{errors.attending.message}</p>}
                   </fieldset>
 
+                  {attending === "yes" && (
+                    <fieldset className="shrink-0">
+                      <legend className="block text-sm font-medium text-foreground mb-2">Will you be bringing any additional guests?</legend>
+                      <div className="flex gap-4">
+                        {(["yes", "no"] as const).map((choice) => (
+                          <label key={choice} htmlFor={`rsvp-bringing-guests-${choice}`} className="flex items-center gap-2 cursor-pointer">
+                            <input
+                              id={`rsvp-bringing-guests-${choice}`}
+                              type="radio"
+                              name="bringingGuests"
+                              value={choice}
+                              checked={bringingGuests === choice}
+                              required
+                              onChange={() => {
+                                setBringingGuests(choice);
+                                setValue("guestCount", choice === "no" ? "0" : "1");
+                                clearErrors("guestCount");
+                              }}
+                              className="accent-accent-secondary"
+                            />
+                            <span className="text-foreground/80">{choice === "yes" ? "Yes" : "No"}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  )}
+
                   <AnimatePresence mode="wait">
                     {/* Logic if Attending */}
-                    {attending === "yes" && (
+                    {attending === "yes" && bringingGuests !== null && (
                       <motion.div 
                         key="attending"
                         {...motionProps(reduceMotion, {
@@ -454,22 +498,23 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                         className="flex flex-col gap-2 md:gap-6 overflow-hidden shrink-0"
                       >
                         {/* Guest Count */}
-                        <div>
+                        {bringingGuests === "yes" && <div>
                           <label htmlFor="rsvp-guest-count" className="block text-sm font-medium text-foreground mb-1">How many additional guests?</label>
                           <input
                             id="rsvp-guest-count"
                             type="number"
-                            min="0"
+                            min="1"
                             max="99"
                             step="1"
+                            required
                             {...register("guestCount")}
                             aria-invalid={Boolean(errors.guestCount)}
                             aria-describedby={errors.guestCount ? "rsvp-guest-count-error" : undefined}
                             className="w-24 px-4 py-2 border border-sage/30 rounded-lg focus:ring-accent-secondary focus:border-accent-secondary outline-none transition-colors bg-cream"
-                            placeholder="0"
+                            placeholder="1"
                           />
                           {errors.guestCount && <p id="rsvp-guest-count-error" className="text-red-700 text-sm mt-1">{errors.guestCount.message}</p>}
-                        </div>
+                        </div>}
 
                         {/* Alcohol Checkbox */}
                         <div>
@@ -491,9 +536,9 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                     )}
                   </AnimatePresence>
 
-                  {/* A Note for the Couple (Shown for both Yes and No if an attending choice is made) */}
+                  {/* Show the note once the attendance questions are answered. */}
                   <AnimatePresence>
-                    {attending && (
+                    {attending && !awaitingGuestChoice && (
                       <motion.div
                         {...motionProps(reduceMotion, {
                           initial: { opacity: 0, height: 0 },
@@ -531,7 +576,7 @@ export default function RSVPForm({ isOpen, onClose }: RSVPFormProps) {
                   )}
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || awaitingGuestChoice}
                     className="w-full rounded-sm bg-wine py-3 font-medium text-cream transition-colors hover:bg-foreground disabled:opacity-70 focus:outline-none focus-visible:ring-2 focus-visible:ring-wine focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
                     {isSubmitting ? "Sending..." : "Submit"}

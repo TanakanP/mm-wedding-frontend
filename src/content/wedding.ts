@@ -132,7 +132,7 @@ export const GALLERY_PHOTOS = [
   {
     src: "/photos/display/page/gallery-2-embrace.webp",
     alt: "Natthida smiling at Tanakan as he lifts her among the trees",
-    objectPosition: "50% 50%",
+    objectPosition: "50% 35%",
     blurDataURL: photoBlurs["/photos/display/page/gallery-2-embrace.webp"],
   },
   {
@@ -150,7 +150,7 @@ export const GALLERY_PHOTOS = [
   {
     src: "/photos/display/page/gallery-4-lakeside.webp",
     alt: "Tanakan looking toward Natthida beside the lake",
-    objectPosition: "50% 50%",
+    objectPosition: "50% 45%",
     blurDataURL: photoBlurs["/photos/display/page/gallery-4-lakeside.webp"],
   },
 ] as const;
