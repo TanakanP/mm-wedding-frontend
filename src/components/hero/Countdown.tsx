@@ -69,7 +69,7 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
             className="min-w-0 text-center"
           >
             <div
-              className="font-serif text-3xl tabular-nums sm:text-4xl md:text-5xl lg:text-6xl"
+              className="font-sans font-light text-3xl lining-nums tabular-nums sm:text-4xl md:text-5xl lg:text-6xl"
             >
               {values[index]}
             </div>
