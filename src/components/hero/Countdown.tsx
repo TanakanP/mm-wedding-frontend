@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getTimeLeft, shouldContinueCountdown } from "@/lib/countdown";
+import { getTimeLeft, shouldContinueCountdown, type TimeLeft } from "@/lib/countdown";
 
 const unitLabels = ["MONTHS", "DAYS", "HOURS", "MINUTES", "SECONDS"] as const;
 
 export default function Countdown({ targetDateIso }: { targetDateIso: string }) {
   const targetMs = new Date(targetDateIso).getTime();
-  const [timeLeft, setTimeLeft] = useState(() => getTimeLeft(targetMs));
+  // Keep the server and first client render identical, even for cached HTML.
+  const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
 
   useEffect(() => {
     let interval: number | undefined;
@@ -27,12 +28,20 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
       interval = window.setInterval(update, 1000);
     }
 
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") update();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pageshow", update);
+
     return () => {
       if (interval !== undefined) window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pageshow", update);
     };
   }, [targetMs]);
 
-  if (timeLeft.isPast) {
+  if (timeLeft?.isPast) {
     return (
       <div className="mt-10 text-[10px] uppercase tracking-[0.2em] text-petal">
         THE NEW CHAPTER BEGINS TODAY, SEE YOU SOON.
@@ -40,16 +49,16 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
     );
   }
 
-  const values = [
+  const values = timeLeft ? [
     timeLeft.months,
     timeLeft.days,
     timeLeft.hours,
     timeLeft.minutes,
     timeLeft.seconds,
-  ];
+  ] : ["—", "—", "—", "—", "—"];
 
   return (
-    <div className="mt-10" suppressHydrationWarning>
+    <div className="mt-10">
       <div className="mb-4 text-[10px] uppercase tracking-[0.2em] text-petal">
         The new chapter awaits in
       </div>
@@ -61,7 +70,6 @@ export default function Countdown({ targetDateIso }: { targetDateIso: string }) 
           >
             <div
               className="font-serif text-3xl tabular-nums sm:text-4xl md:text-5xl lg:text-6xl"
-              suppressHydrationWarning
             >
               {values[index]}
             </div>
